@@ -3,261 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#161914">
+    <meta name="theme-color" content="#166534">
     <meta name="description" content="AgroShift is an AI-powered agri-advisory platform using NASA & ISRO satellite data to help farmers optimize crop rotations, monitor soil health, and conserve water.">
     
+    <!-- Vector Favicon matching Agriculture Palette -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23166534' stroke='%23FEFCE8' stroke-width='2'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='%23FDE047' stroke-width='2' stroke-dasharray='6 6'/%3E%3Cpath d='M20 44L32 20L44 44' fill='none' stroke='%23FEFCE8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='20' r='4' fill='%23FDE047'/%3E%3C/svg%3E">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Lora:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Lora:ital,wght@0,600;1,600&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Gurmukhi:wght@400;700&family=Noto+Sans+Malayalam:wght@400;700&family=Noto+Sans+Tamil:wght@400;700&display=swap" rel="stylesheet">
     
+    <link rel="stylesheet" href="./styles.css">
+
     <title>AgroShift — Satellite Crop &amp; Soil Advisory</title>
-
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; font-size: 100%; -webkit-text-size-adjust: 100%; }
-        body {
-            font-family: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            font-size: 1.125rem;
-            line-height: 1.6;
-            background-color: #161914;
-            color: #F5F2EB;
-            overflow-x: hidden;
-            text-rendering: optimizeSpeed;
-        }
-        img { max-width: 100%; display: block; }
-        a { text-decoration: none; color: #F5F2EB; }
-        :focus-visible { outline: 3px solid #E09F3E; outline-offset: 4px; border-radius: 4px; }
-        
-        .skip-link {
-            position: absolute; top: -100px; left: 16px; z-index: 2000;
-            background-color: #E09F3E; color: #161914; font-weight: bold;
-            padding: 12px 20px; border-radius: 8px;
-        }
-        .skip-link:focus { top: 16px; }
-
-        header {
-            position: absolute; top: 0; left: 0; z-index: 1000; width: 100%;
-            padding: 20px clamp(16px, 4vw, 48px);
-            display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 1rem;
-            background: linear-gradient(to bottom, rgba(22, 25, 20, 0.9) 0%, rgba(22, 25, 20, 0) 100%);
-        }
-        header > h1, .brand-logo {
-            font-weight: bold; color: #ffffff; font-size: clamp(1.6rem, 3vw, 2.3rem);
-            min-height: 48px; display: inline-flex; align-items: center; white-space: nowrap;
-        }
-        header > nav > ul {
-            display: flex; flex-wrap: nowrap; list-style-type: none; align-items: center; gap: clamp(0.75rem, 2vw, 1.5rem);
-        }
-        header > nav > ul > li a {
-            display: inline-flex; align-items: center; min-height: 48px; padding: 6px 10px;
-            white-space: nowrap; color: #ffffff; font-size: clamp(0.95rem, 1.8vw, 1.125rem); font-weight: bold;
-            transition: color 0.2s ease;
-        }
-        header > nav > ul > li a:hover { color: #E09F3E; }
-
-        #hero {
-            min-height: 100vh; min-height: 100svh;
-            background-color: #161914;
-            background-image: linear-gradient(to bottom, rgba(22, 25, 20, 0.8) 0%, rgba(22, 25, 20, 0.2) 45%, rgba(22, 25, 20, 0.9) 100%), url('./images/herobg.jpg');
-            background-size: cover; background-position: center; background-repeat: no-repeat;
-            padding: 140px clamp(16px, 5vw, 48px) clamp(60px, 12vh, 140px);
-            display: flex; flex-direction: column; justify-content: flex-end; align-items: center; text-align: center;
-        }
-        #hero h1 {
-            font-family: 'Lora', Georgia, serif; font-style: italic; font-weight: 600; color: #ffffff;
-            font-size: clamp(2.1rem, 6.3vw, 5.5rem); line-height: 1.1; text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75); margin-bottom: 16px;
-        }
-        #hero p {
-            color: #F5F2EB; font-size: clamp(1.05rem, 2vw, 1.3rem); max-width: 540px;
-            text-shadow: 0 1px 8px rgba(0, 0, 0, 0.95); margin-bottom: 28px;
-        }
-        .hero-btn {
-            display: inline-flex; align-items: center; justify-content: center; min-height: 52px;
-            padding: 14px 34px; font-size: 1.125rem; font-weight: bold; color: #161914;
-            background-color: #E09F3E; border: 2px solid #E09F3E; border-radius: 999px;
-            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-        }
-        .hero-btn:hover { background-color: #F5F2EB; border-color: #F5F2EB; color: #161914; }
-
-        #features, #about, #dashboard-features, #testimonials {
-            padding: clamp(60px, 8vw, 110px) clamp(16px, 5vw, 48px); background-color: #161914;
-        }
-        #about, #dashboard-features, #testimonials { border-top: 1px solid #2A3025; }
-
-        .features-header, .dash-feat-header, .testimonials-header { text-align: center; margin-bottom: clamp(36px, 5vw, 60px); }
-        .features-header h2, .about-text h2, .dash-feat-header h2, .testimonials-header h2 {
-            font-family: 'Lora', Georgia, serif; font-style: italic; color: #F5F2EB;
-            font-size: clamp(1.75rem, 4vw, 3rem); line-height: 1.15; margin-bottom: 14px;
-        }
-        .features-header p, .dash-feat-header p, .testimonials-header p {
-            font-size: clamp(1.05rem, 1.8vw, 1.2rem); color: #D1CEC5; max-width: 620px; margin: 0 auto;
-        }
-        .section-tag {
-            display: inline-block; font-size: 0.95rem; font-weight: bold; text-transform: uppercase;
-            letter-spacing: 0.08em; color: #E09F3E; margin-bottom: 12px;
-        }
-
-        .feature-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-            gap: clamp(1.25rem, 3vw, 2rem); max-width: 1320px; margin: 0 auto;
-        }
-        .feature-card {
-            background-color: #22261E; border: 1px solid #3A4033; padding: clamp(20px, 3vw, 30px);
-            border-radius: 12px; transition: border-color 0.25s ease, transform 0.25s ease;
-        }
-        .feature-card:hover { border-color: #84A98C; transform: translateY(-4px); }
-        .feature-img { width: 100%; height: 200px; overflow: hidden; border-radius: 8px; margin-bottom: 20px; background-color: #161914; }
-        .feature-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.35s ease; }
-        .feature-card:hover .feature-img img { transform: scale(1.04); }
-        .feature-card h3 { font-size: 1.35rem; margin-bottom: 10px; color: #F5F2EB; }
-        .feature-card p { font-size: 1.05rem; color: #D1CEC5; }
-
-        .about-container {
-            max-width: 1320px; margin: 0 auto; display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
-            gap: clamp(2rem, 5vw, 4rem); align-items: center;
-        }
-        .about-text p { font-size: 1.125rem; color: #D1CEC5; line-height: 1.65; margin-bottom: 20px; }
-        .about-stats {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
-            gap: 1.5rem; margin-top: 32px; padding-top: 28px; border-top: 1px solid #3A4033;
-        }
-        .stat-box strong { display: block; font-size: clamp(1.8rem, 3vw, 2.3rem); color: #84A98C; line-height: 1.1; margin-bottom: 6px; }
-        .stat-box span { font-size: 1rem; color: #D1CEC5; line-height: 1.4; }
-        .about-visual img { width: 100%; height: clamp(260px, 40vw, 460px); object-fit: cover; border-radius: 12px; border: 1px solid #3A4033; }
-
-        .dash-feat-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
-            gap: clamp(1.25rem, 3vw, 2rem); max-width: 1320px; margin: 0 auto;
-        }
-        .dash-feat-card {
-            background-color: #22261E; border: 1px solid #3A4033;
-            padding: clamp(24px, 3vw, 35px) clamp(20px, 2.5vw, 30px);
-            border-radius: 12px; transition: border-color 0.25s ease, transform 0.25s ease;
-        }
-        .dash-feat-card:hover { border-color: #84A98C; transform: translateY(-4px); }
-        .feat-icon-num { font-family: 'Lora', Georgia, serif; font-size: 1.8rem; font-weight: bold; color: #E09F3E; margin-bottom: 14px; }
-        .dash-feat-card h3 { font-size: 1.35rem; color: #F5F2EB; margin-bottom: 10px; }
-        .dash-feat-card p { font-size: 1.05rem; color: #D1CEC5; }
-
-        .testimonials-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
-            gap: clamp(1.25rem, 3vw, 2rem); max-width: 1320px; margin: 0 auto;
-        }
-        .testimonial-card {
-            background-color: #22261E; border: 1px solid #3A4033; border-left: 4px solid #E09F3E;
-            padding: clamp(24px, 3vw, 36px) clamp(20px, 2.5vw, 30px); border-radius: 12px;
-            display: flex; flex-direction: column; justify-content: space-between; gap: 24px;
-        }
-        .testimonial-card blockquote { font-family: 'Lora', Georgia, serif; font-style: italic; font-size: 1.15rem; color: #F5F2EB; line-height: 1.6; }
-        .author-info { border-top: 1px solid #3A4033; padding-top: 16px; }
-        .author-info strong { display: block; font-size: 1.1rem; color: #84A98C; margin-bottom: 4px; }
-        .author-info span { font-size: 0.95rem; color: #D1CEC5; }
-
-        #contact {
-            padding: clamp(60px, 7vw, 80px) clamp(16px, 5vw, 48px) 40px;
-            background-color: #0f120e; border-top: 1px solid #2A3025; color: #F5F2EB;
-        }
-        .footer-container {
-            max-width: 1320px; margin: 0 auto clamp(40px, 5vw, 60px);
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: clamp(2rem, 4vw, 3rem);
-        }
-        .footer-brand h2 { font-family: 'Lora', Georgia, serif; font-style: italic; font-size: 2rem; color: #F5F2EB; margin-bottom: 12px; }
-        .footer-brand p, .footer-contact p { font-size: 1.05rem; color: #D1CEC5; }
-        .footer-links h3, .footer-contact h3 { font-size: 1.2rem; color: #E09F3E; margin-bottom: 14px; }
-        .footer-links ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-        .footer-links ul li a { display: inline-flex; align-items: center; min-height: 48px; color: #D1CEC5; transition: color 0.2s ease; }
-        .footer-links ul li a:hover { color: #84A98C; }
-        .footer-email {
-            display: inline-flex; align-items: center; min-height: 48px; margin-top: 8px;
-            font-weight: bold; color: #84A98C; text-decoration: underline; word-break: break-all;
-        }
-        .footer-bottom {
-            max-width: 1320px; margin: 0 auto; padding-top: 28px; border-top: 1px solid #22261E; text-align: center; font-size: 0.95rem; color: #B5B2A8;
-        }
-
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 16px 16px;
-                background: linear-gradient(to bottom, rgba(22, 25, 20, 0.95) 0%, rgba(22, 25, 20, 0.4) 75%, rgba(22, 25, 20, 0) 100%);
-            }
-            header > nav { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-            header > nav::-webkit-scrollbar { display: none; }
-            header > nav > ul { justify-content: center; gap: 1rem; }
-            header > nav > ul > li a { font-size: 0.95rem; padding: 6px 10px; min-height: 44px; }
-            #hero { min-height: 80vh; padding-top: 120px; }
-        }
-
-        @media (max-width: 360px) {
-            html { font-size: 92%; }
-            header { padding: 12px 8px; }
-            .brand-logo { font-size: 1.35rem; }
-            header > nav > ul { gap: 0.35rem; }
-            header > nav > ul > li a { padding: 6px 6px; font-size: 0.85rem; }
-            .hero-btn { width: 100%; padding: 14px 16px; }
-            .feature-img { height: 150px; }
-        }
-
-        @media (min-width: 1800px) {
-            html { font-size: 125%; }
-            .feature-grid, .about-container, .dash-feat-grid, .testimonials-grid, .footer-container, .footer-bottom { max-width: 1640px; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            html { scroll-behavior: auto; }
-            *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
-            .feature-card:hover, .dash-feat-card:hover, .feature-card:hover .feature-img img { transform: none !important; }
-        }
-    </style>
 </head>
 <body>
-    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <a href="#main-content" class="skip-link" data-i18n="skip_link">Skip to main content</a>
 
     <header id="navbar">
-        <a href="#hero" class="brand-logo">AgroShift</a>
+        <a href="#hero" class="brand-logo" aria-label="AgroShift Home">
+            <svg class="brand-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect width="64" height="64" rx="14" fill="#166534" stroke="#FEFCE8" stroke-width="2"/>
+                <circle cx="32" cy="32" r="20" fill="none" stroke="#FDE047" stroke-width="2" stroke-dasharray="6 6"/>
+                <path d="M20 44L32 20L44 44" fill="none" stroke="#FEFCE8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="32" cy="20" r="4" fill="#FDE047"/>
+            </svg>
+            <span>AgroShift</span>
+        </a>
         <nav aria-label="Primary Navigation">
             <ul>
-                <li><a href="#hero">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="./dashboard/index.html">Dashboard</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#hero" data-i18n="nav_home">Home</a></li>
+                <li><a href="#about" data-i18n="nav_about">About</a></li>
+                <li><a href="./dashboard/index.html" data-i18n="nav_dashboard">Dashboard</a></li>
+                <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+                <li>
+                    <div class="controls-wrapper" role="region" aria-label="Language Selector">
+                        <label for="language-selector" class="skip-link">Select Language</label>
+                        <select id="language-selector" class="lang-select" aria-label="Select regional language">
+                            <option value="en">English</option>
+                            <option value="hi">हिन्दी</option>
+                            <option value="pa">ਪੰਜਾਬੀ</option>
+                            <option value="ml">മലയാളം</option>
+                            <option value="mr">मराठी</option>
+                            <option value="ta">தமிழ்</option>
+                        </select>
+                    </div>
+                </li>
             </ul>
         </nav>
     </header>
 
     <main id="main-content">
         <section id="hero" aria-labelledby="hero-heading">
-            <h1 id="hero-heading">Smarter.<br>Healthier.<br>Sustainable.</h1>
-            <p>Satellite-guided crop planning for resilient farms.</p>
-            <a href="./dashboard/index.html" class="hero-btn">Check Your Farm</a>
+            <h1 id="hero-heading" data-i18n="hero_heading">Smarter.<br>Healthier.<br>Sustainable.</h1>
+            <p data-i18n="hero_sub">Satellite-guided crop planning for resilient farms.</p>
+            <div class="hero-actions">
+                <a href="./dashboard/index.html" class="hero-btn" data-i18n="hero_btn">Check Your Farm</a>
+            </div>
         </section>
 
         <section id="features" aria-labelledby="features-heading">
             <div class="features-header">
-                <h2 id="features-heading">Powered by Satellite Intelligence</h2>
-                <p>Built for farmers, backed by global research and space data.</p>
+                <h2 id="features-heading" data-i18n="features_heading">Powered by Satellite Intelligence</h2>
+                <p data-i18n="features_sub">Built for farmers, backed by global research and space data.</p>
             </div>
             <div class="feature-grid">
                 <article class="feature-card">
                     <div class="feature-img">
                         <img src="./images/feature1.jpeg" alt="Satellite orbiting Earth capturing farm data" loading="lazy" decoding="async" width="400" height="200">
                     </div>
-                    <h3>Satellite Insights</h3>
-                    <p>Real-time monitoring using NASA and ISRO data streams like NISAR, SMAP, and Sentinel.</p>
+                    <h3 data-i18n="feat1_title">Satellite Insights</h3>
+                    <p data-i18n="feat1_desc">Real-time monitoring using NASA and ISRO data streams like NISAR, SMAP, and Sentinel.</p>
                 </article>
                 <article class="feature-card">
                     <div class="feature-img">
                         <img src="./images/feature2.jpeg" alt="Healthy green crop rows in fertile soil" loading="lazy" decoding="async" width="400" height="200">
                     </div>
-                    <h3>Smart Crop Planning</h3>
-                    <p>AI-driven recommendations to optimize crop rotation choices and boost long-term yields.</p>
+                    <h3 data-i18n="feat2_title">Smart Crop Planning</h3>
+                    <p data-i18n="feat2_desc">AI-driven recommendations to optimize crop rotation choices and boost long-term yields.</p>
                 </article>
                 <article class="feature-card">
                     <div class="feature-img">
                         <img src="./images/feature3.jpeg" alt="Irrigated farmland showing moisture balance" loading="lazy" decoding="async" width="400" height="200">
                     </div>
-                    <h3>Water &amp; Soil Analysis</h3>
-                    <p>Track soil moisture levels and nutrient health precisely to conserve resources.</p>
+                    <h3 data-i18n="feat3_title">Water &amp; Soil Analysis</h3>
+                    <p data-i18n="feat3_desc">Track soil moisture levels and nutrient health precisely to conserve resources.</p>
                 </article>
             </div>
         </section>
@@ -265,18 +95,18 @@
         <section id="about" aria-labelledby="about-heading">
             <div class="about-container">
                 <div class="about-text">
-                    <span class="section-tag">Our Mission</span>
-                    <h2 id="about-heading">Turning Space Data Into Everyday Harvests</h2>
-                    <p>Unpredictable weather, depleting groundwater, and tired soil make farming harder every season. Most satellite tools are built for scientists—not the people actually working the land.</p>
-                    <p>AgroShift translates live NASA and ISRO Earth-observation feeds into plain, step-by-step guidance so every farmer can protect their soil, save water, and grow higher yields.</p>
+                    <span class="section-tag" data-i18n="about_tag">Our Mission</span>
+                    <h2 id="about-heading" data-i18n="about_heading">Turning Space Data Into Everyday Harvests</h2>
+                    <p data-i18n="about_p1">Unpredictable weather, depleting groundwater, and tired soil make farming harder every season. Most satellite tools are built for scientists—not the people actually working the land.</p>
+                    <p data-i18n="about_p2">AgroShift translates live NASA and ISRO Earth-observation feeds into plain, step-by-step guidance so every farmer can protect their soil, save water, and grow higher yields.</p>
                     <div class="about-stats">
                         <div class="stat-box">
                             <strong>14–27%</strong>
-                            <span>Higher yield via smart crop rotation</span>
+                            <span data-i18n="stat1_label">Higher yield via smart crop rotation</span>
                         </div>
                         <div class="stat-box">
                             <strong>30%</strong>
-                            <span>Water saved with soil moisture alerts</span>
+                            <span data-i18n="stat2_label">Water saved with soil moisture alerts</span>
                         </div>
                     </div>
                 </div>
@@ -288,60 +118,60 @@
 
         <section id="dashboard-features" aria-labelledby="dash-heading">
             <div class="dash-feat-header">
-                <span class="section-tag">Inside the Dashboard</span>
-                <h2 id="dash-heading">Built for the Field: Core Features</h2>
-                <p>Designed with zero clutter, high contrast, and simple visual cues so every tool is easy to navigate.</p>
+                <span class="section-tag" data-i18n="dash_tag">Inside the Dashboard</span>
+                <h2 id="dash-heading" data-i18n="dash_heading">Built for the Field: Core Features</h2>
+                <p data-i18n="dash_sub">Designed with zero clutter, high contrast, and simple visual cues so every tool is easy to navigate.</p>
             </div>
             <div class="dash-feat-grid">
                 <article class="dash-feat-card">
                     <div class="feat-icon-num" aria-hidden="true">01</div>
-                    <h3>Soil Health Tracker</h3>
-                    <p>Live satellite readings on nitrogen, phosphorus, and organic carbon levels to prevent soil exhaustion before it starts.</p>
+                    <h3 data-i18n="df1_title">Soil Health Tracker</h3>
+                    <p data-i18n="df1_desc">Live satellite readings on nitrogen, phosphorus, and organic carbon levels to prevent soil exhaustion before it starts.</p>
                 </article>
                 <article class="dash-feat-card">
                     <div class="feat-icon-num" aria-hidden="true">02</div>
-                    <h3>Smart Crop Rotation Planner</h3>
-                    <p>Step-by-step guidance on which crops to alternate each season to naturally restore nutrients and boost yields by up to 27%.</p>
+                    <h3 data-i18n="df2_title">Smart Crop Rotation Planner</h3>
+                    <p data-i18n="df2_desc">Step-by-step guidance on which crops to alternate each season to naturally restore nutrients and boost yields by up to 27%.</p>
                 </article>
                 <article class="dash-feat-card">
                     <div class="feat-icon-num" aria-hidden="true">03</div>
-                    <h3>Water &amp; Irrigation Advisor</h3>
-                    <p>Real-time soil moisture mapping powered by NASA SMAP to prevent over-watering and conserve vital groundwater.</p>
+                    <h3 data-i18n="df3_title">Water &amp; Irrigation Advisor</h3>
+                    <p data-i18n="df3_desc">Real-time soil moisture mapping powered by NASA SMAP to prevent over-watering and conserve vital groundwater.</p>
                 </article>
                 <article class="dash-feat-card">
                     <div class="feat-icon-num" aria-hidden="true">04</div>
-                    <h3>Local Weather &amp; Risk Alerts</h3>
-                    <p>Early warnings for extreme weather, droughts, or sudden frost tailored specifically to your farm sector.</p>
+                    <h3 data-i18n="df4_title">Local Weather &amp; Risk Alerts</h3>
+                    <p data-i18n="df4_desc">Early warnings for extreme weather, droughts, or sudden frost tailored specifically to your farm sector.</p>
                 </article>
             </div>
         </section>
 
         <section id="testimonials" aria-labelledby="testimonials-heading">
             <div class="testimonials-header">
-                <span class="section-tag">Field Impact</span>
-                <h2 id="testimonials-heading">Trusted by Growers on the Ground</h2>
-                <p>How simple, satellite-backed guidance is helping farms thrive across changing seasons.</p>
+                <span class="section-tag" data-i18n="test_tag">Field Impact</span>
+                <h2 id="testimonials-heading" data-i18n="test_heading">Trusted by Growers on the Ground</h2>
+                <p data-i18n="test_sub">How simple, satellite-backed guidance is helping farms thrive across changing seasons.</p>
             </div>
             <div class="testimonials-grid">
                 <article class="testimonial-card">
-                    <blockquote>"Before AgroShift, I guessed when to water and what to plant next. Following the rotation plan boosted my harvest by 20% while using far less groundwater."</blockquote>
+                    <blockquote data-i18n="t1_quote">"Before AgroShift, I guessed when to water and what to plant next. Following the rotation plan boosted my harvest by 20% while using far less groundwater."</blockquote>
                     <div class="author-info">
-                        <strong>Ramesh Nair</strong>
-                        <span>Paddy &amp; Pulse Farmer • 8 Acres</span>
+                        <strong data-i18n="t1_name">Ramesh Nair</strong>
+                        <span data-i18n="t1_role">Paddy &amp; Pulse Farmer • 8 Acres</span>
                     </div>
                 </article>
                 <article class="testimonial-card">
-                    <blockquote>"Most apps are full of confusing charts. AgroShift gives clear, simple steps I can read in seconds out in the field—it actually respects a farmer's time."</blockquote>
+                    <blockquote data-i18n="t2_quote">"Most apps are full of confusing charts. AgroShift gives clear, simple steps I can read in seconds out in the field—it actually respects a farmer's time."</blockquote>
                     <div class="author-info">
-                        <strong>Meera Devi</strong>
-                        <span>Vegetable &amp; Millet Grower • 5 Acres</span>
+                        <strong data-i18n="t2_name">Meera Devi</strong>
+                        <span data-i18n="t2_role">Vegetable &amp; Millet Grower • 5 Acres</span>
                     </div>
                 </article>
                 <article class="testimonial-card">
-                    <blockquote>"Catching soil moisture drops early saved my entire winter crop during a dry spell. It feels like having an agricultural scientist in my pocket."</blockquote>
+                    <blockquote data-i18n="t3_quote">"Catching soil moisture drops early saved my entire winter crop during a dry spell. It feels like having an agricultural scientist in my pocket."</blockquote>
                     <div class="author-info">
-                        <strong>Arjun Patel</strong>
-                        <span>Cotton &amp; Soybean Farmer • 14 Acres</span>
+                        <strong data-i18n="t3_name">Arjun Patel</strong>
+                        <span data-i18n="t3_role">Cotton &amp; Soybean Farmer • 14 Acres</span>
                     </div>
                 </article>
             </div>
@@ -351,28 +181,437 @@
     <footer id="contact">
         <div class="footer-container">
             <div class="footer-brand">
-                <h2>AgroShift</h2>
-                <p>Satellite intelligence for resilient, sustainable farming. Built for the NASA Space Apps Challenge.</p>
+                <div class="footer-brand-title">
+                    <svg class="brand-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <rect width="64" height="64" rx="14" fill="#166534" stroke="#FEFCE8" stroke-width="2"/>
+                        <circle cx="32" cy="32" r="20" fill="none" stroke="#FDE047" stroke-width="2" stroke-dasharray="6 6"/>
+                        <path d="M20 44L32 20L44 44" fill="none" stroke="#FEFCE8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="32" cy="20" r="4" fill="#FDE047"/>
+                    </svg>
+                    <h2>AgroShift</h2>
+                </div>
+                <p data-i18n="footer_desc">Satellite intelligence for resilient, sustainable farming. Built for the NASA Space Apps Challenge.</p>
             </div>
             <div class="footer-links">
-                <h3>Quick Links</h3>
+                <h3 data-i18n="footer_links_title">Quick Links</h3>
                 <ul>
-                    <li><a href="#hero">Home</a></li>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="./dashboard/index.html">Dashboard</a></li>
-                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#hero" data-i18n="nav_home">Home</a></li>
+                    <li><a href="#features" data-i18n="footer_features">Features</a></li>
+                    <li><a href="#about" data-i18n="nav_about">About</a></li>
+                    <li><a href="./dashboard/index.html" data-i18n="nav_dashboard">Dashboard</a></li>
+                    <li><a href="#testimonials" data-i18n="footer_testimonials">Testimonials</a></li>
                 </ul>
             </div>
             <div class="footer-contact">
-                <h3>Get in Touch</h3>
-                <p>Have questions, feedback, or want to collaborate with our team?</p>
+                <h3 data-i18n="footer_contact_title">Get in Touch</h3>
+                <p data-i18n="footer_contact_desc">Have questions, feedback, or want to collaborate with our team?</p>
                 <a href="mailto:example.com" class="footer-email">example.com</a>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 AgroShift. All rights reserved. Powered by open-source satellite data.</p>
+            <p data-i18n="footer_copy">&copy; 2026 AgroShift. All rights reserved. Powered by open-source satellite data.</p>
         </div>
     </footer>
+
+    <script>
+        const translations = {
+            en: {
+                skip_link: "Skip to main content",
+                nav_home: "Home",
+                nav_about: "About",
+                nav_dashboard: "Dashboard",
+                nav_contact: "Contact",
+                hero_heading: "Smarter.<br>Healthier.<br>Sustainable.",
+                hero_sub: "Satellite-guided crop planning for resilient farms.",
+                hero_btn: "Check Your Farm",
+                features_heading: "Powered by Satellite Intelligence",
+                features_sub: "Built for farmers, backed by global research and space data.",
+                feat1_title: "Satellite Insights",
+                feat1_desc: "Real-time monitoring using NASA and ISRO data streams like NISAR, SMAP, and Sentinel.",
+                feat2_title: "Smart Crop Planning",
+                feat2_desc: "AI-driven recommendations to optimize crop rotation choices and boost long-term yields.",
+                feat3_title: "Water & Soil Analysis",
+                feat3_desc: "Track soil moisture levels and nutrient health precisely to conserve resources.",
+                about_tag: "Our Mission",
+                about_heading: "Turning Space Data Into Everyday Harvests",
+                about_p1: "Unpredictable weather, depleting groundwater, and tired soil make farming harder every season. Most satellite tools are built for scientists—not the people actually working the land.",
+                about_p2: "AgroShift translates live NASA and ISRO Earth-observation feeds into plain, step-by-step guidance so every farmer can protect their soil, save water, and grow higher yields.",
+                stat1_label: "Higher yield via smart crop rotation",
+                stat2_label: "Water saved with soil moisture alerts",
+                dash_tag: "Inside the Dashboard",
+                dash_heading: "Built for the Field: Core Features",
+                dash_sub: "Designed with zero clutter, high contrast, and simple visual cues so every tool is easy to navigate.",
+                df1_title: "Soil Health Tracker",
+                df1_desc: "Live satellite readings on nitrogen, phosphorus, and organic carbon levels to prevent soil exhaustion before it starts.",
+                df2_title: "Smart Crop Rotation Planner",
+                df2_desc: "Step-by-step guidance on which crops to alternate each season to naturally restore nutrients and boost yields by up to 27%.",
+                df3_title: "Water & Irrigation Advisor",
+                df3_desc: "Real-time soil moisture mapping powered by NASA SMAP to prevent over-watering and conserve vital groundwater.",
+                df4_title: "Local Weather & Risk Alerts",
+                df4_desc: "Early warnings for extreme weather, droughts, or sudden frost tailored specifically to your farm sector.",
+                test_tag: "Field Impact",
+                test_heading: "Trusted by Growers on the Ground",
+                test_sub: "How simple, satellite-backed guidance is helping farms thrive across changing seasons.",
+                t1_quote: "\"Before AgroShift, I guessed when to water and what to plant next. Following the rotation plan boosted my harvest by 20% while using far less groundwater.\"",
+                t1_name: "Ramesh Nair",
+                t1_role: "Paddy & Pulse Farmer • 8 Acres",
+                t2_quote: "\"Most apps are full of confusing charts. AgroShift gives clear, simple steps I can read in seconds out in the field—it actually respects a farmer's time.\"",
+                t2_name: "Meera Devi",
+                t2_role: "Vegetable & Millet Grower • 5 Acres",
+                t3_quote: "\"Catching soil moisture drops early saved my entire winter crop during a dry spell. It feels like having an agricultural scientist in my pocket.\"",
+                t3_name: "Arjun Patel",
+                t3_role: "Cotton & Soybean Farmer • 14 Acres",
+                footer_desc: "Satellite intelligence for resilient, sustainable farming. Built for the NASA Space Apps Challenge.",
+                footer_links_title: "Quick Links",
+                footer_features: "Features",
+                footer_testimonials: "Testimonials",
+                footer_contact_title: "Get in Touch",
+                footer_contact_desc: "Have questions, feedback, or want to collaborate with our team?",
+                footer_copy: "© 2026 AgroShift. All rights reserved. Powered by open-source satellite data."
+            },
+            hi: {
+                skip_link: "मुख्य सामग्री पर जाएं",
+                nav_home: "होम",
+                nav_about: "हमारे बारे में",
+                nav_dashboard: "डैशबोर्ड",
+                nav_contact: "संपर्क",
+                hero_heading: "समझदार।<br>स्वस्थ।<br>टिकाऊ खेती।",
+                hero_sub: "मजबूत और लाभदायक खेती के लिए उपग्रह-आधारित फसल योजना।",
+                hero_btn: "अपना खेत जांचें",
+                features_heading: "उपग्रह बुद्धिमत्ता से संचालित",
+                features_sub: "किसानों के लिए निर्मित, वैश्विक अनुसंधान और अंतरिक्ष डेटा द्वारा समर्थित।",
+                feat1_title: "उपग्रह जानकारी",
+                feat1_desc: "NISAR, SMAP और Sentinel जैसे NASA और ISRO डेटा स्ट्रीम का उपयोग करके सटीक निगरानी।",
+                feat2_title: "स्मार्ट फसल योजना",
+                feat2_desc: "फसल चक्र को बेहतर बनाने और लंबे समय तक पैदावार बढ़ाने के लिए AI-आधारित सुझाव।",
+                feat3_title: "जल और मिट्टी विश्लेषण",
+                feat3_desc: "संसाधनों को बचाने के लिए मिट्टी की नमी और पोषक तत्वों की सटीक जांच करें।",
+                about_tag: "हमारा मिशन",
+                about_heading: "अंतरिक्ष डेटा को रोज़मर्रा की अच्छी फसल में बदलना",
+                about_p1: "अनिश्चित मौसम, घटता भूजल और कमजोर मिट्टी हर मौसम में खेती को कठिन बना देते हैं। अधिकांश उपग्रह उपकरण वैज्ञानिकों के लिए बने हैं—खेत में काम करने वाले किसानों के लिए नहीं।",
+                about_p2: "AgroShift लाइव NASA और ISRO डेटा को सरल, चरण-दर-चरण सलाह में बदलता है ताकि हर किसान अपनी मिट्टी की रक्षा कर सके, पानी बचा सके और अधिक उपज प्राप्त कर सके।",
+                stat1_label: "स्मार्ट फसल चक्र से अधिक पैदावार",
+                stat2_label: "मिट्टी की नमी के अलर्ट से पानी की बचत",
+                dash_tag: "डैशबोर्ड के अंदर",
+                dash_heading: "खेत के लिए निर्मित: मुख्य विशेषताएं",
+                dash_sub: "बिना किसी उलझन के, स्पष्ट रंगों और सरल संकेतों के साथ डिज़ाइन किया गया।",
+                df1_title: "मिट्टी स्वास्थ्य ट्रैकर",
+                df1_desc: "मिट्टी की उर्वरता को कम होने से बचाने के लिए नाइट्रोजन, फास्फोरस और कार्बन स्तर की लाइव जानकारी।",
+                df2_title: "स्मार्ट फसल चक्र योजनाकार",
+                df2_desc: "हर मौसम में कौन-सी फसल बदलकर बोएं, इसकी आसान सलाह जिससे उपज 27% तक बढ़ सकती है।",
+                df3_title: "जल और सिंचाई सलाहकार",
+                df3_desc: "अधिक सिंचाई रोकने और भूजल बचाने के लिए NASA SMAP द्वारा संचालित मिट्टी की नमी का मानचित्र।",
+                df4_title: "स्थानीय मौसम और जोखिम अलर्ट",
+                df4_desc: "आपके खेत के क्षेत्र के अनुसार सूखे, भारी बारिश या पाले की समय से पहले चेतावनी।",
+                test_tag: "ज़मीनी प्रभाव",
+                test_heading: "खेतों में काम करने वाले किसानों का भरोसा",
+                test_sub: "कैसे सरल, उपग्रह-आधारित मार्गदर्शन बदलते मौसम में किसानों की मदद कर रहा है।",
+                t1_quote: "\"AgroShift से पहले मैं अंदाज़े से सिंचाई और बुवाई करता था। फसल चक्र योजना अपनाने से भूजल कम खर्च हुआ और मेरी पैदावार 20% बढ़ गई।\"",
+                t1_name: "रमेश नायर",
+                t1_role: "धान और दलहन किसान • 8 एकड़",
+                t2_quote: "\"ज्यादातर ऐप्स में कठिन चार्ट होते हैं। AgroShift खेत में खड़े-खड़े कुछ ही सेकंड में पढ़ने लायक आसान कदम बताता है।\"",
+                t2_name: "मीरा देवी",
+                t2_role: "सब्जी और बाजरा उत्पादक • 5 एकड़",
+                t3_quote: "\"मिट्टी की नमी कम होने की समय पर सूचना मिलने से सूखे के दौरान मेरी पूरी रबी फसल बच गई। यह जेब में कृषि वैज्ञानिक होने जैसा है।\"",
+                t3_name: "अर्जुन पटेल",
+                t3_role: "कपास और सोयाबीन किसान • 14 एकड़",
+                footer_desc: "टिकाऊ खेती के लिए उपग्रह बुद्धिमत्ता। NASA स्पेस ऐप्स चैलेंज के लिए निर्मित।",
+                footer_links_title: "त्वरित लिंक",
+                footer_features: "विशेषताएं",
+                footer_testimonials: "किसानों के अनुभव",
+                footer_contact_title: "संपर्क करें",
+                footer_contact_desc: "कोई प्रश्न या सुझाव है, या हमारी टीम के साथ जुड़ना चाहते हैं?",
+                footer_copy: "© 2026 AgroShift. सर्वाधिकार सुरक्षित। ओपन-सोर्स उपग्रह डेटा द्वारा संचालित।"
+            },
+            pa: {
+                skip_link: "ਮੁੱਖ ਸਮੱਗਰੀ 'ਤੇ ਜਾਓ",
+                nav_home: "ਮੁੱਖ ਪੰਨਾ",
+                nav_about: "ਸਾਡੇ ਬਾਰੇ",
+                nav_dashboard: "ਡੈਸ਼ਬੋਰਡ",
+                nav_contact: "ਸੰਪਰਕ",
+                hero_heading: "ਸਮਝਦਾਰ।<br>ਸਿਹਤਮੰਦ।<br>ਟਿਕਾਊ ਖੇਤੀ।",
+                hero_sub: "ਮਜ਼ਬੂਤ ਅਤੇ ਲਾਹੇਵੰਦ ਖੇਤਾਂ ਲਈ ਸੈਟੇਲਾਈਟ-ਆਧਾਰਿਤ ਫ਼ਸਲ ਯੋਜਨਾਬੰਦੀ।",
+                hero_btn: "ਆਪਣੇ ਖੇਤ ਦੀ ਜਾਂਚ ਕਰੋ",
+                features_heading: "ਸੈਟੇਲਾਈਟ ਤਕਨੀਕ ਨਾਲ ਲੈਸ",
+                features_sub: "ਕਿਸਾਨਾਂ ਲਈ ਤਿਆਰ, ਵਿਸ਼ਵ ਖੋਜ ਅਤੇ ਪੁਲਾੜ ਡੇਟਾ ਦੇ ਸਹਿਯੋਗ ਨਾਲ।",
+                feat1_title: "ਸੈਟੇਲਾਈਟ ਜਾਣਕਾਰੀ",
+                feat1_desc: "NISAR, SMAP ਅਤੇ Sentinel ਵਰਗੇ NASA ਅਤੇ ISRO ਡੇਟਾ ਸਟ੍ਰੀਮ ਰਾਹੀਂ ਸਹੀ ਨਿਗਰਾਨੀ।",
+                feat2_title: "ਸਮਾਰਟ ਫ਼ਸਲ ਯੋਜਨਾ",
+                feat2_desc: "ਫ਼ਸਲੀ ਚੱਕਰ ਨੂੰ ਬਿਹਤਰ ਬਣਾਉਣ ਅਤੇ ਝਾੜ ਵਧਾਉਣ ਲਈ AI-ਆਧਾਰਿਤ ਸੁਝਾਅ।",
+                feat3_title: "ਪਾਣੀ ਅਤੇ ਮਿੱਟੀ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ",
+                feat3_desc: "ਪਾਣੀ ਅਤੇ ਖਾਦਾਂ ਦੀ ਬਚਤ ਲਈ ਮਿੱਟੀ ਦੀ ਨਮੀ ਅਤੇ ਤਾਕਤ ਦੀ ਸਹੀ ਜਾਂਚ ਕਰੋ।",
+                about_tag: "ਸਾਡਾ ਮਿਸ਼ਨ",
+                about_heading: "ਪੁਲਾੜ ਡੇਟਾ ਨੂੰ ਰੋਜ਼ਾਨਾ ਦੀ ਵਧੀਆ ਫ਼ਸਲ ਵਿੱਚ ਬਦਲਣਾ",
+                about_p1: "ਬੇਮੌਸਮੀ ਬਾਰਿਸ਼, ਡਿੱਗਦਾ ਧਰਤੀ ਹੇਠਲਾ ਪਾਣੀ ਅਤੇ ਕਮਜ਼ੋਰ ਮਿੱਟੀ ਹਰ ਸੀਜ਼ਨ ਵਿੱਚ ਖੇਤੀ ਨੂੰ ਔਖਾ ਬਣਾਉਂਦੇ ਹਨ। ਜ਼ਿਆਦਾਤਰ ਸੈਟੇਲਾਈਟ ਟੂਲ ਵਿਗਿਆਨੀਆਂ ਲਈ ਬਣੇ ਹਨ—ਖੇਤਾਂ ਵਿੱਚ ਕੰਮ ਕਰਨ ਵਾਲੇ ਕਿਸਾਨਾਂ ਲਈ ਨਹੀਂ।",
+                about_p2: "AgroShift ਲਾਈਵ NASA ਅਤੇ ISRO ਡੇਟਾ ਨੂੰ ਸੌਖੀ, ਕਦਮ-ਦਰ-ਕਦਮ ਸਲਾਹ ਵਿੱਚ ਬਦਲਦਾ ਹੈ ਤਾਂ ਜੋ ਹਰ ਕਿਸਾਨ ਆਪਣੀ ਮਿੱਟੀ ਦੀ ਸੰਭਾਲ ਕਰ ਸਕੇ, ਪਾਣੀ ਬਚਾ ਸਕੇ ਅਤੇ ਵੱਧ ਝਾੜ ਲੈ ਸਕੇ।",
+                stat1_label: "ਸਮਾਰਟ ਫ਼ਸਲੀ ਚੱਕਰ ਨਾਲ ਵੱਧ ਝਾੜ",
+                stat2_label: "ਮਿੱਟੀ ਦੀ ਨਮੀ ਦੇ ਅਲਰਟ ਨਾਲ ਪਾਣੀ ਦੀ ਬਚਤ",
+                dash_tag: "ਡੈਸ਼ਬੋਰਡ ਦੇ ਅੰਦਰ",
+                dash_heading: "ਖੇਤ ਲਈ ਤਿਆਰ: ਮੁੱਖ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ",
+                dash_sub: "ਬਿਨਾਂ ਕਿਸੇ ਉਲਝਣ ਦੇ, ਸਾਫ਼ ਰੰਗਾਂ ਅਤੇ ਸੌਖੇ ਇਸ਼ਾਰਿਆਂ ਨਾਲ ਤਿਆਰ ਕੀਤਾ ਗਿਆ।",
+                df1_title: "ਮਿੱਟੀ ਸਿਹਤ ਟਰੈਕਰ",
+                df1_desc: "ਮਿੱਟੀ ਦੀ ਉਪਜਾਊ ਸ਼ਕਤੀ ਘਟਣ ਤੋਂ ਰੋਕਣ ਲਈ ਨਾਈਟ੍ਰੋਜਨ, ਫਾਸਫੋਰਸ ਅਤੇ ਕਾਰਬਨ ਪੱਧਰ ਦੀ ਲਾਈਵ ਜਾਣਕਾਰੀ।",
+                df2_title: "ਸਮਾਰਟ ਫ਼ਸਲੀ ਚੱਕਰ ਯੋਜਨਾਕਾਰ",
+                df2_desc: "ਹਰ ਸੀਜ਼ਨ ਵਿੱਚ ਕਿਹੜੀ ਫ਼ਸਲ ਬਦਲ ਕੇ ਬੀਜਣੀ ਹੈ, ਇਸ ਦੀ ਸੌਖੀ ਸਲਾਹ ਜਿਸ ਨਾਲ ਝਾੜ 27% ਤੱਕ ਵਧ ਸਕਦਾ ਹੈ।",
+                df3_title: "ਪਾਣੀ ਅਤੇ ਸਿੰਚਾਈ ਸਲਾਹਕਾਰ",
+                df3_desc: "ਵਾਧੂ ਪਾਣੀ ਰੋਕਣ ਅਤੇ ਧਰਤੀ ਹੇਠਲਾ ਪਾਣੀ ਬਚਾਉਣ ਲਈ NASA SMAP ਰਾਹੀਂ ਮਿੱਟੀ ਦੀ ਨਮੀ ਦਾ ਨਕਸ਼ਾ।",
+                df4_title: "ਸਥਾਨਕ ਮੌਸਮ ਅਤੇ ਜੋਖਮ ਅਲਰਟ",
+                df4_desc: "ਤੁਹਾਡੇ ਖੇਤ ਦੇ ਇਲਾਕੇ ਅਨੁਸਾਰ ਸੋਕੇ, ਤੇਜ਼ ਮੀਂਹ ਜਾਂ ਕੋਰੇ ਦੀ ਸਮੇਂ ਸਿਰ ਚੇਤਾਵਨੀ।",
+                test_tag: "ਜ਼ਮੀਨੀ ਅਸਰ",
+                test_heading: "ਖੇਤਾਂ ਵਿੱਚ ਕੰਮ ਕਰਨ ਵਾਲੇ ਕਿਸਾਨਾਂ ਦਾ ਭਰੋਸਾ",
+                test_sub: "ਕਿਵੇਂ ਸੌਖੀ, ਸੈਟੇਲਾਈਟ-ਆਧਾਰਿਤ ਸਲਾਹ ਬਦਲਦੇ ਮੌਸਮਾਂ ਵਿੱਚ ਕਿਸਾਨਾਂ ਦੀ ਮਦਦ ਕਰ ਰਹੀ ਹੈ।",
+                t1_quote: "\"AgroShift ਤੋਂ ਪਹਿਲਾਂ ਮੈਂ ਅੰਦਾਜ਼ੇ ਨਾਲ ਪਾਣੀ ਲਾਉਂਦਾ ਅਤੇ ਬਿਜਾਈ ਕਰਦਾ ਸੀ। ਫ਼ਸਲੀ ਚੱਕਰ ਯੋਜਨਾ ਅਪਣਾਉਣ ਨਾਲ ਧਰਤੀ ਹੇਠਲਾ ਪਾਣੀ ਘੱਟ ਲੱਗਾ ਅਤੇ ਮੇਰਾ ਝਾੜ 20% ਵਧ ਗਿਆ।\"",
+                t1_name: "ਰਮੇਸ਼ ਨਾਇਰ",
+                t1_role: "ਝੋਨਾ ਅਤੇ ਦਾਲਾਂ ਦਾ ਕਿਸਾਨ • 8 ਏਕੜ",
+                t2_quote: "\"ਜ਼ਿਆਦਾਤਰ ਐਪਾਂ ਵਿੱਚ ਔਖੇ ਚਾਰਟ ਹੁੰਦੇ ਹਨ। AgroShift ਖੇਤ ਵਿੱਚ ਖੜ੍ਹੇ-ਖੜ੍ਹੇ ਕੁਝ ਸਕਿੰਟਾਂ ਵਿੱਚ ਪੜ੍ਹਨ ਯੋਗ ਸੌਖੇ ਕਦਮ ਦੱਸਦਾ ਹੈ।\"",
+                t2_name: "ਮੀਰਾ ਦੇਵੀ",
+                t2_role: "ਸਬਜ਼ੀ ਅਤੇ ਬਾਜਰਾ ਉਤਪਾਦਕ • 5 ਏਕੜ",
+                t3_quote: "\"ਮਿੱਟੀ ਦੀ ਨਮੀ ਘਟਣ ਦੀ ਸਮੇਂ ਸਿਰ ਸੂਚਨਾ ਮਿਲਣ ਨਾਲ ਸੋਕੇ ਦੌਰਾਨ ਮੇਰੀ ਪੂਰੀ ਹਾੜ੍ਹੀ ਦੀ ਫ਼ਸਲ ਬਚ ਗਈ। ਇਹ ਜੇਬ ਵਿੱਚ ਖੇਤੀ ਵਿਗਿਆਨੀ ਹੋਣ ਵਰਗਾ ਹੈ।\"",
+                t3_name: "ਅਰਜੁਨ ਪਟੇਲ",
+                t3_role: "ਕਪਾਹ ਅਤੇ ਸੋਇਆਬੀਨ ਕਿਸਾਨ • 14 ਏਕੜ",
+                footer_desc: "ਟਿਕਾਊ ਖੇਤੀ ਲਈ ਸੈਟੇਲਾਈਟ ਤਕਨੀਕ। NASA ਸਪੇਸ ਐਪਸ ਚੈਲੇਂਜ ਲਈ ਤਿਆਰ।",
+                footer_links_title: "ਤੇਜ਼ ਲਿੰਕ",
+                footer_features: "ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ",
+                footer_testimonials: "ਕਿਸਾਨਾਂ ਦੇ ਤਜਰਬੇ",
+                footer_contact_title: "ਸੰਪਰਕ ਕਰੋ",
+                footer_contact_desc: "ਕੋਈ ਸਵਾਲ ਜਾਂ ਸੁਝਾਅ ਹੈ, ਜਾਂ ਸਾਡੀ ਟੀਮ ਨਾਲ ਜੁੜਨਾ ਚਾਹੁੰਦੇ ਹੋ?",
+                footer_copy: "© 2026 AgroShift. ਸਾਰੇ ਹੱਕ ਰਾਖਵੇਂ ਹਨ। ਓਪਨ-ਸੋਰਸ ਸੈਟੇਲਾਈਟ ਡੇਟਾ ਦੁਆਰਾ ਸੰਚਾਲਿਤ।"
+            },
+            ml: {
+                skip_link: "പ്രധാന ഉള്ളടക്കത്തിലേക്ക് കടക്കുക",
+                nav_home: "ഹോം",
+                nav_about: "ഞങ്ങളെക്കുറിച്ച്",
+                nav_dashboard: "ഡാഷ്‌ബോർഡ്",
+                nav_contact: "ബന്ധപ്പെടുക",
+                hero_heading: "മികച്ചത്.<br>ആരോഗ്യകരം.<br>സുസ്ഥിര കൃഷി.",
+                hero_sub: "കരുത്തുറ്റ കൃഷിയിടങ്ങൾക്കായി ഉപഗ്രഹ അധിഷ്ഠിത വിള ആസൂത്രണം.",
+                hero_btn: "നിങ്ങളുടെ കൃഷിയിടം പരിശോധിക്കുക",
+                features_heading: "ഉപഗ്രഹ സാങ്കേതികവിദ്യയുടെ കരുത്തിൽ",
+                features_sub: "കർഷകർക്കായി നിർമ്മിച്ചത്, ആഗോള ഗവേഷണത്തിന്റെയും ബഹിരാകാശ ഡാറ്റയുടെയും പിൻബലത്തോടെ.",
+                feat1_title: "ഉപഗ്രഹ വിവരങ്ങൾ",
+                feat1_desc: "NISAR, SMAP, Sentinel തുടങ്ങിയ NASA, ISRO ഡാറ്റ സ്ട്രീമുകൾ ഉപയോഗിച്ചുള്ള തത്സമയ നിരീക്ഷണം.",
+                feat2_title: "സ്മാർട്ട് വിള ആസൂത്രണം",
+                feat2_desc: "വിളമാറ്റം മെച്ചപ്പെടുത്താനും ദീർഘകാല വിളവ് വർദ്ധിപ്പിക്കാനുമുള്ള AI നിർദ്ദേശങ്ങൾ.",
+                feat3_title: "ജലവും മണ്ണും വിശകലനം",
+                feat3_desc: "വിഭവങ്ങൾ സംരക്ഷിക്കുന്നതിനായി മണ്ണിലെ ഈർപ്പവും പോഷകഗുണവും കൃത്യമായി പരിശോധിക്കുക.",
+                about_tag: "ഞങ്ങളുടെ ദൗത്യം",
+                about_heading: "ബഹിരാകാശ ഡാറ്റയെ മികച്ച വിളവെടുപ്പാക്കി മാറ്റുന്നു",
+                about_p1: "പ്രവചനാതീതമായ കാലാവസ്ഥയും കുറയുന്ന ഭൂഗർഭജലവും മണ്ണിന്റെ ഫലഭൂയിഷ്ഠതയില്ലായ്മയും കൃഷി കൂടുതൽ പ്രയാസകരമാക്കുന്നു. മിക്ക ഉപഗ്രഹ ടൂളുകളും ശാസ്ത്രജ്ഞർക്കായി നിർമ്മിച്ചവയാണ്—മണ്ണിൽ പണിയെടുക്കുന്ന കർഷകർക്കല്ല.",
+                about_p2: "ഓരോ കർഷകനും മണ്ണിനെ സംരക്ഷിക്കാനും വെള്ളം ലാഭിക്കാനും കൂടുതൽ വിളവ് നേടാനും കഴിയുന്ന തരത്തിൽ NASA, ISRO ഡാറ്റകളെ ലളിതമായ നിർദ്ദേശങ്ങളാക്കി AgroShift മാറ്റുന്നു.",
+                stat1_label: "വിളമാറ്റത്തിലൂടെയുള്ള അധിക വിളവ്",
+                stat2_label: "മണ്ണിലെ ഈർപ്പ മുന്നറിയിപ്പിലൂടെ ജലസംരക്ഷണം",
+                dash_tag: "ഡാഷ്‌ബോർഡിനുള്ളിൽ",
+                dash_heading: "കൃഷിയിടത്തിനായി നിർമ്മിച്ചത്: പ്രധാന സവിശേഷതകൾ",
+                dash_sub: "സങ്കീർണ്ണതകളില്ലാതെ, വ്യക്തമായ നിറങ്ങളിലും ലളിതമായ അടയാളങ്ങളിലും രൂപകൽപ്പന ചെയ്തത്.",
+                df1_title: "മണ്ണിന്റെ ആരോഗ്യ ട്രാക്കർ",
+                df1_desc: "മണ്ണിന്റെ ഫലഭൂയിഷ്ഠത നഷ്ടപ്പെടുന്നത് തടയാൻ നൈട്രജൻ, ഫോസ്ഫറസ്, ഓർഗാനിക് കാർബൺ എന്നിവയുടെ തത്സമയ അളവുകൾ.",
+                df2_title: "സ്മാർട്ട് വിളമാറ്റ പ്ലാനർ",
+                df2_desc: "മണ്ണിന്റെ പോഷകങ്ങൾ സ്വാഭാവികമായി വീണ്ടെടുക്കാനും വിളവ് 27% വരെ വർദ്ധിപ്പിക്കാനും ഓരോ സീസണിലും മാറി കൃഷി ചെയ്യേണ്ട വിളകളുടെ നിർദ്ദേശങ്ങൾ.",
+                df3_title: "ജലസേചന ഉപദേശകൻ",
+                df3_desc: "അമിതമായ നനവ് ഒഴിവാക്കാനും ഭൂഗർഭജലം സംരക്ഷിക്കാനും NASA SMAP നൽകുന്ന തത്സമയ മണ്ണിലെ ഈർപ്പ ഭൂപടം.",
+                df4_title: "പ്രാദേശിക കാലാവസ്ഥാ മുന്നറിയിപ്പുകൾ",
+                df4_desc: "നിങ്ങളുടെ കൃഷിയിടത്തിന് അനുയോജ്യമായ വരൾച്ച, അതിവൃഷ്ടി, കാലാവസ്ഥാ വ്യതിയാന മുന്നറിയിപ്പുകൾ.",
+                test_tag: "കൃഷിയിടത്തിലെ മാറ്റം",
+                test_heading: "കർഷകരുടെ വിശ്വാസം നേടിയത്",
+                test_sub: "മാറുന്ന കാലാവസ്ഥയിൽ ലളിതമായ ഉപഗ്രഹ നിർദ്ദേശങ്ങൾ കർഷകരെ എങ്ങനെ സഹായിക്കുന്നു.",
+                t1_quote: "\"AgroShift ഉപയോഗിക്കുന്നതിന് മുമ്പ് ഊഹിച്ചാണ് വെള്ളം നനച്ചിരുന്നത്. വിളമാറ്റ പ്ലാൻ പിന്തുടർന്നതോടെ ഭൂഗർഭജലം കുറച്ച് ഉപയോഗിച്ച് 20% കൂടുതൽ വിളവ് ലഭിച്ചു.\"",
+                t1_name: "രമേശ് നായർ",
+                t1_role: "നെല്ല്, പയർ കർഷകൻ • 8 ഏക്കർ",
+                t2_quote: "\"മിക്ക ആപ്പുകളിലും മനസ്സിലാകാത്ത ചാർട്ടുകളാണ്. എന്നാൽ AgroShift കൃഷിയിടത്തിൽ നിൽക്കുമ്പോൾ തന്നെ നിമിഷങ്ങൾക്കുള്ളിൽ വായിക്കാവുന്ന ലളിതമായ നിർദ്ദേശങ്ങൾ നൽകുന്നു.\"",
+                t2_name: "മീര ദേവി",
+                t2_role: "പച്ചക്കറി, ചെറുധാന്യ കർഷക • 5 ഏക്കർ",
+                t3_quote: "\"മണ്ണിലെ ഈർപ്പം കുറയുന്നത് നേരത്തെ അറിയാൻ കഴിഞ്ഞത് വരൾച്ചയിൽ എന്റെ കൃഷിയെ രക്ഷിച്ചു. പോക്കറ്റിൽ ഒരു കൃഷി ശാസ്ത്രജ്ഞൻ ഉള്ളതുപോലെയാണിത്.\"",
+                t3_name: "അർജുൻ പട്ടേൽ",
+                t3_role: "പരുത്തി, സോയാബീൻ കർഷകൻ • 14 ഏക്കർ",
+                footer_desc: "സുസ്ഥിര കൃഷിക്കായുള്ള ഉപഗ്രഹ സാങ്കേതികവിദ്യ. NASA സ്പേസ് ആപ്പ്സ് ചലഞ്ചിനായി നിർമ്മിച്ചത്.",
+                footer_links_title: "പ്രധാന ലിങ്കുകൾ",
+                footer_features: "സവിശേഷതകൾ",
+                footer_testimonials: "അനുഭവങ്ങൾ",
+                footer_contact_title: "ബന്ധപ്പെടുക",
+                footer_contact_desc: "ചോദ്യങ്ങളോ നിർദ്ദേശങ്ങളോ ഉണ്ടോ, അല്ലെങ്കിൽ ഞങ്ങളുടെ ടീമുമായി സഹകരിക്കാൻ ആഗ്രഹിക്കുന്നുണ്ടോ?",
+                footer_copy: "© 2026 AgroShift. എല്ലാ അവകാശങ്ങളും നിക്ഷിപ്തം. ഓപ്പൺ-സോഴ്‌സ് ഉപഗ്രഹ ഡാറ്റയാൽ പ്രവർത്തിക്കുന്നു."
+            },
+            mr: {
+                skip_link: "मुख्य सामग्रीवर जा",
+                nav_home: "मुख्यपृष्ठ",
+                nav_about: "आमच्याबद्दल",
+                nav_dashboard: "डॅशबोर्ड",
+                nav_contact: "संपर्क",
+                hero_heading: "हुशार.<br>निरोगी.<br>शाश्वत शेती.",
+                hero_sub: "अभिमान व समृद्धीसाठी उपग्रह-आधारित पीक नियोजन.",
+                hero_btn: "तुमचे शेत तपासा",
+                features_heading: "उपग्रह बुद्धिमत्तेद्वारे चालित",
+                features_sub: "शेतकऱ्यांसाठी निर्मित, जागतिक संशोधन आणि अंतराळ डेटाद्वारे समर्थित.",
+                feat1_title: "उपग्रह अंतर्दृष्टी",
+                feat1_desc: "NISAR, SMAP आणि Sentinel सारख्या NASA आणि ISRO डेटा प्रवाहांसह रिअल-टाइम निरीक्षण.",
+                feat2_title: "स्मार्ट पीक नियोजन",
+                feat2_desc: "पीक फेरपालट अनुकूल करण्यासाठी आणि दीर्घकालीन उत्पन्न वाढवण्यासाठी AI-संचालित शिफारसी.",
+                feat3_title: "पाणी आणि माती विश्लेषण",
+                feat3_desc: "संसाधने जतन करण्यासाठी मातीतील ओलावा आणि पोषक आरोग्याचा अचूक मागोवा घ्या.",
+                about_tag: "आमचे ध्येय",
+                about_heading: "अंतराळ डेटाचे दररोजच्या पिकांमध्ये रूपांतर करणे",
+                about_p1: "अनिश्चित हवामान, घटणारे भूजल आणि थकलेली माती प्रत्येक हंगामात शेती अधिक कठीण बनवते. बहुतेक उपग्रह साधने वैज्ञानिकांसाठी बनवली आहेत—खरोखर शेतात काम करणाऱ्या लोकांसाठी नाहीत.",
+                about_p2: "AgroShift थेट NASA आणि ISRO पृथ्वी-निरीक्षण फीडचे साध्या, चरण-दर-चरण मार्गदर्शनामध्ये रूपांतर करते जेणेकरून प्रत्येक शेतकरी त्यांच्या मातीचे रक्षण करू शकेल, पाणी वाचवू शकेल आणि उच्च उत्पन्न वाढवू शकेल.",
+                stat1_label: "स्मार्ट पीक फेरपालटाद्वारे उच्च उत्पन्न",
+                stat2_label: "मातीच्या ओलावा चेतावणीसह पाणी वाचवले",
+                dash_tag: "डॅशबोर्डच्या आत",
+                dash_heading: "शेतासाठी तयार केलेले: मुख्य वैशिष्ट्ये",
+                dash_sub: "शून्य गोंधळ, उच्च कॉन्ट्रास्ट आणि साध्या व्हिज्युअल संकेतांसह डिझाइन केलेले जेणेकरून प्रत्येक साधन नेव्हिगेट करणे सोपे होईल.",
+                df1_title: "माती आरोग्य ट्रॅकर",
+                df1_desc: "मातीचा थकवा येण्यापूर्वी रोखण्यासाठी नायट्रोजन, फॉस्फरस आणि सेंद्रिय कार्बन पातळीवर थेट उपग्रह रीडिंग.",
+                df2_title: "स्मार्ट पीक फेरपालट प्लॅनर",
+                df2_desc: "नैसर्गिकरित्या पोषक तत्त्वे पुनर्स्थापित करण्यासाठी आणि 27% पर्यंत उत्पन्न वाढवण्यासाठी प्रत्येक हंगामात कोणती पिके बदलायची याचे चरण-दर-चरण मार्गदर्शन.",
+                df3_title: "पाणी आणि सिंचन सल्लागार",
+                df3_desc: "जादा पाणी देणे टाळण्यासाठी आणि महत्त्वपूर्ण भूजल जतन करण्यासाठी NASA SMAP द्वारे समर्थित रिअल-टाइम माती ओलावा मॅपिंग.",
+                df4_title: "स्थानीय हवामान आणि जोखीम चेतावणी",
+                df4_desc: "अति हवामान, दुष्काळ किंवा अचानक तुषार यासाठी विशेषतः तुमच्या शेती क्षेत्रासाठी तयार केलेल्या पूर्व चेतावणी.",
+                test_tag: "शेतातील प्रभाव",
+                test_heading: "जमिनीवरील उत्पादकांचा विश्वास",
+                test_sub: "बदलत्या ऋतूंमध्ये शेतीला भरभराट होण्यास साधे, उपग्रह-समर्थित मार्गदर्शन कसे मदत करत आहे.",
+                t1_quote: "\"AgroShift च्या आधी, मी कधी पाणी द्यायचे आणि पुढे काय लावायचे याचा अंदाज लावला. फेरपालट योजनेचे अनुसरण केल्यामुळे भूजल खूप कमी वापरताना माझे पीक 20% वाढले.\"",
+                t1_name: "रमेश नायर",
+                t1_role: "धान्य आणि कडधान्य शेतकरी • 8 एकर",
+                t2_quote: "\"बहुतेक ॲप्स गोंधळात टाकणाऱ्या चार्ट्सने भरलेले असतात. AgroShift शेतात सेकंदात वाचू शकेन अशी स्पष्ट, सोपी पायऱ्या देते—हे खऱ्या अर्थाने शेतकऱ्याच्या वेळेचा आदर करते.\"",
+                t2_name: "मीरा देवी",
+                t2_role: "भाजीपाला आणि बाजरी उत्पादक • 5 एकर",
+                t3_quote: "\"कोरड्या काळात मातीतील ओलावा कमी झाल्याचे लवकर लक्षात आल्याने माझी संपूर्ण हिवाळी पिके वाचली. माझ्या खिशात कृषी वैज्ञानिक असल्यासारखे वाटते.\"",
+                t3_name: "अर्जुन पटेल",
+                t3_role: "कापूस आणि सोयाबीन शेतकरी • 14 एकर",
+                footer_desc: "लवचिक, शाश्वत शेतीसाठी उपग्रह बुद्धिमत्ता. NASA स्पेस अप्स चॅलेंजसाठी तयार केलेले.",
+                footer_links_title: "त्वरित दुवे",
+                footer_features: "वैशिष्ट्ये",
+                footer_testimonials: "प्रशंसापत्रे",
+                footer_contact_title: "संपर्कात रहा",
+                footer_contact_desc: "प्रश्न, अभिप्राय आहेत किंवा आमच्या टीमशी सहकार्य करू इच्छिता?",
+                footer_copy: "© 2026 AgroShift. सर्व हक्क राखीव. ओपन-सोर्स उपग्रह डेटाद्वारे समर्थित."
+            },
+            ta: {
+                skip_link: "முதன்மை உள்ளடக்கத்திற்குச் செல்லவும்",
+                nav_home: "முகப்பு",
+                nav_about: "எங்களைப் பற்றி",
+                nav_dashboard: "டாஷ்போர்டு",
+                nav_contact: "தொடர்பு",
+                hero_heading: "நுண்ணறிவு.<br>ஆரோக்கியம்.<br>நிலையான விவசாயம்.",
+                hero_sub: "மீள்தன்மை கொண்ட பண்ணைகளுக்கான செயற்கைக்கோள் வழிகாட்டப்பட்ட பயிர் திட்டமிடல்.",
+                hero_btn: "உங்கள் பண்ணையைச் சரிபார்க்கவும்",
+                features_heading: "செயற்கைக்கோள் நுண்ணறிவு மூலம் இயக்கப்படுகிறது",
+                features_sub: "விவசாயிகளுக்காக கட்டப்பட்டது, உலகளாவிய ஆராய்ச்சி மற்றும் விண்வெளி தரவுகளால் ஆதரிக்கப்படுகிறது.",
+                feat1_title: "செயற்கைக்கோள் நுண்ணறிவு",
+                feat1_desc: "NISAR, SMAP மற்றும் Sentinel போன்ற NASA மற்றும் ISRO தரவு ஓடைகளைப் பயன்படுத்தி நிகழ்நேர கண்காணிப்பு.",
+                feat2_title: "ஸ்மார்ட் பயிர் திட்டமிடல்",
+                feat2_desc: "பயிர் சுழற்சி தேர்வுகளை மேம்படுத்தவும் நீண்ட கால விளைச்சலை அதிகரிக்கவும் AI-இயக்கப்படும் பரிந்துரைகள்.",
+                feat3_title: "நீர் மற்றும் மண் பகுப்பாய்வு",
+                feat3_desc: "வளங்களைப் பாதுகாக்க மண் ஈரப்பதம் மற்றும் சத்து நிலைகளை துல்லியமாக கண்காணிக்கவும்.",
+                about_tag: "எங்கள் நோக்கம்",
+                about_heading: "விண்வெளி தரவுகளை அன்றாட அறுவடையாக மாற்றுதல்",
+                about_p1: "கணிக்க முடியாத வானிலை, குறையும் நிலத்தடி நீர் மற்றும் சோர்வடைந்த மண் ஆகியவை ஒவ்வொரு பருவத்திலும் விவசாயத்தை கடினமாக்குகின்றன. பெரும்பாலான செயற்கைக்கோள் கருவிகள் விஞ்ஞானிகளுக்காக கட்டமைக்கப்பட்டவை—நிலத்தில் உண்மையில் வேலை செய்பவர்களுக்காக அல்ல.",
+                about_p2: "ஒவ்வொரு விவசாயியும் தங்கள் மண்ணைப் பாதுகாக்கவும், தண்ணீரைச் சேமிக்கவும், அதிக விளைச்சலைப் பெறவும் நேரலை NASA மற்றும் ISRO பூமி-கண்காணிப்பு ஊட்டங்களை எளிய, படிப்படியான வழிகாட்டலாக AgroShift மொழிபெயர்க்கிறது.",
+                stat1_label: "ஸ்மார்ட் பயிர் சுழற்சி மூலம் அதிக விளைச்சல்",
+                stat2_label: "மண் ஈரப்பத எச்சரிக்கைகள் மூலம் சேமிக்கப்பட்ட நீர்",
+                dash_tag: "டாஷ்போர்டுக்குள்",
+                dash_heading: "புலத்திற்காக கட்டப்பட்டது: முக்கிய அம்சங்கள்",
+                dash_sub: "பூஜ்ஜியக் குழப்பம், அதிக மாறுபாடு மற்றும் எளிய காட்சி குறிப்புகளுடன் வடிவமைக்கப்பட்டுள்ளது, இதனால் ஒவ்வொரு கருவியும் செல்ல எளிதானது.",
+                df1_title: "மண் ஆரோக்கிய கண்காணிப்பாளர்",
+                df1_desc: "மண் சோர்வடைவதைத் தடுக்க நைட்ரஜன், பாஸ்பரஸ் மற்றும் கரிம கார்பன் அளவுகள் குறித்த நேரலை செயற்கைக்கோள் வாசிப்புகள்.",
+                df2_title: "ஸ்மார்ட் பயிர் சுழற்சி திட்டமிடுபவர்",
+                df2_desc: "ஊட்டச்சத்துக்களை இயற்கையாகவே மீட்டெடுக்க மற்றும் விளைச்சலை 27% வரை அதிகரிக்க ஒவ்வொரு பருவத்திலும் எந்தப் பயிர்களை மாற்ற வேண்டும் என்பது குறித்த படிப்படியான வழிகாட்டுதல்.",
+                df3_title: "நீர் மற்றும் நீர்ப்பாசன ஆலோசகர்",
+                df3_desc: "அதிகப்படியான நீர்ப்பாசனத்தைத் தடுக்கவும் முக்கிய நிலத்தடி நீரைப் பாதுகாக்கவும் NASA SMAP மூலம் இயக்கப்படும் நிகழ்நேர மண் ஈரப்பதம் மேப்பிங்.",
+                df4_title: "உள்ளூர் வானிலை & ஆபத்து எச்சரிக்கைகள்",
+                df4_desc: "தீவிர வானிலை, வறட்சி அல்லது திடீர் உறைபனிக்கு உங்கள் பண்ணைத்துறைக்கு பிரத்யேகமாக வடிவமைக்கப்பட்ட முன்கூட்டிய எச்சரிக்கைகள்.",
+                test_tag: "கள தாக்கம்",
+                test_heading: "நிலத்தில் உள்ள விவசாயிகளால் நம்பப்படுகிறது",
+                test_sub: "எளிய, செயற்கைக்கோள் ஆதரவு வழிகாட்டுதல் எப்படி மாறும் பருவங்களில் பண்ணைகள் செழிக்க உதவுகிறது.",
+                t1_quote: "\"AgroShift-க்கு முன், எப்போது தண்ணீர் பாய்ச்சுவது மற்றும் அடுத்து என்ன நடவு செய்வது என்று யூகித்தேன். சுழற்சி திட்டத்தைப் பின்பற்றுவது குறைந்த நிலத்தடி நீரைப் பயன்படுத்தும்போது எனது அறுவடையை 20% அதிகரித்தது.\"",
+                t1_name: "ரமேஷ் நாயர்",
+                t1_role: "நெல் & பயறு வகை விவசாயி • 8 ஏக்கர்",
+                t2_quote: "\"பெரும்பாலான பயன்பாடுகள் குழப்பமான விளக்கப்படங்களால் நிரம்பியுள்ளன. AgroShift களத்தில் சில விநாடிகளில் நான் படிக்கக்கூடிய தெளிவான, எளிய படிகளை வழங்குகிறது—இது உண்மையில் ஒரு விவசாயியின் நேரத்தை மதிக்கிறது.\"",
+                t2_name: "மீரா தேவி",
+                t2_role: "காய்கறி & சிறுதானிய வளர்ப்பவர் • 5 ஏக்கர்",
+                t3_quote: "\"மண் ஈரப்பதம் குறைவதை முன்கூட்டியே கண்டறிவது வறட்சி காலத்தின் போது எனது முழு குளிர்கால பயிரையும் காப்பாற்றியது. இது என் பாக்கெட்டில் ஒரு விவசாய விஞ்ஞானியை வைத்திருப்பது போல் உணர்கிறது.\"",
+                t3_name: "அர்ஜுன் படேல்",
+                t3_role: "பருத்தி & சோயாபீன் விவசாயி • 14 ஏக்கர்",
+                footer_desc: "மீள்தன்மை, நிலையான விவசாயத்திற்கான செயற்கைக்கோள் நுண்ணறிவு. NASA விண்வெளி பயன்பாடுகள் சவாலுக்காக கட்டப்பட்டது.",
+                footer_links_title: "விரைவு இணைப்புகள்",
+                footer_features: "அம்சங்கள்",
+                footer_testimonials: "சான்றுகள்",
+                footer_contact_title: "தொடர்பு கொள்ளுங்கள்",
+                footer_contact_desc: "கேள்விகள், கருத்துகள் உள்ளதா அல்லது எங்கள் குழுவுடன் இணைந்து பணியாற்ற விரும்புகிறீர்களா?",
+                footer_copy: "© 2026 AgroShift. அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை. திறந்த மூல செயற்கைக்கோள் தரவுகளால் இயக்கப்படுகிறது."
+            }
+        };
+
+        const langSelector = document.getElementById('language-selector');
+
+        function applyLanguage(lang, save = true) {
+            const dict = translations[lang] || translations.en;
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) {
+                    if (key === 'hero_heading') {
+                        el.innerHTML = dict[key];
+                    } else {
+                        el.textContent = dict[key];
+                    }
+                }
+            });
+
+            if (save) {
+                localStorage.setItem('agroshift_lang', lang);
+            }
+            langSelector.value = lang;
+        }
+
+        function checkFirstVisitLanguage() {
+            const savedLang = localStorage.getItem('agroshift_lang');
+            if (!savedLang) {
+                showFirstVisitModal();
+            } else {
+                applyLanguage(savedLang, false);
+            }
+        }
+
+        function showFirstVisitModal() {
+            if (document.getElementById('first-visit-lang-modal')) return;
+
+            const modalHtml = `
+                <div id="first-visit-lang-modal" class="lang-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+                    <div class="lang-modal-card">
+                        <h3 id="modal-title">Select Language / भाषा चुनें</h3>
+                        <p>Choose your preferred language for farming advisories:</p>
+                        <div class="lang-options-grid">
+                            <button type="button" class="lang-option-btn" onclick="selectFirstLanguage('en')">English <span>English</span></button>
+                            <button type="button" class="lang-option-btn" onclick="selectFirstLanguage('hi')">हिन्दी <span>Hindi</span></button>
+                            <button type="button" class="lang-option-btn" onclick="selectFirstLanguage('pa')">ਪੰਜਾਬੀ <span>Punjabi</span></button>
+                            <button type="button" class="lang-option-btn" onclick="selectFirstLanguage('ml')">മലയാളം <span>Malayalam</span></button>
+                            <button type="button" class="lang-option-btn" onclick="selectFirstLanguage('mr')">मराठी <span>Marathi</span></button>
+                            <button type="button" class="lang-option-btn" onclick="selectFirstLanguage('ta')">தமிழ் <span>Tamil</span></button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        window.selectFirstLanguage = function(lang) {
+            applyLanguage(lang, true);
+            const modal = document.getElementById('first-visit-lang-modal');
+            if (modal) {
+                modal.style.opacity = '0';
+                modal.style.transition = 'opacity 0.25s ease';
+                setTimeout(() => modal.remove(), 250);
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            checkFirstVisitLanguage();
+        });
+
+        langSelector.addEventListener('change', (e) => {
+            applyLanguage(e.target.value, true);
+        });
+    </script>
 </body>
 </html>

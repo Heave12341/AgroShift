@@ -1,0 +1,674 @@
+/* ==========================================
+   1. CSS RESET & BASE STYLES (Tailwind Slate & Emerald)
+   ========================================== */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: 'Atkinson Hyperlegible', 'Noto Sans Devanagari', 'Noto Sans Gurmukhi', 'Noto Sans Malayalam', 'Noto Sans Tamil', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.65;
+    background-color: #0f172a; /* Tailwind Slate 900 */
+    color: #f8fafc; /* Tailwind Slate 50 */
+    overflow-x: hidden;
+    text-rendering: optimizeLegibility;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+:focus-visible {
+    outline: 3px solid #10b981; /* Tailwind Emerald 500 */
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 16px;
+    z-index: 2000;
+    background-color: #10b981;
+    color: #0f172a;
+    font-weight: bold;
+    padding: 12px 20px;
+    border-radius: 8px;
+}
+
+.skip-link:focus {
+    top: 16px;
+}
+
+/* ==========================================
+   2. HEADER & NAVIGATION
+   ========================================== */
+header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+    padding: 24px clamp(20px, 5vw, 64px);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    background: linear-gradient(to bottom, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0) 100%);
+}
+
+.brand-logo {
+    font-weight: 700;
+    color: #f8fafc;
+    font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: -0.02em;
+}
+
+.brand-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+}
+
+header > nav > ul {
+    display: flex;
+    flex-wrap: nowrap;
+    list-style-type: none;
+    align-items: center;
+    gap: clamp(1rem, 2vw, 2rem);
+}
+
+header > nav > ul > li a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 4px 8px;
+    white-space: nowrap;
+    color: #cbd5e1; /* Tailwind Slate 300 */
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+header > nav > ul > li a:hover {
+    color: #34d399; /* Tailwind Emerald 400 */
+}
+
+/* ==========================================
+   3. LANGUAGE SELECTOR CONTROL
+   ========================================== */
+.controls-wrapper {
+    display: inline-flex;
+    align-items: center;
+}
+
+.lang-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #1e293b; /* Tailwind Slate 800 */
+    color: #f8fafc;
+    border: 1px solid #334155; /* Tailwind Slate 700 */
+    border-radius: 999px;
+    padding: 8px 36px 8px 16px;
+    min-height: 44px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2334d399' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+}
+
+.lang-select:hover, .lang-select:focus {
+    border-color: #10b981;
+    background-color: #1e293b;
+}
+
+.lang-select option {
+    background-color: #1e293b;
+    color: #f8fafc;
+}
+
+/* ==========================================
+   4. FIRST-VISIT LANGUAGE MODAL
+   ========================================== */
+.lang-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.88); /* Tailwind Slate 950 */
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.lang-modal-card {
+    background: #1e293b; /* Tailwind Slate 800 */
+    border: 1px solid #334155;
+    border-radius: 20px;
+    padding: clamp(32px, 5vw, 48px);
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
+    text-align: left;
+}
+
+.lang-modal-card h3 {
+    font-family: 'Lora', Georgia, serif;
+    font-size: clamp(1.6rem, 3vw, 2rem);
+    color: #f8fafc;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.lang-modal-card p {
+    font-size: 1.05rem;
+    color: #94a3b8; /* Tailwind Slate 400 */
+    margin-bottom: 28px;
+}
+
+.lang-options-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.lang-option-btn {
+    background-color: #0f172a; /* Tailwind Slate 900 */
+    border: 1px solid #334155;
+    color: #f8fafc;
+    padding: 16px;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    text-align: left;
+}
+
+.lang-option-btn span {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    font-weight: 400;
+}
+
+.lang-option-btn:hover, .lang-option-btn:focus {
+    border-color: #10b981;
+    background-color: #1e293b;
+    transform: translateY(-2px);
+}
+
+/* ==========================================
+   5. HERO SECTION (Full-Width Edge-to-Edge)
+   ========================================== */
+#hero {
+    width: 100%;
+    max-width: none;
+    min-height: 94vh;
+    margin: 0;
+    background-color: #0f172a;
+    background-image: linear-gradient(180deg, rgba(15, 23, 42, 0.2) 0%, rgba(15, 23, 42, 0.4) 50%, rgba(15, 23, 42, 0.95) 100%), url('./images/herobg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 160px clamp(20px, 6vw, 64px) 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.hero-content-wrapper {
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+}
+
+#hero h1 {
+    font-family: 'Lora', Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+    color: #f8fafc;
+    font-size: clamp(2.8rem, 7vw, 6rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+}
+
+#hero p {
+    color: #cbd5e1;
+    font-size: clamp(1.15rem, 2vw, 1.4rem);
+    max-width: 560px;
+    margin-bottom: 36px;
+    font-weight: 400;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
+}
+
+.hero-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 56px;
+    padding: 16px 36px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #0f172a;
+    background-color: #10b981; /* Tailwind Emerald 500 */
+    border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.hero-btn:hover {
+    background-color: #34d399; /* Tailwind Emerald 400 */
+    transform: translateY(-2px);
+}
+
+/* ==========================================
+   6. EDITORIAL SECTIONS & CARDS
+   ========================================== */
+section {
+    padding: clamp(80px, 10vw, 140px) clamp(20px, 6vw, 64px);
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.section-tag {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #34d399; /* Tailwind Emerald 400 */
+    margin-bottom: 16px;
+}
+
+/* Features Showcase */
+.features-header {
+    max-width: 680px;
+    margin-bottom: 64px;
+}
+
+.features-header h2, .dash-feat-header h2, .testimonials-header h2, .about-text h2 {
+    font-family: 'Lora', Georgia, serif;
+    font-style: italic;
+    color: #f8fafc;
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    line-height: 1.15;
+    font-weight: 500;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+}
+
+.features-header p, .dash-feat-header p, .testimonials-header p {
+    font-size: 1.15rem;
+    color: #94a3b8;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 24px;
+}
+
+.feature-card {
+    background-color: #1e293b; /* Tailwind Slate 800 */
+    border: 1px solid #334155; /* Tailwind Slate 700 */
+    border-radius: 16px;
+    padding: clamp(28px, 3vw, 40px);
+    grid-column: span 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+@media (max-width: 1024px) {
+    .feature-card {
+        grid-column: span 6;
+    }
+}
+@media (max-width: 768px) {
+    .feature-card {
+        grid-column: span 12;
+    }
+}
+
+.feature-card:hover {
+    border-color: #10b981;
+    transform: translateY(-4px);
+}
+
+.feature-img {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 28px;
+    background-color: #0f172a;
+}
+
+.feature-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.92);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.feature-card:hover .feature-img img {
+    transform: scale(1.03);
+}
+
+.feature-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+    color: #f8fafc;
+    font-weight: 600;
+}
+
+.feature-card p {
+    font-size: 1.05rem;
+    color: #94a3b8;
+    line-height: 1.6;
+}
+
+/* About Section */
+.about-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 8vw, 96px);
+    align-items: center;
+}
+
+@media (max-width: 900px) {
+    .about-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.about-text p {
+    font-size: 1.15rem;
+    color: #cbd5e1;
+    line-height: 1.7;
+    margin-bottom: 24px;
+}
+
+.about-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    margin-top: 40px;
+    padding-top: 36px;
+    border-top: 1px solid #334155;
+}
+
+.stat-box strong {
+    display: block;
+    font-family: 'Lora', Georgia, serif;
+    font-size: clamp(2.2rem, 3.5vw, 3rem);
+    color: #34d399; /* Tailwind Emerald 400 */
+    line-height: 1;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.stat-box span {
+    font-size: 0.95rem;
+    color: #94a3b8;
+    line-height: 1.4;
+}
+
+.about-visual img {
+    width: 100%;
+    height: clamp(340px, 45vw, 540px);
+    object-fit: cover;
+    border-radius: 20px;
+    border: 1px solid #334155;
+}
+
+/* Dashboard Features Grid */
+.dash-feat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+@media (max-width: 800px) {
+    .dash-feat-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.dash-feat-card {
+    background-color: #1e293b; /* Tailwind Slate 800 */
+    border: 1px solid #334155;
+    padding: clamp(32px, 4vw, 44px);
+    border-radius: 16px;
+    position: relative;
+    transition: border-color 0.3s ease;
+}
+
+.dash-feat-card:hover {
+    border-color: #10b981;
+}
+
+.feat-icon-num {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 1.25rem;
+    font-style: italic;
+    color: #34d399;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+.dash-feat-card h3 {
+    font-size: 1.45rem;
+    color: #f8fafc;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.dash-feat-card p {
+    font-size: 1.05rem;
+    color: #94a3b8;
+    line-height: 1.6;
+}
+
+/* Testimonials */
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+@media (max-width: 1024px) {
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.testimonial-card {
+    background-color: #1e293b; /* Tailwind Slate 800 */
+    border: 1px solid #334155;
+    padding: clamp(32px, 3vw, 40px);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 32px;
+}
+
+.testimonial-card blockquote {
+    font-family: 'Lora', Georgia, serif;
+    font-style: italic;
+    font-size: 1.2rem;
+    color: #f8fafc;
+    line-height: 1.65;
+    font-weight: 400;
+}
+
+.author-info {
+    border-top: 1px solid #334155;
+    padding-top: 20px;
+}
+
+.author-info strong {
+    display: block;
+    font-size: 1.05rem;
+    color: #34d399;
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+.author-info span {
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+/* ==========================================
+   7. FOOTER
+   ========================================== */
+#contact {
+    padding: clamp(80px, 10vw, 120px) clamp(20px, 6vw, 64px) 40px;
+    background-color: #020617; /* Tailwind Slate 950 */
+    border-top: 1px solid #334155;
+    color: #f8fafc;
+    max-width: 100%;
+}
+
+.footer-inner-wrap {
+    max-width: 1320px;
+    margin: 0 auto;
+}
+
+.footer-container {
+    margin: 0 auto clamp(60px, 8vw, 80px);
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.2fr;
+    gap: clamp(3rem, 5vw, 6rem);
+}
+
+@media (max-width: 900px) {
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+}
+
+.footer-brand-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.footer-brand h2 {
+    font-family: 'Lora', Georgia, serif;
+    font-style: italic;
+    font-size: 2.2rem;
+    color: #f8fafc;
+    font-weight: 500;
+}
+
+.footer-brand p, .footer-contact p {
+    font-size: 1.05rem;
+    color: #94a3b8;
+    max-width: 380px;
+    line-height: 1.6;
+}
+
+.footer-links h3, .footer-contact h3 {
+    font-size: 1.1rem;
+    color: #34d399;
+    margin-bottom: 20px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.footer-links ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.footer-links ul li a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    color: #94a3b8;
+    transition: color 0.2s ease;
+    font-size: 1.05rem;
+}
+
+.footer-links ul li a:hover {
+    color: #34d399;
+}
+
+.footer-email {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    margin-top: 12px;
+    font-weight: 600;
+    color: #34d399;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.footer-bottom {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding-top: 32px;
+    border-top: 1px solid #334155;
+    text-align: center;
+    font-size: 0.95rem;
+    color: #64748b; /* Tailwind Slate 500 */
+}
+
+/* ==========================================
+   8. REDUCED MOTION & ACCESSIBILITY
+   ========================================== */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+    .feature-card:hover, .feature-card:hover .feature-img img {
+        transform: none !important;
+    }
+}
