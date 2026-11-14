@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#161914">
+    <meta name="description" content="AgroShift is an AI-powered agri-advisory platform using NASA & ISRO satellite data to help farmers optimize crop rotations, monitor soil health, and conserve water.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Lora:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    
+    <title>AgroShift — Satellite Crop &amp; Soil Advisory</title>
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; font-size: 100%; -webkit-text-size-adjust: 100%; }
+        body {
+            font-family: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 1.125rem;
+            line-height: 1.6;
+            background-color: #161914;
+            color: #F5F2EB;
+            overflow-x: hidden;
+            text-rendering: optimizeSpeed;
+        }
+        img { max-width: 100%; display: block; }
+        a { text-decoration: none; color: #F5F2EB; }
+        :focus-visible { outline: 3px solid #E09F3E; outline-offset: 4px; border-radius: 4px; }
+        
+        .skip-link {
+            position: absolute; top: -100px; left: 16px; z-index: 2000;
+            background-color: #E09F3E; color: #161914; font-weight: bold;
+            padding: 12px 20px; border-radius: 8px;
+        }
+        .skip-link:focus { top: 16px; }
+
+        header {
+            position: absolute; top: 0; left: 0; z-index: 1000; width: 100%;
+            padding: 20px clamp(16px, 4vw, 48px);
+            display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 1rem;
+            background: linear-gradient(to bottom, rgba(22, 25, 20, 0.9) 0%, rgba(22, 25, 20, 0) 100%);
+        }
+        header > h1, .brand-logo {
+            font-weight: bold; color: #ffffff; font-size: clamp(1.6rem, 3vw, 2.3rem);
+            min-height: 48px; display: inline-flex; align-items: center; white-space: nowrap;
+        }
+        header > nav > ul {
+            display: flex; flex-wrap: nowrap; list-style-type: none; align-items: center; gap: clamp(0.75rem, 2vw, 1.5rem);
+        }
+        header > nav > ul > li a {
+            display: inline-flex; align-items: center; min-height: 48px; padding: 6px 10px;
+            white-space: nowrap; color: #ffffff; font-size: clamp(0.95rem, 1.8vw, 1.125rem); font-weight: bold;
+            transition: color 0.2s ease;
+        }
+        header > nav > ul > li a:hover { color: #E09F3E; }
+
+        #hero {
+            min-height: 100vh; min-height: 100svh;
+            background-color: #161914;
+            background-image: linear-gradient(to bottom, rgba(22, 25, 20, 0.8) 0%, rgba(22, 25, 20, 0.2) 45%, rgba(22, 25, 20, 0.9) 100%), url('./images/herobg.jpg');
+            background-size: cover; background-position: center; background-repeat: no-repeat;
+            padding: 140px clamp(16px, 5vw, 48px) clamp(60px, 12vh, 140px);
+            display: flex; flex-direction: column; justify-content: flex-end; align-items: center; text-align: center;
+        }
+        #hero h1 {
+            font-family: 'Lora', Georgia, serif; font-style: italic; font-weight: 600; color: #ffffff;
+            font-size: clamp(2.1rem, 6.3vw, 5.5rem); line-height: 1.1; text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75); margin-bottom: 16px;
+        }
+        #hero p {
+            color: #F5F2EB; font-size: clamp(1.05rem, 2vw, 1.3rem); max-width: 540px;
+            text-shadow: 0 1px 8px rgba(0, 0, 0, 0.95); margin-bottom: 28px;
+        }
+        .hero-btn {
+            display: inline-flex; align-items: center; justify-content: center; min-height: 52px;
+            padding: 14px 34px; font-size: 1.125rem; font-weight: bold; color: #161914;
+            background-color: #E09F3E; border: 2px solid #E09F3E; border-radius: 999px;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+        .hero-btn:hover { background-color: #F5F2EB; border-color: #F5F2EB; color: #161914; }
+
+        #features, #about, #dashboard-features, #testimonials {
+            padding: clamp(60px, 8vw, 110px) clamp(16px, 5vw, 48px); background-color: #161914;
+        }
+        #about, #dashboard-features, #testimonials { border-top: 1px solid #2A3025; }
+
+        .features-header, .dash-feat-header, .testimonials-header { text-align: center; margin-bottom: clamp(36px, 5vw, 60px); }
+        .features-header h2, .about-text h2, .dash-feat-header h2, .testimonials-header h2 {
+            font-family: 'Lora', Georgia, serif; font-style: italic; color: #F5F2EB;
+            font-size: clamp(1.75rem, 4vw, 3rem); line-height: 1.15; margin-bottom: 14px;
+        }
+        .features-header p, .dash-feat-header p, .testimonials-header p {
+            font-size: clamp(1.05rem, 1.8vw, 1.2rem); color: #D1CEC5; max-width: 620px; margin: 0 auto;
+        }
+        .section-tag {
+            display: inline-block; font-size: 0.95rem; font-weight: bold; text-transform: uppercase;
+            letter-spacing: 0.08em; color: #E09F3E; margin-bottom: 12px;
+        }
+
+        .feature-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+            gap: clamp(1.25rem, 3vw, 2rem); max-width: 1320px; margin: 0 auto;
+        }
+        .feature-card {
+            background-color: #22261E; border: 1px solid #3A4033; padding: clamp(20px, 3vw, 30px);
+            border-radius: 12px; transition: border-color 0.25s ease, transform 0.25s ease;
+        }
+        .feature-card:hover { border-color: #84A98C; transform: translateY(-4px); }
+        .feature-img { width: 100%; height: 200px; overflow: hidden; border-radius: 8px; margin-bottom: 20px; background-color: #161914; }
+        .feature-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.35s ease; }
+        .feature-card:hover .feature-img img { transform: scale(1.04); }
+        .feature-card h3 { font-size: 1.35rem; margin-bottom: 10px; color: #F5F2EB; }
+        .feature-card p { font-size: 1.05rem; color: #D1CEC5; }
+
+        .about-container {
+            max-width: 1320px; margin: 0 auto; display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+            gap: clamp(2rem, 5vw, 4rem); align-items: center;
+        }
+        .about-text p { font-size: 1.125rem; color: #D1CEC5; line-height: 1.65; margin-bottom: 20px; }
+        .about-stats {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+            gap: 1.5rem; margin-top: 32px; padding-top: 28px; border-top: 1px solid #3A4033;
+        }
+        .stat-box strong { display: block; font-size: clamp(1.8rem, 3vw, 2.3rem); color: #84A98C; line-height: 1.1; margin-bottom: 6px; }
+        .stat-box span { font-size: 1rem; color: #D1CEC5; line-height: 1.4; }
+        .about-visual img { width: 100%; height: clamp(260px, 40vw, 460px); object-fit: cover; border-radius: 12px; border: 1px solid #3A4033; }
+
+        .dash-feat-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+            gap: clamp(1.25rem, 3vw, 2rem); max-width: 1320px; margin: 0 auto;
+        }
+        .dash-feat-card {
+            background-color: #22261E; border: 1px solid #3A4033;
+            padding: clamp(24px, 3vw, 35px) clamp(20px, 2.5vw, 30px);
+            border-radius: 12px; transition: border-color 0.25s ease, transform 0.25s ease;
+        }
+        .dash-feat-card:hover { border-color: #84A98C; transform: translateY(-4px); }
+        .feat-icon-num { font-family: 'Lora', Georgia, serif; font-size: 1.8rem; font-weight: bold; color: #E09F3E; margin-bottom: 14px; }
+        .dash-feat-card h3 { font-size: 1.35rem; color: #F5F2EB; margin-bottom: 10px; }
+        .dash-feat-card p { font-size: 1.05rem; color: #D1CEC5; }
+
+        .testimonials-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+            gap: clamp(1.25rem, 3vw, 2rem); max-width: 1320px; margin: 0 auto;
+        }
+        .testimonial-card {
+            background-color: #22261E; border: 1px solid #3A4033; border-left: 4px solid #E09F3E;
+            padding: clamp(24px, 3vw, 36px) clamp(20px, 2.5vw, 30px); border-radius: 12px;
+            display: flex; flex-direction: column; justify-content: space-between; gap: 24px;
+        }
+        .testimonial-card blockquote { font-family: 'Lora', Georgia, serif; font-style: italic; font-size: 1.15rem; color: #F5F2EB; line-height: 1.6; }
+        .author-info { border-top: 1px solid #3A4033; padding-top: 16px; }
+        .author-info strong { display: block; font-size: 1.1rem; color: #84A98C; margin-bottom: 4px; }
+        .author-info span { font-size: 0.95rem; color: #D1CEC5; }
+
+        #contact {
+            padding: clamp(60px, 7vw, 80px) clamp(16px, 5vw, 48px) 40px;
+            background-color: #0f120e; border-top: 1px solid #2A3025; color: #F5F2EB;
+        }
+        .footer-container {
+            max-width: 1320px; margin: 0 auto clamp(40px, 5vw, 60px);
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: clamp(2rem, 4vw, 3rem);
+        }
+        .footer-brand h2 { font-family: 'Lora', Georgia, serif; font-style: italic; font-size: 2rem; color: #F5F2EB; margin-bottom: 12px; }
+        .footer-brand p, .footer-contact p { font-size: 1.05rem; color: #D1CEC5; }
+        .footer-links h3, .footer-contact h3 { font-size: 1.2rem; color: #E09F3E; margin-bottom: 14px; }
+        .footer-links ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+        .footer-links ul li a { display: inline-flex; align-items: center; min-height: 48px; color: #D1CEC5; transition: color 0.2s ease; }
+        .footer-links ul li a:hover { color: #84A98C; }
+        .footer-email {
+            display: inline-flex; align-items: center; min-height: 48px; margin-top: 8px;
+            font-weight: bold; color: #84A98C; text-decoration: underline; word-break: break-all;
+        }
+        .footer-bottom {
+            max-width: 1320px; margin: 0 auto; padding-top: 28px; border-top: 1px solid #22261E; text-align: center; font-size: 0.95rem; color: #B5B2A8;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 16px 16px;
+                background: linear-gradient(to bottom, rgba(22, 25, 20, 0.95) 0%, rgba(22, 25, 20, 0.4) 75%, rgba(22, 25, 20, 0) 100%);
+            }
+            header > nav { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+            header > nav::-webkit-scrollbar { display: none; }
+            header > nav > ul { justify-content: center; gap: 1rem; }
+            header > nav > ul > li a { font-size: 0.95rem; padding: 6px 10px; min-height: 44px; }
+            #hero { min-height: 80vh; padding-top: 120px; }
+        }
+
+        @media (max-width: 360px) {
+            html { font-size: 92%; }
+            header { padding: 12px 8px; }
+            .brand-logo { font-size: 1.35rem; }
+            header > nav > ul { gap: 0.35rem; }
+            header > nav > ul > li a { padding: 6px 6px; font-size: 0.85rem; }
+            .hero-btn { width: 100%; padding: 14px 16px; }
+            .feature-img { height: 150px; }
+        }
+
+        @media (min-width: 1800px) {
+            html { font-size: 125%; }
+            .feature-grid, .about-container, .dash-feat-grid, .testimonials-grid, .footer-container, .footer-bottom { max-width: 1640px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+            .feature-card:hover, .dash-feat-card:hover, .feature-card:hover .feature-img img { transform: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header id="navbar">
+        <a href="#hero" class="brand-logo">AgroShift</a>
+        <nav aria-label="Primary Navigation">
+            <ul>
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="./dashboard/index.html">Dashboard</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <section id="hero" aria-labelledby="hero-heading">
+            <h1 id="hero-heading">Smarter.<br>Healthier.<br>Sustainable.</h1>
+            <p>Satellite-guided crop planning for resilient farms.</p>
+            <a href="./dashboard/index.html" class="hero-btn">Check Your Farm</a>
+        </section>
+
+        <section id="features" aria-labelledby="features-heading">
+            <div class="features-header">
+                <h2 id="features-heading">Powered by Satellite Intelligence</h2>
+                <p>Built for farmers, backed by global research and space data.</p>
+            </div>
+            <div class="feature-grid">
+                <article class="feature-card">
+                    <div class="feature-img">
+                        <img src="./images/feature1.jpeg" alt="Satellite orbiting Earth capturing farm data" loading="lazy" decoding="async" width="400" height="200">
+                    </div>
+                    <h3>Satellite Insights</h3>
+                    <p>Real-time monitoring using NASA and ISRO data streams like NISAR, SMAP, and Sentinel.</p>
+                </article>
+                <article class="feature-card">
+                    <div class="feature-img">
+                        <img src="./images/feature2.jpeg" alt="Healthy green crop rows in fertile soil" loading="lazy" decoding="async" width="400" height="200">
+                    </div>
+                    <h3>Smart Crop Planning</h3>
+                    <p>AI-driven recommendations to optimize crop rotation choices and boost long-term yields.</p>
+                </article>
+                <article class="feature-card">
+                    <div class="feature-img">
+                        <img src="./images/feature3.jpeg" alt="Irrigated farmland showing moisture balance" loading="lazy" decoding="async" width="400" height="200">
+                    </div>
+                    <h3>Water &amp; Soil Analysis</h3>
+                    <p>Track soil moisture levels and nutrient health precisely to conserve resources.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="about" aria-labelledby="about-heading">
+            <div class="about-container">
+                <div class="about-text">
+                    <span class="section-tag">Our Mission</span>
+                    <h2 id="about-heading">Turning Space Data Into Everyday Harvests</h2>
+                    <p>Unpredictable weather, depleting groundwater, and tired soil make farming harder every season. Most satellite tools are built for scientists—not the people actually working the land.</p>
+                    <p>AgroShift translates live NASA and ISRO Earth-observation feeds into plain, step-by-step guidance so every farmer can protect their soil, save water, and grow higher yields.</p>
+                    <div class="about-stats">
+                        <div class="stat-box">
+                            <strong>14–27%</strong>
+                            <span>Higher yield via smart crop rotation</span>
+                        </div>
+                        <div class="stat-box">
+                            <strong>30%</strong>
+                            <span>Water saved with soil moisture alerts</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-visual">
+                    <img src="./images/about-farm.jpeg" alt="Farmer inspecting healthy crops in the field" loading="lazy" decoding="async" width="600" height="460">
+                </div>
+            </div>
+        </section>
+
+        <section id="dashboard-features" aria-labelledby="dash-heading">
+            <div class="dash-feat-header">
+                <span class="section-tag">Inside the Dashboard</span>
+                <h2 id="dash-heading">Built for the Field: Core Features</h2>
+                <p>Designed with zero clutter, high contrast, and simple visual cues so every tool is easy to navigate.</p>
+            </div>
+            <div class="dash-feat-grid">
+                <article class="dash-feat-card">
+                    <div class="feat-icon-num" aria-hidden="true">01</div>
+                    <h3>Soil Health Tracker</h3>
+                    <p>Live satellite readings on nitrogen, phosphorus, and organic carbon levels to prevent soil exhaustion before it starts.</p>
+                </article>
+                <article class="dash-feat-card">
+                    <div class="feat-icon-num" aria-hidden="true">02</div>
+                    <h3>Smart Crop Rotation Planner</h3>
+                    <p>Step-by-step guidance on which crops to alternate each season to naturally restore nutrients and boost yields by up to 27%.</p>
+                </article>
+                <article class="dash-feat-card">
+                    <div class="feat-icon-num" aria-hidden="true">03</div>
+                    <h3>Water &amp; Irrigation Advisor</h3>
+                    <p>Real-time soil moisture mapping powered by NASA SMAP to prevent over-watering and conserve vital groundwater.</p>
+                </article>
+                <article class="dash-feat-card">
+                    <div class="feat-icon-num" aria-hidden="true">04</div>
+                    <h3>Local Weather &amp; Risk Alerts</h3>
+                    <p>Early warnings for extreme weather, droughts, or sudden frost tailored specifically to your farm sector.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="testimonials" aria-labelledby="testimonials-heading">
+            <div class="testimonials-header">
+                <span class="section-tag">Field Impact</span>
+                <h2 id="testimonials-heading">Trusted by Growers on the Ground</h2>
+                <p>How simple, satellite-backed guidance is helping farms thrive across changing seasons.</p>
+            </div>
+            <div class="testimonials-grid">
+                <article class="testimonial-card">
+                    <blockquote>"Before AgroShift, I guessed when to water and what to plant next. Following the rotation plan boosted my harvest by 20% while using far less groundwater."</blockquote>
+                    <div class="author-info">
+                        <strong>Ramesh Nair</strong>
+                        <span>Paddy &amp; Pulse Farmer • 8 Acres</span>
+                    </div>
+                </article>
+                <article class="testimonial-card">
+                    <blockquote>"Most apps are full of confusing charts. AgroShift gives clear, simple steps I can read in seconds out in the field—it actually respects a farmer's time."</blockquote>
+                    <div class="author-info">
+                        <strong>Meera Devi</strong>
+                        <span>Vegetable &amp; Millet Grower • 5 Acres</span>
+                    </div>
+                </article>
+                <article class="testimonial-card">
+                    <blockquote>"Catching soil moisture drops early saved my entire winter crop during a dry spell. It feels like having an agricultural scientist in my pocket."</blockquote>
+                    <div class="author-info">
+                        <strong>Arjun Patel</strong>
+                        <span>Cotton &amp; Soybean Farmer • 14 Acres</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h2>AgroShift</h2>
+                <p>Satellite intelligence for resilient, sustainable farming. Built for the NASA Space Apps Challenge.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="./dashboard/index.html">Dashboard</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h3>Get in Touch</h3>
+                <p>Have questions, feedback, or want to collaborate with our team?</p>
+                <a href="mailto:example.com" class="footer-email">example.com</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 AgroShift. All rights reserved. Powered by open-source satellite data.</p>
+        </div>
+    </footer>
+</body>
+</html>
