@@ -1,6 +1,3 @@
-/* ==========================================
-   1. CSS RESET & BASE STYLES (Tailwind Slate & Emerald)
-   ========================================== */
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -9,7 +6,6 @@
 
 html {
     scroll-behavior: smooth;
-    font-size: 100%;
     -webkit-text-size-adjust: 100%;
 }
 
@@ -17,10 +13,10 @@ body {
     font-family: 'Atkinson Hyperlegible', 'Noto Sans Devanagari', 'Noto Sans Gurmukhi', 'Noto Sans Malayalam', 'Noto Sans Tamil', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 1.125rem;
     line-height: 1.65;
-    background-color: #0f172a; /* Tailwind Slate 900 */
-    color: #f8fafc; /* Tailwind Slate 50 */
+    background-color: #0f172a;
+    color: #f8fafc;
     overflow-x: hidden;
-    text-rendering: optimizeLegibility;
+    width: 100%;
 }
 
 img {
@@ -34,7 +30,7 @@ a {
 }
 
 :focus-visible {
-    outline: 3px solid #10b981; /* Tailwind Emerald 500 */
+    outline: 3px solid #10b981;
     outline-offset: 4px;
     border-radius: 4px;
 }
@@ -55,9 +51,6 @@ a {
     top: 16px;
 }
 
-/* ==========================================
-   2. HEADER & NAVIGATION
-   ========================================== */
 header {
     position: absolute;
     top: 0;
@@ -66,7 +59,6 @@ header {
     width: 100%;
     padding: 24px clamp(20px, 5vw, 64px);
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: space-between;
     gap: 1.5rem;
@@ -92,8 +84,7 @@ header {
 
 header > nav > ul {
     display: flex;
-    flex-wrap: nowrap;
-    list-style-type: none;
+    list-style: none;
     align-items: center;
     gap: clamp(1rem, 2vw, 2rem);
 }
@@ -104,19 +95,16 @@ header > nav > ul > li a {
     min-height: 48px;
     padding: 4px 8px;
     white-space: nowrap;
-    color: #cbd5e1; /* Tailwind Slate 300 */
+    color: #cbd5e1;
     font-size: 0.95rem;
     font-weight: 600;
     transition: color 0.2s ease;
 }
 
 header > nav > ul > li a:hover {
-    color: #34d399; /* Tailwind Emerald 400 */
+    color: #34d399;
 }
 
-/* ==========================================
-   3. LANGUAGE SELECTOR CONTROL
-   ========================================== */
 .controls-wrapper {
     display: inline-flex;
     align-items: center;
@@ -124,10 +112,9 @@ header > nav > ul > li a:hover {
 
 .lang-select {
     appearance: none;
-    -webkit-appearance: none;
-    background-color: #1e293b; /* Tailwind Slate 800 */
+    background-color: #1e293b;
     color: #f8fafc;
-    border: 1px solid #334155; /* Tailwind Slate 700 */
+    border: 1px solid #334155;
     border-radius: 999px;
     padding: 8px 36px 8px 16px;
     min-height: 44px;
@@ -151,44 +138,44 @@ header > nav > ul > li a:hover {
     color: #f8fafc;
 }
 
-/* ==========================================
-   4. FIRST-VISIT LANGUAGE MODAL (Responsive)
-   ========================================== */
 .lang-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(2, 6, 23, 0.88); /* Tailwind Slate 950 */
+    background: rgba(2, 6, 23, 0.88);
     backdrop-filter: blur(8px);
     z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 16px;
+    overflow-y: auto;
 }
 
 .lang-modal-card {
-    background: #1e293b; /* Tailwind Slate 800 */
+    background: #1e293b;
     border: 1px solid #334155;
     border-radius: 20px;
-    padding: clamp(24px, 5vw, 48px);
+    padding: clamp(20px, 4vw, 40px);
     max-width: 480px;
     width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
-    text-align: left;
+    margin: auto;
 }
 
 .lang-modal-card h3 {
     font-family: 'Lora', Georgia, serif;
-    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
     color: #f8fafc;
     margin-bottom: 8px;
     font-weight: 600;
 }
 
 .lang-modal-card p {
-    font-size: 1rem;
-    color: #94a3b8; /* Tailwind Slate 400 */
-    margin-bottom: 24px;
+    font-size: 0.95rem;
+    color: #94a3b8;
+    margin-bottom: 20px;
 }
 
 .lang-options-grid {
@@ -198,20 +185,20 @@ header > nav > ul > li a:hover {
 }
 
 .lang-option-btn {
-    background-color: #0f172a; /* Tailwind Slate 900 */
+    background-color: #0f172a;
     border: 1px solid #334155;
     color: #f8fafc;
-    padding: 14px;
+    padding: 12px;
     border-radius: 12px;
     font-family: inherit;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.2s ease;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 4px;
+    gap: 2px;
     text-align: left;
 }
 
@@ -227,14 +214,11 @@ header > nav > ul > li a:hover {
     transform: translateY(-2px);
 }
 
-/* ==========================================
-   5. HERO SECTION (Full-Width Edge-to-Edge)
-   ========================================== */
 #hero {
     width: 100%;
     max-width: none;
-    min-height: 94vh;
     margin: 0;
+    min-height: 94vh;
     background-color: #0f172a;
     background-image: linear-gradient(180deg, rgba(15, 23, 42, 0.2) 0%, rgba(15, 23, 42, 0.4) 50%, rgba(15, 23, 42, 0.95) 100%), url('./images/herobg.jpg');
     background-size: cover;
@@ -283,24 +267,22 @@ header > nav > ul > li a:hover {
     font-size: 1rem;
     font-weight: 600;
     color: #0f172a;
-    background-color: #10b981; /* Tailwind Emerald 500 */
+    background-color: #10b981;
     border-radius: 999px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
 .hero-btn:hover {
-    background-color: #34d399; /* Tailwind Emerald 400 */
+    background-color: #34d399;
     transform: translateY(-2px);
 }
 
-/* ==========================================
-   6. EDITORIAL SECTIONS & CARDS
-   ========================================== */
 section {
     padding: clamp(60px, 9vw, 140px) clamp(20px, 6vw, 64px);
     max-width: 1440px;
     margin: 0 auto;
+    width: 100%;
 }
 
 .section-tag {
@@ -309,11 +291,10 @@ section {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    color: #34d399; /* Tailwind Emerald 400 */
+    color: #34d399;
     margin-bottom: 16px;
 }
 
-/* Features Showcase */
 .features-header {
     max-width: 680px;
     margin-bottom: 48px;
@@ -342,8 +323,8 @@ section {
 }
 
 .feature-card {
-    background-color: #1e293b; /* Tailwind Slate 800 */
-    border: 1px solid #334155; /* Tailwind Slate 700 */
+    background-color: #1e293b;
+    border: 1px solid #334155;
     border-radius: 16px;
     padding: clamp(24px, 3vw, 40px);
     grid-column: span 4;
@@ -372,7 +353,7 @@ section {
     height: 100%;
     object-fit: cover;
     filter: brightness(0.92);
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.5s ease;
 }
 
 .feature-card:hover .feature-img img {
@@ -392,7 +373,6 @@ section {
     line-height: 1.6;
 }
 
-/* About Section */
 .about-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -420,7 +400,7 @@ section {
     display: block;
     font-family: 'Lora', Georgia, serif;
     font-size: clamp(2rem, 3.5vw, 3rem);
-    color: #34d399; /* Tailwind Emerald 400 */
+    color: #34d399;
     line-height: 1;
     margin-bottom: 6px;
     font-weight: 600;
@@ -440,7 +420,6 @@ section {
     border: 1px solid #334155;
 }
 
-/* Dashboard Features Grid */
 .dash-feat-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -448,11 +427,10 @@ section {
 }
 
 .dash-feat-card {
-    background-color: #1e293b; /* Tailwind Slate 800 */
+    background-color: #1e293b;
     border: 1px solid #334155;
     padding: clamp(24px, 4vw, 44px);
     border-radius: 16px;
-    position: relative;
     transition: border-color 0.3s ease;
 }
 
@@ -482,7 +460,6 @@ section {
     line-height: 1.6;
 }
 
-/* Testimonials */
 .testimonials-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -490,7 +467,7 @@ section {
 }
 
 .testimonial-card {
-    background-color: #1e293b; /* Tailwind Slate 800 */
+    background-color: #1e293b;
     border: 1px solid #334155;
     padding: clamp(24px, 3vw, 40px);
     border-radius: 16px;
@@ -527,15 +504,14 @@ section {
     color: #94a3b8;
 }
 
-/* ==========================================
-   7. FOOTER
-   ========================================== */
 #contact {
+    width: 100%;
+    max-width: none;
+    margin: 0;
     padding: clamp(60px, 8vw, 120px) clamp(20px, 6vw, 64px) 32px;
-    background-color: #020617; /* Tailwind Slate 950 */
+    background-color: #020617;
     border-top: 1px solid #334155;
     color: #f8fafc;
-    max-width: 100%;
 }
 
 .footer-inner-wrap {
@@ -577,7 +553,6 @@ section {
     color: #34d399;
     margin-bottom: 16px;
     font-weight: 600;
-    letter-spacing: 0.02em;
 }
 
 .footer-links ul {
@@ -618,14 +593,9 @@ section {
     border-top: 1px solid #334155;
     text-align: center;
     font-size: 0.9rem;
-    color: #64748b; /* Tailwind Slate 500 */
+    color: #64748b;
 }
 
-/* ==========================================
-   8. RESPONSIVE BREAKPOINTS & MEDIA QUERIES
-   ========================================== */
-
-/* Tablet & Smaller Laptops */
 @media (max-width: 1024px) {
     .feature-card {
         grid-column: span 6;
@@ -635,15 +605,14 @@ section {
     }
 }
 
-/* Mobile Devices (Stacking Header & Wrapping Navigation) */
 @media (max-width: 900px) {
     header {
         position: relative;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 1rem;
-        padding: 24px 16px 16px;
+        gap: 12px;
+        padding: 20px 16px;
         background: rgba(15, 23, 42, 0.95);
         backdrop-filter: blur(6px);
     }
@@ -653,18 +622,17 @@ section {
     header > nav > ul {
         display: flex;
         flex-wrap: wrap;
-        list-style-type: none;
-        align-items: center;
         justify-content: center;
-        gap: 0.5rem 1rem;
+        align-items: center;
+        gap: 8px 16px;
         width: 100%;
         margin: 0;
         padding: 0;
     }
     header > nav > ul > li a {
         font-size: 0.9rem;
-        padding: 4px 6px;
         min-height: 40px;
+        padding: 4px 6px;
     }
     .about-container {
         grid-template-columns: 1fr;
@@ -679,11 +647,10 @@ section {
     #hero {
         padding-top: 40px;
         min-height: 85vh;
-        background-position: 75% center; /* Focuses on the right side/sun area of herobg.jpg */
+        background-position: 75% center;
     }
 }
 
-/* Small Phones */
 @media (max-width: 768px) {
     .feature-card {
         grid-column: span 12;
@@ -695,16 +662,10 @@ section {
         grid-template-columns: 1fr;
     }
     .lang-modal-card {
-        padding: 24px 16px;
-    }
-    .lang-select {
-        padding: 6px 30px 6px 12px;
-        font-size: 0.85rem;
-        min-height: 40px;
+        padding: 20px 16px;
     }
 }
 
-/* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
