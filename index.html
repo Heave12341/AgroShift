@@ -3,17 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#166534">
+    <meta name="theme-color" content="#0f172a">
     <meta name="description" content="AgroShift is an AI-powered agri-advisory platform using NASA & ISRO satellite data to help farmers optimize crop rotations, monitor soil health, and conserve water.">
     
-    <!-- Vector Favicon matching Agriculture Palette -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23166534' stroke='%23FEFCE8' stroke-width='2'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='%23FDE047' stroke-width='2' stroke-dasharray='6 6'/%3E%3Cpath d='M20 44L32 20L44 44' fill='none' stroke='%23FEFCE8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='20' r='4' fill='%23FDE047'/%3E%3C/svg%3E">
+    <!-- PERFORMANCE FIX: Preload LCP Hero Background Image -->
+    <link rel="preload" as="image" href="./images/herobg.jpg" fetchpriority="high">
 
+    <!-- Preconnect to Font Origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Lora:ital,wght@0,600;1,600&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Gurmukhi:wght@400;700&family=Noto+Sans+Malayalam:wght@400;700&family=Noto+Sans+Tamil:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- PERFORMANCE FIX: Google Fonts with display=swap to prevent render blocking -->
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;600;700&family=Lora:ital,wght@0,500;0,600;1,500&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Gurmukhi:wght@400;600;700&family=Noto+Sans+Malayalam:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="./styles.css">
+
+    <!-- Distinct Vector Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f172a' stroke='%2310b981' stroke-width='2'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='%2334d399' stroke-width='2' stroke-dasharray='6 6'/%3E%3Cpath d='M20 44L32 20L44 44' fill='none' stroke='%2310b981' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='20' r='4' fill='%2310b981'/%3E%3C/svg%3E">
 
     <title>AgroShift — Satellite Crop &amp; Soil Advisory</title>
 </head>
@@ -23,10 +29,10 @@
     <header id="navbar">
         <a href="#hero" class="brand-logo" aria-label="AgroShift Home">
             <svg class="brand-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <rect width="64" height="64" rx="14" fill="#166534" stroke="#FEFCE8" stroke-width="2"/>
-                <circle cx="32" cy="32" r="20" fill="none" stroke="#FDE047" stroke-width="2" stroke-dasharray="6 6"/>
-                <path d="M20 44L32 20L44 44" fill="none" stroke="#FEFCE8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="32" cy="20" r="4" fill="#FDE047"/>
+                <rect width="64" height="64" rx="14" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+                <circle cx="32" cy="32" r="20" fill="none" stroke="#34d399" stroke-width="2" stroke-dasharray="6 6"/>
+                <path d="M20 44L32 20L44 44" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="32" cy="20" r="4" fill="#10b981"/>
             </svg>
             <span>AgroShift</span>
         </a>
@@ -55,39 +61,48 @@
 
     <main id="main-content">
         <section id="hero" aria-labelledby="hero-heading">
-            <h1 id="hero-heading" data-i18n="hero_heading">Smarter.<br>Healthier.<br>Sustainable.</h1>
-            <p data-i18n="hero_sub">Satellite-guided crop planning for resilient farms.</p>
-            <div class="hero-actions">
-                <a href="./dashboard/index.html" class="hero-btn" data-i18n="hero_btn">Check Your Farm</a>
+            <div class="hero-content-wrapper">
+                <h1 id="hero-heading" data-i18n="hero_heading">Smarter.<br>Healthier.<br>Sustainable.</h1>
+                <p data-i18n="hero_sub">Satellite-guided crop planning for resilient farms.</p>
+                <div class="hero-actions">
+                    <a href="./dashboard/index.html" class="hero-btn" data-i18n="hero_btn">Check Your Farm</a>
+                </div>
             </div>
         </section>
 
         <section id="features" aria-labelledby="features-heading">
             <div class="features-header">
-                <h2 id="features-heading" data-i18n="features_heading">Powered by Satellite Intelligence</h2>
-                <p data-i18n="features_sub">Built for farmers, backed by global research and space data.</p>
+                <span class="section-tag" data-i18n="features_tag">Intelligence</span>
+                <h2 id="features-heading" data-i18n="features_heading">Powered by Satellite Data</h2>
+                <p data-i18n="features_sub">Built for farmers, backed by global research and space observation feeds.</p>
             </div>
             <div class="feature-grid">
                 <article class="feature-card">
                     <div class="feature-img">
-                        <img src="./images/feature1.jpeg" alt="Satellite orbiting Earth capturing farm data" loading="lazy" decoding="async" width="400" height="200">
+                        <img src="./images/feature1.jpeg" alt="Satellite orbiting Earth capturing farm data" loading="lazy" decoding="async" width="400" height="220">
                     </div>
-                    <h3 data-i18n="feat1_title">Satellite Insights</h3>
-                    <p data-i18n="feat1_desc">Real-time monitoring using NASA and ISRO data streams like NISAR, SMAP, and Sentinel.</p>
+                    <div>
+                        <h3 data-i18n="feat1_title">Satellite Insights</h3>
+                        <p data-i18n="feat1_desc">Real-time monitoring using NASA and ISRO data streams like NISAR, SMAP, and Sentinel.</p>
+                    </div>
                 </article>
                 <article class="feature-card">
                     <div class="feature-img">
-                        <img src="./images/feature2.jpeg" alt="Healthy green crop rows in fertile soil" loading="lazy" decoding="async" width="400" height="200">
+                        <img src="./images/feature2.jpeg" alt="Healthy green crop rows in fertile soil" loading="lazy" decoding="async" width="400" height="220">
                     </div>
-                    <h3 data-i18n="feat2_title">Smart Crop Planning</h3>
-                    <p data-i18n="feat2_desc">AI-driven recommendations to optimize crop rotation choices and boost long-term yields.</p>
+                    <div>
+                        <h3 data-i18n="feat2_title">Smart Crop Planning</h3>
+                        <p data-i18n="feat2_desc">AI-driven recommendations to optimize crop rotation choices and boost long-term yields.</p>
+                    </div>
                 </article>
                 <article class="feature-card">
                     <div class="feature-img">
-                        <img src="./images/feature3.jpeg" alt="Irrigated farmland showing moisture balance" loading="lazy" decoding="async" width="400" height="200">
+                        <img src="./images/feature3.jpeg" alt="Irrigated farmland showing moisture balance" loading="lazy" decoding="async" width="400" height="220">
                     </div>
-                    <h3 data-i18n="feat3_title">Water &amp; Soil Analysis</h3>
-                    <p data-i18n="feat3_desc">Track soil moisture levels and nutrient health precisely to conserve resources.</p>
+                    <div>
+                        <h3 data-i18n="feat3_title">Water &amp; Soil Analysis</h3>
+                        <p data-i18n="feat3_desc">Track soil moisture levels and nutrient health precisely to conserve resources.</p>
+                    </div>
                 </article>
             </div>
         </section>
@@ -111,7 +126,7 @@
                     </div>
                 </div>
                 <div class="about-visual">
-                    <img src="./images/about-farm.jpeg" alt="Farmer inspecting healthy crops in the field" loading="lazy" decoding="async" width="600" height="460">
+                    <img src="./images/about-farm.jpeg" alt="Farmer inspecting healthy crops in the field" loading="lazy" decoding="async" width="600" height="540">
                 </div>
             </div>
         </section>
@@ -119,27 +134,27 @@
         <section id="dashboard-features" aria-labelledby="dash-heading">
             <div class="dash-feat-header">
                 <span class="section-tag" data-i18n="dash_tag">Inside the Dashboard</span>
-                <h2 id="dash-heading" data-i18n="dash_heading">Built for the Field: Core Features</h2>
+                <h2 id="dash-heading" data-i18n="dash_heading">Built for the Field</h2>
                 <p data-i18n="dash_sub">Designed with zero clutter, high contrast, and simple visual cues so every tool is easy to navigate.</p>
             </div>
             <div class="dash-feat-grid">
                 <article class="dash-feat-card">
-                    <div class="feat-icon-num" aria-hidden="true">01</div>
+                    <div class="feat-icon-num" aria-hidden="true">01 / Tracker</div>
                     <h3 data-i18n="df1_title">Soil Health Tracker</h3>
                     <p data-i18n="df1_desc">Live satellite readings on nitrogen, phosphorus, and organic carbon levels to prevent soil exhaustion before it starts.</p>
                 </article>
                 <article class="dash-feat-card">
-                    <div class="feat-icon-num" aria-hidden="true">02</div>
+                    <div class="feat-icon-num" aria-hidden="true">02 / Planner</div>
                     <h3 data-i18n="df2_title">Smart Crop Rotation Planner</h3>
                     <p data-i18n="df2_desc">Step-by-step guidance on which crops to alternate each season to naturally restore nutrients and boost yields by up to 27%.</p>
                 </article>
                 <article class="dash-feat-card">
-                    <div class="feat-icon-num" aria-hidden="true">03</div>
+                    <div class="feat-icon-num" aria-hidden="true">03 / Advisor</div>
                     <h3 data-i18n="df3_title">Water &amp; Irrigation Advisor</h3>
                     <p data-i18n="df3_desc">Real-time soil moisture mapping powered by NASA SMAP to prevent over-watering and conserve vital groundwater.</p>
                 </article>
                 <article class="dash-feat-card">
-                    <div class="feat-icon-num" aria-hidden="true">04</div>
+                    <div class="feat-icon-num" aria-hidden="true">04 / Alerts</div>
                     <h3 data-i18n="df4_title">Local Weather &amp; Risk Alerts</h3>
                     <p data-i18n="df4_desc">Early warnings for extreme weather, droughts, or sudden frost tailored specifically to your farm sector.</p>
                 </article>
@@ -179,37 +194,39 @@
     </main>
 
     <footer id="contact">
-        <div class="footer-container">
-            <div class="footer-brand">
-                <div class="footer-brand-title">
-                    <svg class="brand-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <rect width="64" height="64" rx="14" fill="#166534" stroke="#FEFCE8" stroke-width="2"/>
-                        <circle cx="32" cy="32" r="20" fill="none" stroke="#FDE047" stroke-width="2" stroke-dasharray="6 6"/>
-                        <path d="M20 44L32 20L44 44" fill="none" stroke="#FEFCE8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                        <circle cx="32" cy="20" r="4" fill="#FDE047"/>
-                    </svg>
-                    <h2>AgroShift</h2>
+        <div class="footer-inner-wrap">
+            <div class="footer-container">
+                <div class="footer-brand">
+                    <div class="footer-brand-title">
+                        <svg class="brand-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <rect width="64" height="64" rx="14" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+                            <circle cx="32" cy="32" r="20" fill="none" stroke="#34d399" stroke-width="2" stroke-dasharray="6 6"/>
+                            <path d="M20 44L32 20L44 44" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="32" cy="20" r="4" fill="#10b981"/>
+                        </svg>
+                        <h2>AgroShift</h2>
+                    </div>
+                    <p data-i18n="footer_desc">Satellite intelligence for resilient, sustainable farming. Built for the NASA Space Apps Challenge.</p>
                 </div>
-                <p data-i18n="footer_desc">Satellite intelligence for resilient, sustainable farming. Built for the NASA Space Apps Challenge.</p>
+                <div class="footer-links">
+                    <h3 data-i18n="footer_links_title">Quick Links</h3>
+                    <ul>
+                        <li><a href="#hero" data-i18n="nav_home">Home</a></li>
+                        <li><a href="#features" data-i18n="footer_features">Features</a></li>
+                        <li><a href="#about" data-i18n="nav_about">About</a></li>
+                        <li><a href="./dashboard/index.html" data-i18n="nav_dashboard">Dashboard</a></li>
+                        <li><a href="#testimonials" data-i18n="footer_testimonials">Testimonials</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h3 data-i18n="footer_contact_title">Get in Touch</h3>
+                    <p data-i18n="footer_contact_desc">Have questions, feedback, or want to collaborate with our team?</p>
+                    <a href="mailto:example.com" class="footer-email">example.com</a>
+                </div>
             </div>
-            <div class="footer-links">
-                <h3 data-i18n="footer_links_title">Quick Links</h3>
-                <ul>
-                    <li><a href="#hero" data-i18n="nav_home">Home</a></li>
-                    <li><a href="#features" data-i18n="footer_features">Features</a></li>
-                    <li><a href="#about" data-i18n="nav_about">About</a></li>
-                    <li><a href="./dashboard/index.html" data-i18n="nav_dashboard">Dashboard</a></li>
-                    <li><a href="#testimonials" data-i18n="footer_testimonials">Testimonials</a></li>
-                </ul>
+            <div class="footer-bottom">
+                <p data-i18n="footer_copy">&copy; 2026 AgroShift. All rights reserved. Powered by open-source satellite data.</p>
             </div>
-            <div class="footer-contact">
-                <h3 data-i18n="footer_contact_title">Get in Touch</h3>
-                <p data-i18n="footer_contact_desc">Have questions, feedback, or want to collaborate with our team?</p>
-                <a href="mailto:example.com" class="footer-email">example.com</a>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p data-i18n="footer_copy">&copy; 2026 AgroShift. All rights reserved. Powered by open-source satellite data.</p>
         </div>
     </footer>
 
@@ -224,8 +241,9 @@
                 hero_heading: "Smarter.<br>Healthier.<br>Sustainable.",
                 hero_sub: "Satellite-guided crop planning for resilient farms.",
                 hero_btn: "Check Your Farm",
-                features_heading: "Powered by Satellite Intelligence",
-                features_sub: "Built for farmers, backed by global research and space data.",
+                features_tag: "Intelligence",
+                features_heading: "Powered by Satellite Data",
+                features_sub: "Built for farmers, backed by global research and space observation feeds.",
                 feat1_title: "Satellite Insights",
                 feat1_desc: "Real-time monitoring using NASA and ISRO data streams like NISAR, SMAP, and Sentinel.",
                 feat2_title: "Smart Crop Planning",
@@ -239,7 +257,7 @@
                 stat1_label: "Higher yield via smart crop rotation",
                 stat2_label: "Water saved with soil moisture alerts",
                 dash_tag: "Inside the Dashboard",
-                dash_heading: "Built for the Field: Core Features",
+                dash_heading: "Built for the Field",
                 dash_sub: "Designed with zero clutter, high contrast, and simple visual cues so every tool is easy to navigate.",
                 df1_title: "Soil Health Tracker",
                 df1_desc: "Live satellite readings on nitrogen, phosphorus, and organic carbon levels to prevent soil exhaustion before it starts.",
@@ -278,7 +296,8 @@
                 hero_heading: "समझदार।<br>स्वस्थ।<br>टिकाऊ खेती।",
                 hero_sub: "मजबूत और लाभदायक खेती के लिए उपग्रह-आधारित फसल योजना।",
                 hero_btn: "अपना खेत जांचें",
-                features_heading: "उपग्रह बुद्धिमत्ता से संचालित",
+                features_tag: "बुद्धिमत्ता",
+                features_heading: "उपग्रह डेटा द्वारा संचालित",
                 features_sub: "किसानों के लिए निर्मित, वैश्विक अनुसंधान और अंतरिक्ष डेटा द्वारा समर्थित।",
                 feat1_title: "उपग्रह जानकारी",
                 feat1_desc: "NISAR, SMAP और Sentinel जैसे NASA और ISRO डेटा स्ट्रीम का उपयोग करके सटीक निगरानी।",
@@ -293,7 +312,7 @@
                 stat1_label: "स्मार्ट फसल चक्र से अधिक पैदावार",
                 stat2_label: "मिट्टी की नमी के अलर्ट से पानी की बचत",
                 dash_tag: "डैशबोर्ड के अंदर",
-                dash_heading: "खेत के लिए निर्मित: मुख्य विशेषताएं",
+                dash_heading: "खेत के लिए निर्मित",
                 dash_sub: "बिना किसी उलझन के, स्पष्ट रंगों और सरल संकेतों के साथ डिज़ाइन किया गया।",
                 df1_title: "मिट्टी स्वास्थ्य ट्रैकर",
                 df1_desc: "मिट्टी की उर्वरता को कम होने से बचाने के लिए नाइट्रोजन, फास्फोरस और कार्बन स्तर की लाइव जानकारी।",
@@ -332,7 +351,8 @@
                 hero_heading: "ਸਮਝਦਾਰ।<br>ਸਿਹਤਮੰਦ।<br>ਟਿਕਾਊ ਖੇਤੀ।",
                 hero_sub: "ਮਜ਼ਬੂਤ ਅਤੇ ਲਾਹੇਵੰਦ ਖੇਤਾਂ ਲਈ ਸੈਟੇਲਾਈਟ-ਆਧਾਰਿਤ ਫ਼ਸਲ ਯੋਜਨਾਬੰਦੀ।",
                 hero_btn: "ਆਪਣੇ ਖੇਤ ਦੀ ਜਾਂਚ ਕਰੋ",
-                features_heading: "ਸੈਟੇਲਾਈਟ ਤਕਨੀਕ ਨਾਲ ਲੈਸ",
+                features_tag: "ਸੂਝ",
+                features_heading: "ਸੈਟੇਲਾਈਟ ਡੇਟਾ ਦੁਆਰਾ ਸੰਚਾਲਿਤ",
                 features_sub: "ਕਿਸਾਨਾਂ ਲਈ ਤਿਆਰ, ਵਿਸ਼ਵ ਖੋਜ ਅਤੇ ਪੁਲਾੜ ਡੇਟਾ ਦੇ ਸਹਿਯੋਗ ਨਾਲ।",
                 feat1_title: "ਸੈਟੇਲਾਈਟ ਜਾਣਕਾਰੀ",
                 feat1_desc: "NISAR, SMAP ਅਤੇ Sentinel ਵਰਗੇ NASA ਅਤੇ ISRO ਡੇਟਾ ਸਟ੍ਰੀਮ ਰਾਹੀਂ ਸਹੀ ਨਿਗਰਾਨੀ।",
@@ -347,7 +367,7 @@
                 stat1_label: "ਸਮਾਰਟ ਫ਼ਸਲੀ ਚੱਕਰ ਨਾਲ ਵੱਧ ਝਾੜ",
                 stat2_label: "ਮਿੱਟੀ ਦੀ ਨਮੀ ਦੇ ਅਲਰਟ ਨਾਲ ਪਾਣੀ ਦੀ ਬਚਤ",
                 dash_tag: "ਡੈਸ਼ਬੋਰਡ ਦੇ ਅੰਦਰ",
-                dash_heading: "ਖੇਤ ਲਈ ਤਿਆਰ: ਮੁੱਖ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ",
+                dash_heading: "ਖੇਤ ਲਈ ਤਿਆਰ",
                 dash_sub: "ਬਿਨਾਂ ਕਿਸੇ ਉਲਝਣ ਦੇ, ਸਾਫ਼ ਰੰਗਾਂ ਅਤੇ ਸੌਖੇ ਇਸ਼ਾਰਿਆਂ ਨਾਲ ਤਿਆਰ ਕੀਤਾ ਗਿਆ।",
                 df1_title: "ਮਿੱਟੀ ਸਿਹਤ ਟਰੈਕਰ",
                 df1_desc: "ਮਿੱਟੀ ਦੀ ਉਪਜਾਊ ਸ਼ਕਤੀ ਘਟਣ ਤੋਂ ਰੋਕਣ ਲਈ ਨਾਈਟ੍ਰੋਜਨ, ਫਾਸਫੋਰਸ ਅਤੇ ਕਾਰਬਨ ਪੱਧਰ ਦੀ ਲਾਈਵ ਜਾਣਕਾਰੀ।",
@@ -386,7 +406,8 @@
                 hero_heading: "മികച്ചത്.<br>ആരോഗ്യകരം.<br>സുസ്ഥിര കൃഷി.",
                 hero_sub: "കരുത്തുറ്റ കൃഷിയിടങ്ങൾക്കായി ഉപഗ്രഹ അധിഷ്ഠിത വിള ആസൂത്രണം.",
                 hero_btn: "നിങ്ങളുടെ കൃഷിയിടം പരിശോധിക്കുക",
-                features_heading: "ഉപഗ്രഹ സാങ്കേതികവിദ്യയുടെ കരുത്തിൽ",
+                features_tag: "വിവരങ്ങൾ",
+                features_heading: "ഉപഗ്രഹ ഡാറ്റയുടെ കരുത്തിൽ",
                 features_sub: "കർഷകർക്കായി നിർമ്മിച്ചത്, ആഗോള ഗവേഷണത്തിന്റെയും ബഹിരാകാശ ഡാറ്റയുടെയും പിൻബലത്തോടെ.",
                 feat1_title: "ഉപഗ്രഹ വിവരങ്ങൾ",
                 feat1_desc: "NISAR, SMAP, Sentinel തുടങ്ങിയ NASA, ISRO ഡാറ്റ സ്ട്രീമുകൾ ഉപയോഗിച്ചുള്ള തത്സമയ നിരീക്ഷണം.",
@@ -401,7 +422,7 @@
                 stat1_label: "വിളമാറ്റത്തിലൂടെയുള്ള അധിക വിളവ്",
                 stat2_label: "മണ്ണിലെ ഈർപ്പ മുന്നറിയിപ്പിലൂടെ ജലസംരക്ഷണം",
                 dash_tag: "ഡാഷ്‌ബോർഡിനുള്ളിൽ",
-                dash_heading: "കൃഷിയിടത്തിനായി നിർമ്മിച്ചത്: പ്രധാന സവിശേഷതകൾ",
+                dash_heading: "കൃഷിയിടത്തിനായി നിർമ്മിച്ചത്",
                 dash_sub: "സങ്കീർണ്ണതകളില്ലാതെ, വ്യക്തമായ നിറങ്ങളിലും ലളിതമായ അടയാളങ്ങളിലും രൂപകൽപ്പന ചെയ്തത്.",
                 df1_title: "മണ്ണിന്റെ ആരോഗ്യ ട്രാക്കർ",
                 df1_desc: "മണ്ണിന്റെ ഫലഭൂയിഷ്ഠത നഷ്ടപ്പെടുന്നത് തടയാൻ നൈട്രജൻ, ഫോസ്ഫറസ്, ഓർഗാനിക് കാർബൺ എന്നിവയുടെ തത്സമയ അളവുകൾ.",
@@ -440,7 +461,8 @@
                 hero_heading: "हुशार.<br>निरोगी.<br>शाश्वत शेती.",
                 hero_sub: "अभिमान व समृद्धीसाठी उपग्रह-आधारित पीक नियोजन.",
                 hero_btn: "तुमचे शेत तपासा",
-                features_heading: "उपग्रह बुद्धिमत्तेद्वारे चालित",
+                features_tag: "माहिती",
+                features_heading: "उपग्रह डेटाद्वारे चालित",
                 features_sub: "शेतकऱ्यांसाठी निर्मित, जागतिक संशोधन आणि अंतराळ डेटाद्वारे समर्थित.",
                 feat1_title: "उपग्रह अंतर्दृष्टी",
                 feat1_desc: "NISAR, SMAP आणि Sentinel सारख्या NASA आणि ISRO डेटा प्रवाहांसह रिअल-टाइम निरीक्षण.",
@@ -455,7 +477,7 @@
                 stat1_label: "स्मार्ट पीक फेरपालटाद्वारे उच्च उत्पन्न",
                 stat2_label: "मातीच्या ओलावा चेतावणीसह पाणी वाचवले",
                 dash_tag: "डॅशबोर्डच्या आत",
-                dash_heading: "शेतासाठी तयार केलेले: मुख्य वैशिष्ट्ये",
+                dash_heading: "शेतासाठी तयार केलेले",
                 dash_sub: "शून्य गोंधळ, उच्च कॉन्ट्रास्ट आणि साध्या व्हिज्युअल संकेतांसह डिझाइन केलेले जेणेकरून प्रत्येक साधन नेव्हिगेट करणे सोपे होईल.",
                 df1_title: "माती आरोग्य ट्रॅकर",
                 df1_desc: "मातीचा थकवा येण्यापूर्वी रोखण्यासाठी नायट्रोजन, फॉस्फरस आणि सेंद्रिय कार्बन पातळीवर थेट उपग्रह रीडिंग.",
@@ -494,7 +516,8 @@
                 hero_heading: "நுண்ணறிவு.<br>ஆரோக்கியம்.<br>நிலையான விவசாயம்.",
                 hero_sub: "மீள்தன்மை கொண்ட பண்ணைகளுக்கான செயற்கைக்கோள் வழிகாட்டப்பட்ட பயிர் திட்டமிடல்.",
                 hero_btn: "உங்கள் பண்ணையைச் சரிபார்க்கவும்",
-                features_heading: "செயற்கைக்கோள் நுண்ணறிவு மூலம் இயக்கப்படுகிறது",
+                features_tag: "நுண்ணறிவு",
+                features_heading: "செயற்கைக்கோள் தரவு மூலம் இயக்கப்படுகிறது",
                 features_sub: "விவசாயிகளுக்காக கட்டப்பட்டது, உலகளாவிய ஆராய்ச்சி மற்றும் விண்வெளி தரவுகளால் ஆதரிக்கப்படுகிறது.",
                 feat1_title: "செயற்கைக்கோள் நுண்ணறிவு",
                 feat1_desc: "NISAR, SMAP மற்றும் Sentinel போன்ற NASA மற்றும் ISRO தரவு ஓடைகளைப் பயன்படுத்தி நிகழ்நேர கண்காணிப்பு.",
@@ -509,7 +532,7 @@
                 stat1_label: "ஸ்மார்ட் பயிர் சுழற்சி மூலம் அதிக விளைச்சல்",
                 stat2_label: "மண் ஈரப்பத எச்சரிக்கைகள் மூலம் சேமிக்கப்பட்ட நீர்",
                 dash_tag: "டாஷ்போர்டுக்குள்",
-                dash_heading: "புலத்திற்காக கட்டப்பட்டது: முக்கிய அம்சங்கள்",
+                dash_heading: "புலத்திற்காக கட்டப்பட்டது",
                 dash_sub: "பூஜ்ஜியக் குழப்பம், அதிக மாறுபாடு மற்றும் எளிய காட்சி குறிப்புகளுடன் வடிவமைக்கப்பட்டுள்ளது, இதனால் ஒவ்வொரு கருவியும் செல்ல எளிதானது.",
                 df1_title: "மண் ஆரோக்கிய கண்காணிப்பாளர்",
                 df1_desc: "மண் சோர்வடைவதைத் தடுக்க நைட்ரஜன், பாஸ்பரஸ் மற்றும் கரிம கார்பன் அளவுகள் குறித்த நேரலை செயற்கைக்கோள் வாசிப்புகள்.",
