@@ -1,7 +1,8 @@
-"""Pan-Indian Crop Database (53 Crops) & Multi-Criteria Rotation Engine.
+"""Global Crop Catalogue (1,232 records) & Multi-Criteria Rotation Engine.
 Scientifically calibrated for the Agro-Climatic Zones of Bihar and the Indo-Gangetic Plains.
 """
 from typing import Any
+from crops_registry import CROPS as GLOBAL_CROPS
 
 CROPS: dict[str, dict[str, Any]] = {
     "rice": {
@@ -3470,6 +3471,57 @@ CROPS: dict[str, dict[str, Any]] = {
     }
 }
 
+
+# Keep the original Indian 53-crop set as the trusted baseline used by the
+# existing India recommendations. Add the teammate's wider 1,232-crop registry
+# for crop discovery, custom rotations and region-specific recommendation paths.
+BASE_CROP_IDS = frozenset(CROPS.keys())
+_CATEGORY_ALIASES = {
+    "cereals_millets": "cereal", "pulses": "pulse", "oilseeds": "oilseed",
+    "vegetables": "vegetable", "roots_tubers": "vegetable",
+    "industrial_fibre": "commercial", "commercial_cash": "commercial",
+    "fruits": "fruit", "spices_aromatics": "spice", "spices": "spice",
+}
+for _global_id, _global_crop in GLOBAL_CROPS.items():
+    if _global_id in CROPS:
+        # Preserve the already-reviewed, locally calibrated base crop record.
+        continue
+    _crop = dict(_global_crop)
+    _crop["id"] = _global_id
+    _crop.setdefault("name", _global_id.replace("_", " ").title())
+    _crop.setdefault("scientific_name", "")
+    _crop.setdefault("categories", [])
+    _crop["categories"] = list(dict.fromkeys(
+        list(_crop.get("categories") or []) +
+        [_CATEGORY_ALIASES.get(_crop.get("primary_category", ""), _crop.get("primary_category", "other"))]
+    ))
+    _crop.setdefault("crop_family", "Unknown")
+    _crop.setdefault("season", "annual")
+    _crop.setdefault("duration_range_days", _crop.get("duration_days", [90, 120]))
+    _crop.setdefault("typical_duration", int(sum(_crop["duration_range_days"]) / 2))
+    _crop.setdefault("water_need_range_mm", _crop.get("water_need_mm", [300, 600]))
+    _crop.setdefault("typical_water_mm", int(sum(_crop["water_need_range_mm"]) / 2))
+    _crop.setdefault("nitrogen_fixation_range_kg_ha", None)
+    _crop.setdefault("nitrogen_fixation_kg_ha", None)
+    _crop.setdefault("root_type", "unspecified")
+    _crop.setdefault("root_depth_range_cm", _crop.get("root_depth_cm", [0, 60]))
+    _crop.setdefault("soil_cover_rating", 3)
+    _crop.setdefault("drought_tolerance", 3)
+    _crop.setdefault("waterlogging_tolerance", 2)
+    _crop.setdefault("market_stability", "unknown")
+    _crop.setdefault("n_feeder", "unknown")
+    _crop.setdefault("suitable_soils", [])
+    _crop.setdefault("regional_suitability", {})
+    _crop.setdefault("data_source", "Global crop registry; see record metadata")
+    _crop.setdefault("source_year", "not specified")
+    _crop.setdefault("data_confidence", "medium")
+    _crop.setdefault("limitations", ["Global catalogue record; check local suitability and conditions before planting."])
+    _crop.setdefault("duration_days", _crop["duration_range_days"])
+    _crop.setdefault("water_need_mm", _crop["water_need_range_mm"])
+    _crop.setdefault("root_depth_cm", _crop["root_depth_range_cm"])
+    CROPS[_global_id] = _crop
+
+
 # Backward compatibility convenience accessors
 for _cid, _c in CROPS.items():
     _c["id"] = _cid
@@ -3984,6 +4036,318 @@ def detect_indian_agroclimatic_zone(lat: float | None, lon: float | None) -> tup
     return "indo_gangetic", "Indo-Gangetic & Sub-Humid Plains (approximate)"
 
 
+def detect_global_climate_zone(lat: float | None, lon: float | None) -> tuple[str, str, str, str]:
+    """Resolves worldwide coordinates to global agro-climatic zone, region name, hemisphere, and climate type.
+    Returns: (zone_key, zone_name, hemisphere, eco_zone)
+    """
+    if lat is None or lon is None:
+        return "bihar", "Middle Gangetic Plains (Bihar Hub)", "northern", "subtropical"
+
+    hemisphere = "southern" if lat < 0 else "northern"
+
+    # Check if coordinate is in Indian Subcontinent
+    if 6.0 <= lat <= 38.0 and 68.0 <= lon <= 97.5:
+        icar_key, icar_name = detect_indian_agroclimatic_zone(lat, lon)
+        return icar_key, icar_name, "northern", "subtropical"
+
+    # Global Agro-Climatic Zones
+    # North America Corn Belt & Upper Midwest
+    if 36.0 <= lat <= 49.0 and -104.0 <= lon <= -80.0:
+        return "us_corn_belt", "North American Corn Belt & Upper Midwest (USA)", "northern", "temperate_continental"
+
+    # North America Great Plains / Wheat Belt
+    if 32.0 <= lat <= 52.0 and -115.0 <= lon < -100.0:
+        return "us_great_plains", "North American Great Plains & Wheat Belt (USA/Canada)", "northern", "arid_semiarid"
+
+    # North America Pacific / California Central Valley
+    if 32.0 <= lat <= 46.0 and -125.0 <= lon < -115.0:
+        return "us_mediterranean", "Pacific Southwest / California Central Valley", "northern", "mediterranean"
+
+    # South America Cerrado (Mato Grosso, Goias)
+    if -18.0 <= lat <= -8.0 and -60.0 <= lon <= -45.0:
+        return "latin_america_cerrado", "Brazilian Cerrado Agricultural Frontier (Brazil)", "southern", "tropical_savanna"
+
+    # South America Pampas (Argentina, Uruguay, Rio Grande do Sul)
+    if -39.0 <= lat < -25.0 and -65.0 <= lon <= -50.0:
+        return "latin_america_pampas", "Pampas Agricultural Plains (Argentina / Uruguay)", "southern", "temperate_subtropical"
+
+    # Mediterranean Basin (Spain, Italy, Greece, Turkey, North Africa)
+    if 30.0 <= lat <= 45.0 and -10.0 <= lon <= 36.0:
+        return "mediterranean_basin", "Mediterranean Basin (Southern Europe / North Africa)", "northern", "mediterranean"
+
+    # Western & Central European Agricultural Plain (France, Germany, UK, Poland)
+    if 45.0 <= lat <= 58.0 and -10.0 <= lon <= 25.0:
+        return "europe_temperate", "Western & Central European Plains (France / Germany / UK)", "northern", "temperate_maritime"
+
+    # Eurasian Steppe & Black Earth Basin (Ukraine, Southern Russia, Kazakhstan)
+    if 44.0 <= lat <= 55.0 and 25.0 <= lon <= 70.0:
+        return "eurasian_steppe", "Black Earth Steppe Belt (Ukraine / Southern Russia)", "northern", "continental_temperate"
+
+    # Sub-Saharan Africa & Savanna-Sahel (Nigeria, Kenya, Ethiopia, Ghana)
+    if -15.0 <= lat <= 18.0 and -18.0 <= lon <= 50.0:
+        return "sub_saharan_africa", "Sub-Saharan Africa & East African Plateau (Kenya / Nigeria)", "tropical", "tropical_savanna"
+
+    # East Asian Agricultural Basin (China North Plain, Yangtze, Japan, Korea)
+    if 22.0 <= lat <= 45.0 and 100.0 <= lon <= 145.0:
+        return "east_asia", "East Asian Agricultural Basin (China / Korea / Japan)", "northern", "subtropical_temperate"
+
+    # Australian Murray-Darling & Southwest Grain Belt
+    if -42.0 <= lat <= -20.0 and 112.0 <= lon <= 154.0:
+        return "australia_grain_belt", "Australian Grain Belt (Murray-Darling / Western Australia)", "southern", "mediterranean_arid"
+
+    # General Latitudinal fallbacks
+    abs_lat = abs(lat)
+    if abs_lat <= 23.5:
+        return "global_tropical", f"Global Tropical Lowlands ({hemisphere.capitalize()} Hemisphere)", hemisphere, "tropical"
+    elif 23.5 < abs_lat <= 38.0:
+        return "global_subtropical", f"Global Subtropical Belt ({hemisphere.capitalize()} Hemisphere)", hemisphere, "subtropical"
+    elif 38.0 < abs_lat <= 55.0:
+        return "global_temperate", f"Global Temperate Zone ({hemisphere.capitalize()} Hemisphere)", hemisphere, "temperate"
+    else:
+        return "global_boreal", f"High Latitude Boreal Zone ({hemisphere.capitalize()} Hemisphere)", hemisphere, "boreal"
+
+
+def _global_candidate_rotations(reg_key: str) -> list[dict[str, Any]]:
+    # Curated region-specific crop pathways imported from teammate source.
+    candidate_rotations: list[dict[str, Any]] = []
+    if reg_key == "us_corn_belt":
+        candidate_rotations = [
+            {
+                "id": "corn_soybean",
+                "name": "Dent Corn → Soybean (Corn Belt Standard)",
+                "crop_ids": ["dent_corn", "soybean"],
+                "description": "The benchmark agricultural rotation of the US Midwest, balancing high-yielding carbohydrate feed grain with legume nitrogen fixation.",
+                "benefits": ["Proven agronomic stability across the US Corn Belt.", "Soybean nodulation fixes nitrogen reducing synthetic fertilizer needs for following corn.", "Breaks corn rootworm (Diabrotica) and foliar disease cycles."],
+                "disadvantages": ["Two-crop annual cycle lacks winter ground cover without cover crops.", "Susceptible to soil erosion during spring thaw."],
+                "assumptions": ["Assumes assured rainfall or center-pivot irrigation."],
+            },
+            {
+                "id": "corn_soybean_winter_wheat",
+                "name": "Dent Corn → Soybean → Winter Wheat",
+                "crop_ids": ["dent_corn", "soybean", "hard_red_winter_wheat"],
+                "description": "Diverse 3-crop extended sequence adding a winter cereal to reduce pest pressure and protect soil over winter.",
+                "benefits": ["Winter wheat roots scavenge residual soil nitrogen.", "High soil cover throughout winter and spring.", "Spreads labor and cash flow across summer and autumn harvests."],
+                "disadvantages": ["Requires tight harvest window for soybean to drill winter wheat."],
+                "assumptions": ["Assumes moderate winter hardiness zone."],
+            },
+            {
+                "id": "corn_alfalfa_dairy",
+                "name": "Dent Corn → Alfalfa Hay (Dairy Forage)",
+                "crop_ids": ["dent_corn", "alfalfa_hay"],
+                "description": "High-value dairy and livestock forage rotation combining silage corn with perennial deep-rooting lucerne.",
+                "benefits": ["Alfalfa taproots penetrate 2-3 meters deep breaking subsoil compaction.", "Fixes 150-250 kg N/ha, providing a massive nitrogen credit to following corn.", "Exceptional feed protein value for livestock."],
+                "disadvantages": ["High total water consumption over perennial growth."],
+                "assumptions": ["Requires dairy or livestock market infrastructure."],
+            },
+            {
+                "id": "oats_red_clover_corn",
+                "name": "Common Oat → Red Clover → Dent Corn",
+                "crop_ids": ["oats_common", "red_clover", "dent_corn"],
+                "description": "Regenerative soil-building system undersowing red clover into oats, terminated before high-yielding maize.",
+                "benefits": ["Substantially reduces synthetic fertilizer requirements.", "Red clover provides dense winter ground cover preventing erosion.", "Oats provide high-fiber cool-season grain and straw bedding."],
+                "disadvantages": ["Requires timely mechanical termination of clover."],
+                "assumptions": ["Assumes mixed crop-livestock or organic farming goals."],
+            },
+            {
+                "id": "soybean_cereal_rye",
+                "name": "Soybean → Winter Rye Cover → Field Corn",
+                "crop_ids": ["soybean", "rye_winter", "dent_corn"],
+                "description": "No-till cover-crop rotation using winter cereal rye between soybean and corn for weed suppression.",
+                "benefits": ["Winter rye allelopathy suppresses winter annual and spring weeds.", "Drastically reduces nutrient runoff into waterways.", "Builds active organic carbon in topsoil."],
+                "disadvantages": ["Rye must be terminated at right height before corn planting."],
+                "assumptions": ["Assumes no-till drill and roller-crimper or burndown."],
+            },
+        ]
+    elif reg_key in ("latin_america_cerrado", "latin_america_pampas"):
+        candidate_rotations = [
+            {
+                "id": "soybean_corn_safrinha",
+                "name": "Soybean → Safrinha Corn (Cerrado Double-Crop)",
+                "crop_ids": ["soybean", "dent_corn"],
+                "description": "The quintessential Brazilian Cerrado double-crop system capitalizing on early-maturing soybeans followed immediately by dry-season maize.",
+                "benefits": ["Maximizes annual land productivity with two commercial grain harvests per calendar year.", "Soybean fixes nitrogen for the following safrinha maize."],
+                "disadvantages": ["Safrinha corn yields depend heavily on late rains before dry season."],
+                "assumptions": ["Assumes tropical savanna climate with distinct rainy/dry seasons."],
+            },
+            {
+                "id": "soybean_cotton",
+                "name": "Soybean → Upland Cotton",
+                "crop_ids": ["soybean", "cotton"],
+                "description": "High-value cash rotation alternating legume grain with high-return commercial fibre.",
+                "benefits": ["High gross revenue per hectare.", "Deep taproot of cotton utilizes subsoil moisture."],
+                "disadvantages": ["High pesticide and intensive management requirement for cotton."],
+                "assumptions": ["Assumes access to mechanized cotton harvesters."],
+            },
+            {
+                "id": "soybean_black_oats",
+                "name": "Soybean → Black Oat Cover",
+                "crop_ids": ["soybean", "black_oats"],
+                "description": "Conservation agriculture rotation using black oats as a winter cover and nematode-suppressing mulch.",
+                "benefits": ["Black oats suppress root-knot nematodes in tropical soils.", "Produces thick straw blanket that conserves soil moisture."],
+                "disadvantages": ["Oat residue requires specialized no-till seeders for following crop."],
+                "assumptions": ["Zero-tillage management."],
+            },
+            {
+                "id": "sunflower_soybean",
+                "name": "High-Oleic Sunflower → Soybean",
+                "crop_ids": ["sunflower_high_oleic", "soybean"],
+                "description": "Oilseed-legume sequence leveraging deep sunflower taproots to mine subsoil potassium.",
+                "benefits": ["Diversifies farm income across global vegetable oil markets.", "Breaks cereal monoculture pest complexes."],
+                "disadvantages": ["Shared susceptibility to Sclerotinia requires careful scouting."],
+                "assumptions": ["Good local oilseed crushing facilities."],
+            },
+        ]
+    elif reg_key in ("mediterranean_basin", "us_mediterranean"):
+        candidate_rotations = [
+            {
+                "id": "durum_wheat_chickpea",
+                "name": "Durum Wheat → Kabuli Chickpea",
+                "crop_ids": ["durum_wheat", "kabuli_chickpea"],
+                "description": "The historic Mediterranean dryland rotation pairing premium pasta wheat with drought-hardy garbanzo legumes.",
+                "benefits": ["Chickpea fixes 40-80 kg N/ha, boosting grain protein of succeeding durum wheat.", "Low annual water demand suited to dry Mediterranean summers.", "High commercial liquidity across Mediterranean food markets."],
+                "disadvantages": ["Ascochyta blight risk in wet springs."],
+                "assumptions": ["Assumes winter rainfall Mediterranean climate."],
+            },
+            {
+                "id": "winter_barley_sunflower",
+                "name": "Two-Row Malting Barley → High-Oleic Sunflower",
+                "crop_ids": ["two_row_barley", "sunflower_high_oleic"],
+                "description": "Water-efficient rotation combining cool-season malting barley with deep-rooted summer sunflower.",
+                "benefits": ["Barley finishes before summer heat; sunflower extracts deep moisture reserves.", "Excellent weed competition from dense barley tillering."],
+                "disadvantages": ["Sunflower needs sufficient soil moisture stored from winter rains."],
+                "assumptions": ["Assumes winter moisture retention in soil profile."],
+            },
+            {
+                "id": "faba_bean_durum",
+                "name": "Broad Bean (Faba) → Durum Wheat",
+                "crop_ids": ["faba_bean_broad", "durum_wheat"],
+                "description": "High-nitrogen-building Mediterranean sequence using faba beans as a bio-fertilizer preceding premium durum.",
+                "benefits": ["Faba beans fix up to 120-160 kg N/ha.", "Significantly boosts durum wheat vitreous kernel percentage."],
+                "disadvantages": ["Faba beans require cool early vegetative conditions."],
+                "assumptions": ["Assumes moderate winter rainfall."],
+            },
+            {
+                "id": "tomato_winter_wheat",
+                "name": "Processing Tomato → Hard Red Winter Wheat",
+                "crop_ids": ["tomato_roma", "hard_red_winter_wheat"],
+                "description": "Intensive horticultural-cereal rotation alternating high-return processing tomatoes with soil-resting winter wheat.",
+                "benefits": ["High revenue from industrial processing tomato contract.", "Winter wheat scavenges leftover irrigation and fertilizer."],
+                "disadvantages": ["Intensive field operations during tomato harvest."],
+                "assumptions": ["Requires drip irrigation infrastructure."],
+            },
+        ]
+    elif reg_key in ("europe_temperate", "eurasian_steppe"):
+        candidate_rotations = [
+            {
+                "id": "winter_wheat_oilseed_rape",
+                "name": "Winter Wheat → Winter Canola (Oilseed Rape)",
+                "crop_ids": ["soft_red_winter_wheat", "canola_winter"],
+                "description": "The dominant European crop rotation pairing high-yielding winter bread wheat with high-oil winter rapeseed.",
+                "benefits": ["Rapeseed taproot breaks plow pan and aerates soil for wheat.", "Rapeseed biofumigant root exudates suppress wheat take-all fungus.", "Highest combined gross margin in temperate Western Europe."],
+                "disadvantages": ["Heavy synthetic nitrogen demand requires careful split applications."],
+                "assumptions": ["Temperate climate with reliable winter precipitation."],
+            },
+            {
+                "id": "winter_wheat_sugar_beet",
+                "name": "Winter Wheat → Sugar Beet",
+                "crop_ids": ["soft_red_winter_wheat", "sugar_beet_commercial"],
+                "description": "High-yield commercial cash rotation dominant in the European loess plains.",
+                "benefits": ["Exceptional cash revenue per hectare from sugar processing quota.", "Sugar beet leaves loose, highly friable soil structure."],
+                "disadvantages": ["Heavy harvesting machinery risks soil compaction in wet autumns."],
+                "assumptions": ["Proximity to sugar processing factory."],
+            },
+            {
+                "id": "spring_barley_field_pea",
+                "name": "Two-Row Malting Barley → Yellow Field Pea",
+                "crop_ids": ["two_row_barley", "yellow_field_pea"],
+                "description": "Low-input, balanced rotation producing premium malting barley and plant protein peas.",
+                "benefits": ["Field pea fixes 50-80 kg N/ha, keeping subsequent barley protein in optimal malting range.", "Low water requirement and short growing seasons."],
+                "disadvantages": ["Field pea lodging can complicate wet harvests."],
+                "assumptions": ["Standard grain combining equipment."],
+            },
+            {
+                "id": "winter_rye_potato",
+                "name": "Winter Rye → Russet Potato",
+                "crop_ids": ["rye_winter", "potato"],
+                "description": "Cold-hardy sandy soil rotation utilizing rye's allelopathy and biomass ahead of potato tuber production.",
+                "benefits": ["Rye suppresses soil-borne potato pathogens and weeds.", "Excellent adaptation to light, sandy, slightly acidic soils."],
+                "disadvantages": ["Potato harvest disturbs soil structure."],
+                "assumptions": ["Cold temperate or continental climate."],
+            },
+        ]
+    elif reg_key == "sub_saharan_africa":
+        candidate_rotations = [
+            {
+                "id": "sorghum_cowpea",
+                "name": "Red Grain Sorghum → Cowpea",
+                "crop_ids": ["sorghum_grain_red", "cowpea"],
+                "description": "The cornerstone resilient rotation of African drylands and savannas.",
+                "benefits": ["High drought tolerance and heat resilience.", "Cowpea provides household nutrition and fixes soil nitrogen.", "Sorghum provides food grain and drought-proof livestock stover."],
+                "disadvantages": ["Susceptible to Striga weed if soil fertility is severely depleted."],
+                "assumptions": ["Semi-arid or savanna tropical ecology."],
+            },
+            {
+                "id": "maize_pigeonpea",
+                "name": "Flint Corn → Perennial Pigeonpea",
+                "crop_ids": ["flint_corn", "pigeonpea"],
+                "description": "Multi-story cropping system combining staple maize with deep-rooting pigeonpea.",
+                "benefits": ["Pigeonpea leaf drop provides massive organic mulch.", "Mines phosphorus from subsoil horizons.", "Provides pulse grain and firewood."],
+                "disadvantages": ["Pigeonpea occupies land longer than short-season crops."],
+                "assumptions": ["Sub-humid to semi-arid tropical plateau."],
+            },
+            {
+                "id": "cassava_groundnut",
+                "name": "Sweet Cassava → Groundnut",
+                "crop_ids": ["cassava_sweet", "groundnut"],
+                "description": "Calorie and protein security system combining drought-proof cassava with high-oil groundnut.",
+                "benefits": ["Cassava provides flexible harvest window up to 2 years.", "Groundnut fixes nitrogen and prevents soil erosion."],
+                "disadvantages": ["Cassava removes high potassium amounts if tubers are exported."],
+                "assumptions": ["Warm tropical climate."],
+            },
+            {
+                "id": "teff_chickpea",
+                "name": "Brown Teff → Desi Chickpea",
+                "crop_ids": ["teff_brown", "desi_chickpea"],
+                "description": "East African highland Vertisol rotation alternating staple teff grain with nitrogen-fixing chickpea.",
+                "benefits": ["Both crops adapt to heavy cracking black clay soils.", "Teff commands high commercial market price in urban centers."],
+                "disadvantages": ["Teff requires precise, fine seedbed preparation."],
+                "assumptions": ["Tropical highland climate."],
+            },
+        ]
+    else:
+        # General Worldwide fallback
+        candidate_rotations = [
+            {
+                "id": "global_cereal_legume",
+                "name": "Small Grain Cereal → Grain Legume Pulse",
+                "crop_ids": ["wheat", "chickpea"],
+                "description": "Universal balanced cereal-legume sustainable rotation.",
+                "benefits": ["Restores soil nitrogen and interrupts pest cycles.", "Balanced food and cash flow."],
+                "disadvantages": ["Requires monitoring of soil moisture during transition."],
+                "assumptions": ["Adaptable to general temperate and subtropical zones."],
+            },
+            {
+                "id": "global_cereal_oilseed",
+                "name": "Small Grain Cereal → Brassica Oilseed",
+                "crop_ids": ["barley", "mustard"],
+                "description": "Diverse taproot-fibrous sequence breaking monoculture cycles.",
+                "benefits": ["Biofumigation from brassica glucosinolates.", "Deep subsoil moisture scavenging."],
+                "disadvantages": ["Avoid back-to-back brassicas."],
+                "assumptions": ["Standard agricultural practices."],
+            },
+            {
+                "id": "global_water_saver",
+                "name": "Drought-Resilient Millet → Pulse",
+                "crop_ids": ["pearl_millet", "cowpea"],
+                "description": "Climate-smart low-water pathway for semi-arid environments.",
+                "benefits": ["Lowest water footprint and high heat tolerance.", "Protects farm income during dry years."],
+                "disadvantages": ["Lower maximum yield ceiling than high-input cereals."],
+                "assumptions": ["Rainfed or limited water environments."],
+            },
+        ]
+    return candidate_rotations
+
+
 def _score_regional_fit(crops_list: list[dict], region_key: str) -> tuple[float, list[str]]:
     """Score regional suitability without treating nearby-region tags as local proof.
 
@@ -4064,7 +4428,11 @@ def evaluate_single_strategy(
 
     lat = farmer_profile.get("lat")
     lon = farmer_profile.get("lon")
-    reg_key, reg_name = detect_indian_agroclimatic_zone(lat, lon)
+    is_indian_zone = (lat is None or lon is None) or (6.0 <= float(lat) <= 38.0 and 68.0 <= float(lon) <= 98.0)
+    if is_indian_zone:
+        reg_key, reg_name = detect_indian_agroclimatic_zone(lat, lon)
+    else:
+        reg_key, reg_name, _hemisphere, _eco_zone = detect_global_climate_zone(lat, lon)
 
     water_score, total_water, water_warn = _score_water(crops_list, irrigation)
     soil_score, soil_warn = _score_soil_health(
@@ -4084,7 +4452,16 @@ def evaluate_single_strategy(
     resilience_score, res_warn = _score_climate_resilience(
         crops_list, climate_summary=climate_summary, region_key=reg_key
     )
-    regional_score, regional_warn = _score_regional_fit(crops_list, reg_key)
+    global_region_aliases = {
+        "us_corn_belt": "north_america", "us_great_plains": "north_america",
+        "us_mediterranean": "north_america", "latin_america_cerrado": "latin_america",
+        "latin_america_pampas": "latin_america", "mediterranean_basin": "mediterranean",
+        "europe_temperate": "europe", "eurasian_steppe": "russia",
+        "australia_grain_belt": "australia", "global_tropical": "global",
+        "global_subtropical": "global", "global_temperate": "global", "global_boreal": "global",
+    }
+    score_region_key = global_region_aliases.get(reg_key, reg_key)
+    regional_score, regional_warn = _score_regional_fit(crops_list, score_region_key)
 
     all_warnings = water_warn + soil_warn + dur_warn + econ_warn + res_warn + regional_warn
     criteria_scores = {
@@ -4095,7 +4472,15 @@ def evaluate_single_strategy(
         "climate_resilience": round(resilience_score, 1),
     }
 
-    weighted_score = sum(criteria_scores[k] * weights[k] for k in criteria_scores)
+    # Keep the five raw criterion scores separate from the user's priority
+    # weights. A crop's growing duration, for example, does not change just
+    # because the farmer selects "save water"; what changes is how strongly
+    # that criterion contributes to the final ranking.
+    weighted_contributions = {
+        key: round(criteria_scores[key] * weights[key], 2)
+        for key in criteria_scores
+    }
+    weighted_score = sum(weighted_contributions.values())
     # Regional evidence is a separate context correction, not a sixth user
     # preference. It can move candidates up or down, but cannot overwhelm the
     # five visible criteria.
@@ -4162,6 +4547,8 @@ def evaluate_single_strategy(
         "overall_score": overall_score,
         "criteria_scores": criteria_scores,
         "weights_used": weights,
+        "weighted_contributions": weighted_contributions,
+        "five_criteria_score": round(weighted_score, 1),
         "water_demand_mm": total_water,
         "rabi_water_demand_mm": crops_list[1]["typical_water_mm"] if len(crops_list) > 1 else 0,
         "nitrogen_fixed_kg_ha": round(total_n_fixed, 1),
@@ -4187,7 +4574,11 @@ def evaluate_rotations(
     irrigation = str(farmer_profile.get("irrigation", "assured_tubewell")).lower()
     lat = farmer_profile.get("lat")
     lon = farmer_profile.get("lon")
-    reg_key, reg_name = detect_indian_agroclimatic_zone(lat, lon)
+    is_indian_zone = (lat is None or lon is None) or (6.0 <= float(lat) <= 38.0 and 68.0 <= float(lon) <= 98.0)
+    if is_indian_zone:
+        reg_key, reg_name = detect_indian_agroclimatic_zone(lat, lon)
+    else:
+        reg_key, reg_name, _hemisphere, _eco_zone = detect_global_climate_zone(lat, lon)
 
     candidate_rotations = [
         # Pathway 1: Staple / Baseline Rotation
@@ -4419,6 +4810,9 @@ def evaluate_rotations(
             },
         ])
 
+    if not is_indian_zone:
+        candidate_rotations = _global_candidate_rotations(reg_key)
+
     evaluated = []
     for strat in candidate_rotations:
         ev = evaluate_single_strategy(
@@ -4448,7 +4842,7 @@ def evaluate_rotations(
             "name": reg_name,
         },
         "rotations": evaluated,
-        "crops": {cid: dict(c) for cid, c in CROPS.items()},
+        "crops": {cid: dict(CROPS[cid]) for cid in BASE_CROP_IDS if cid in CROPS},
         "weights": weights,
         "disclaimer": DISCLAIMER,
     }
@@ -4459,7 +4853,7 @@ def evaluate_custom_rotation(
     farmer_profile: dict[str, Any],
     climate_summary: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Evaluates an arbitrary user-chosen sequence of crops from the 53-crop catalog."""
+    """Evaluates an arbitrary user-chosen sequence from the merged global crop catalogue."""
     valid_ids = [cid for cid in crop_ids if cid in CROPS]
     if not valid_ids:
         raise ValueError("At least one valid crop must be selected from the catalog")

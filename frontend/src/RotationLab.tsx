@@ -27,14 +27,14 @@ interface RotationLabProps {
 }
 
 const CATEGORIES = [
-  { id: "all", label: "All Crops (53)" },
-  { id: "cereal", label: "Cereals & Millets (8)" },
-  { id: "pulse", label: "Pulses & Legumes (9)" },
-  { id: "oilseed", label: "Oilseeds (8)" },
-  { id: "vegetable", label: "Vegetables & Tubers (11)" },
-  { id: "commercial", label: "Commercial & Fibre (5)" },
-  { id: "fruit", label: "Fruits & Perennials (5)" },
-  { id: "spice", label: "Spices & Condiments (7)" },
+  { id: "all", label: "All Crops" },
+  { id: "cereal", label: "Cereals & Millets" },
+  { id: "pulse", label: "Pulses & Legumes" },
+  { id: "oilseed", label: "Oilseeds" },
+  { id: "vegetable", label: "Vegetables & Tubers" },
+  { id: "commercial", label: "Commercial & Fibre" },
+  { id: "fruit", label: "Fruits & Perennials" },
+  { id: "spice", label: "Spices & Condiments" },
 ];
 
 export default function RotationLab({
@@ -66,6 +66,7 @@ export default function RotationLab({
   const [showCompareModal, setShowCompareModal] = useState<boolean>(false);
   const [showReportModal, setShowReportModal] = useState<boolean>(false);
   const [expandedExplanationId, setExpandedExplanationId] = useState<string | null>(null);
+  const [detailMode, setDetailMode] = useState<"simple" | "detailed">("simple");
 
   // Custom Rotation Builder State
   const [customKharif, setCustomKharif] = useState<string>("rice");
@@ -94,9 +95,6 @@ export default function RotationLab({
       const res = await fetchRotationEvaluation(payload, signal);
       if (signal?.aborted) return;
       setEvaluation(res);
-      if (res.crops && Object.keys(res.crops).length > 0) {
-        setAllCrops(res.crops);
-      }
     } catch (err: any) {
       if (err?.name === "AbortError") return;
       setError(err?.message || "Failed to evaluate rotation strategies");
@@ -183,7 +181,7 @@ export default function RotationLab({
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       const matchName = c.name.toLowerCase().includes(q);
-      const matchSci = c.scientific_name.toLowerCase().includes(q);
+      const matchSci = (c.scientific_name || "").toLowerCase().includes(q);
       const matchFam = c.crop_family.toLowerCase().includes(q);
       if (!matchName && !matchSci && !matchFam) return false;
     }
@@ -191,39 +189,39 @@ export default function RotationLab({
   });
 
   return (
-    <div className="space-y-6">
+    <div className="rotation-lab space-y-6">
       {/* Farmer Profile Editor Card */}
-      <div className="bg-white rounded-lg border border-[#e5dfd3] p-5 shadow-xs">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-[#f0ebe0] pb-3 mb-4">
+      <div className="bg-white rounded-lg border border-[#44464d] p-5 shadow-xs">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-[#2b2c31] pb-3 mb-4">
           <div>
-            <h3 className="text-base font-bold text-[#1b4332] flex items-center gap-2">
-              <span>🌾</span> Tell us about your farm
+            <h3 className="text-base font-bold text-[#e7e8eb] flex items-center gap-2">
+              <span aria-hidden="true">⌂</span> Tell us about your farm
             </h3>
             <p className="text-xs text-gray-500 mt-0.5">
               Add the details you know. We will use them to compare crop plans for your farm. Leave soil-test numbers blank if you do not know them.
             </p>
-            <div className="mt-2 inline-flex items-center gap-2 px-2.5 py-1 bg-[#e8f5e9] border border-[#a5d6a7] rounded text-[11px] text-[#1b4332]">
+            <div className="mt-2 inline-flex items-center gap-2 px-2.5 py-1 bg-[#25262b] border border-[#bfc1c6] rounded text-[11px] text-[#e7e8eb]">
               <span className="font-bold">Weather information for this place:</span>
               <span>Active at {lat.toFixed(4)}°N, {lon.toFixed(4)}°E</span>
               {baselineRainfall != null && (
-                <span className="text-[#2e7d32]">| Usual yearly rain: {Math.round(baselineRainfall)} mm</span>
+                <span className="text-[#666a72]">| Usual yearly rain: {Math.round(baselineRainfall)} mm</span>
               )}
               {climateData?.march_temperature?.t2m_max != null && (
-                <span className={climateData.march_temperature.t2m_max > 32 ? "text-amber-700 font-semibold" : "text-[#2e7d32]"}>
+                <span className={climateData.march_temperature.t2m_max > 32 ? "text-zinc-700 font-semibold" : "text-[#666a72]"}>
                   | March highest temperature: {climateData.march_temperature.t2m_max.toFixed(1)}°C
                 </span>
               )}
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[11px] bg-[#d8f3dc] text-[#1b4332] px-2.5 py-1 rounded font-semibold uppercase tracking-wider">
+            <span className="text-[11px] bg-[#303136] text-[#e7e8eb] px-2.5 py-1 rounded font-semibold uppercase tracking-wider">
               {profile.priority.replace("_", " ")}
             </span>
             <button
               onClick={() => setShowReportModal(true)}
-              className="bg-[#1b4332] hover:bg-[#2d6a4f] text-white text-xs font-semibold px-3 py-1.5 rounded transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
+              className="bg-[#e7e8eb] hover:bg-[#6a6d75] text-white text-xs font-semibold px-3 py-1.5 rounded transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
             >
-              <span>📄</span> Print farm report
+              <span aria-hidden="true">▤</span> Print farm report
             </button>
           </div>
         </div>
@@ -242,7 +240,7 @@ export default function RotationLab({
                   priority: e.target.value as any,
                 })
               }
-              className="w-full text-xs px-2.5 py-1.5 border border-gray-300 rounded bg-[#faf9f5] font-medium text-gray-800 focus:ring-1 focus:ring-[#2d6a4f]"
+              className="w-full text-xs px-2.5 py-1.5 border border-gray-300 rounded bg-[#202125] font-medium text-gray-800 focus:ring-1 focus:ring-[#6a6d75]"
             >
               <option value="water_conservation">Save water</option>
               <option value="soil_improvement">Improve the soil</option>
@@ -260,7 +258,7 @@ export default function RotationLab({
             <select
               value={profile.soil_type}
               onChange={(e) => setProfile({ ...profile, soil_type: e.target.value })}
-              className="w-full text-xs px-2.5 py-1.5 border border-gray-300 rounded bg-[#faf9f5] font-medium text-gray-800"
+              className="w-full text-xs px-2.5 py-1.5 border border-gray-300 rounded bg-[#202125] font-medium text-gray-800"
             >
               <option value="alluvial">River soil (alluvial)</option>
               <option value="black_cotton">Black cotton soil</option>
@@ -280,7 +278,7 @@ export default function RotationLab({
             <select
               value={profile.irrigation}
               onChange={(e) => setProfile({ ...profile, irrigation: e.target.value })}
-              className="w-full text-xs px-2.5 py-1.5 border border-gray-300 rounded bg-[#faf9f5] font-medium text-gray-800"
+              className="w-full text-xs px-2.5 py-1.5 border border-gray-300 rounded bg-[#202125] font-medium text-gray-800"
             >
               <option value="assured_tubewell">Borewell or tube well: water is usually available</option>
               <option value="assured_canal">Canal: water is usually available</option>
@@ -311,7 +309,7 @@ export default function RotationLab({
                   })
                 }
                 placeholder="Soil pH"
-                className="w-1/2 text-xs px-2 py-1.5 border border-gray-300 rounded bg-[#faf9f5]"
+                className="w-1/2 text-xs px-2 py-1.5 border border-gray-300 rounded bg-[#202125]"
               />
               <input
                 type="number"
@@ -328,7 +326,7 @@ export default function RotationLab({
                   })
                 }
                 placeholder="Organic carbon %"
-                className="w-1/2 text-xs px-2 py-1.5 border border-gray-300 rounded bg-[#faf9f5]"
+                className="w-1/2 text-xs px-2 py-1.5 border border-gray-300 rounded bg-[#202125]"
               />
             </div>
             <span className="text-[10px] text-gray-400">Use numbers from a soil test. Leave blank if you do not know them.</span>
@@ -336,15 +334,15 @@ export default function RotationLab({
         </div>
 
         {/* Target Context */}
-        <div className="mt-4 pt-3 border-t border-[#f0ebe0] flex flex-wrap items-center justify-between text-xs text-gray-600 gap-2">
+        <div className="mt-4 pt-3 border-t border-[#2b2c31] flex flex-wrap items-center justify-between text-xs text-gray-600 gap-2">
           <div className="flex items-center gap-2 flex-wrap">
-            <span>Local farming area: <strong className="text-[#1b4332]">{evaluation?.detected_region?.name || "Pan-Indian Agricultural Zone"}</strong></span>
+            <span>Local farming area: <strong className="text-[#e7e8eb]">{evaluation?.detected_region?.name || "Pan-Indian Agricultural Zone"}</strong></span>
             <span className="text-gray-400">•</span>
-            <span>Farm location: <strong className="text-[#1b4332]">{lat.toFixed(4)}°N, {lon.toFixed(4)}°E</strong></span>
+            <span>Farm location: <strong className="text-[#e7e8eb]">{lat.toFixed(4)}°N, {lon.toFixed(4)}°E</strong></span>
           </div>
           <button
             onClick={() => void runEvaluation()}
-            className="bg-[#2d6a4f] hover:bg-[#1b4332] text-white text-xs font-semibold px-3 py-1.5 rounded transition-colors shadow-xs cursor-pointer"
+            className="bg-[#6a6d75] hover:bg-[#e7e8eb] text-white text-xs font-semibold px-3 py-1.5 rounded transition-colors shadow-xs cursor-pointer"
           >
             Update crop suggestions
           </button>
@@ -352,36 +350,36 @@ export default function RotationLab({
       </div>
 
       {/* Sub-Navigation Tabs */}
-      <div className="flex border-b border-[#e5dfd3] bg-white rounded-t-lg px-3 pt-2 gap-2 text-xs font-semibold">
+      <div className="flex border-b border-[#44464d] bg-white rounded-t-lg px-3 pt-2 gap-2 text-xs font-semibold">
         <button
           onClick={() => setSubTab("recommendations")}
           className={`px-4 py-2.5 border-b-2 transition-all flex items-center gap-1.5 cursor-pointer ${
             subTab === "recommendations"
-              ? "border-[#2d6a4f] text-[#2d6a4f] bg-[#f8f6f0] rounded-t font-bold"
+              ? "border-[#6a6d75] text-[#6a6d75] bg-[#232428] rounded-t font-bold"
               : "border-transparent text-gray-500 hover:text-gray-800"
           }`}
         >
-          <span>🎯</span> Suggested crop plans
+          Suggested crop plans
         </button>
         <button
           onClick={() => setSubTab("custom")}
           className={`px-4 py-2.5 border-b-2 transition-all flex items-center gap-1.5 cursor-pointer ${
             subTab === "custom"
-              ? "border-[#2d6a4f] text-[#2d6a4f] bg-[#f8f6f0] rounded-t font-bold"
+              ? "border-[#6a6d75] text-[#6a6d75] bg-[#232428] rounded-t font-bold"
               : "border-transparent text-gray-500 hover:text-gray-800"
           }`}
         >
-          <span>🧪</span> Custom Rotation Builder
+          Custom Rotation Builder
         </button>
         <button
           onClick={() => setSubTab("explorer")}
           className={`px-4 py-2.5 border-b-2 transition-all flex items-center gap-1.5 cursor-pointer ${
             subTab === "explorer"
-              ? "border-[#2d6a4f] text-[#2d6a4f] bg-[#f8f6f0] rounded-t font-bold"
+              ? "border-[#6a6d75] text-[#6a6d75] bg-[#232428] rounded-t font-bold"
               : "border-transparent text-gray-500 hover:text-gray-800"
           }`}
         >
-          <span>📚</span> Pan-Indian Find a crop ({Object.keys(allCrops).length || 53})
+          Global crop library ({Object.keys(allCrops).length || "Loading…"})
         </button>
       </div>
 
@@ -389,17 +387,36 @@ export default function RotationLab({
       {subTab === "recommendations" && (
         <>
           {/* Header Action Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 bg-[#faf9f5] p-3 rounded-lg border border-[#e5dfd3]">
-            <div className="text-xs text-gray-700">
-              Select any 2 or 3 strategies to compare them side by side across water, soil, duration, and economic trade-offs.
+          <div className="flex flex-wrap items-center justify-between gap-3 bg-[#202125] p-3 rounded-lg border border-[#44464d]">
+            <div className="text-sm text-gray-700 max-w-3xl">
+              Each plan is checked in five ways. Your chosen priority changes how much each way counts in the final score.
+              A crop's growing time may stay the same even when your priority changes.
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="view-mode-toggle" role="group" aria-label="Recommendation detail level">
+                <button
+                  type="button"
+                  aria-pressed={detailMode === "simple"}
+                  onClick={() => setDetailMode("simple")}
+                  className={`view-mode-btn ${detailMode === "simple" ? "is-active" : ""}`}
+                >
+                  Easy view
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={detailMode === "detailed"}
+                  onClick={() => setDetailMode("detailed")}
+                  className={`view-mode-btn ${detailMode === "detailed" ? "is-active" : ""}`}
+                >
+                  Detailed view
+                </button>
+              </div>
               <button
                 disabled={selectedForCompare.length < 2}
                 onClick={() => setShowCompareModal(true)}
                 className={`text-xs font-semibold px-3 py-1.5 rounded transition-all flex items-center gap-1.5 cursor-pointer ${
                   selectedForCompare.length >= 2
-                    ? "bg-[#2d6a4f] hover:bg-[#1b4332] text-white shadow-xs"
+                    ? "bg-[#6a6d75] hover:bg-[#e7e8eb] text-white shadow-xs"
                     : "bg-gray-200 text-gray-400 cursor-not-allowed"
                 }`}
               >
@@ -417,22 +434,22 @@ export default function RotationLab({
           </div>
 
           {loading && (
-            <div className="flex flex-col items-center justify-center py-16 bg-white rounded-lg shadow-xs border border-[#e5dfd3]">
-              <div className="w-8 h-8 border-3 border-[#2d6a4f] border-t-transparent rounded-full animate-spin"></div>
-              <p className="mt-3 text-xs text-[#52796f] font-medium">Checking which crop plans may suit your farm…</p>
+            <div className="flex flex-col items-center justify-center py-16 bg-white rounded-lg shadow-xs border border-[#44464d]">
+              <div className="w-8 h-8 border-3 border-[#6a6d75] border-t-transparent rounded-full animate-spin"></div>
+              <p className="mt-3 text-xs text-[#8b8d94] font-medium">Checking which crop plans may suit your farm…</p>
             </div>
           )}
 
           {error && (
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-r shadow-xs">
-              <span className="text-xs text-red-700 font-medium">{error}</span>
+            <div className="bg-zinc-50 border-l-4 border-zinc-500 p-4 rounded-r shadow-xs">
+              <span className="text-xs text-zinc-700 font-medium">{error}</span>
             </div>
           )}
 
           {!loading && evaluation && (
             <>
               {/* Strategy Comparison Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div className="rotation-strategy-grid gap-5">
                 {evaluation.rotations.map((strat: RotationStrategy, idx: number) => {
                   const isChecked = selectedForCompare.includes(strat.id);
                   const isExplaining = expandedExplanationId === strat.id;
@@ -442,19 +459,19 @@ export default function RotationLab({
                       key={strat.id}
                       className={`bg-white rounded-lg border shadow-xs flex flex-col justify-between overflow-hidden transition-all ${
                         idx === 0
-                          ? "border-[#2d6a4f] ring-2 ring-[#2d6a4f]"
+                          ? "border-[#6a6d75] ring-2 ring-[#6a6d75]"
                           : isChecked
-                          ? "border-[#52796f] ring-1 ring-[#52796f]"
-                          : "border-[#e5dfd3]"
+                          ? "border-[#8b8d94] ring-1 ring-[#8b8d94]"
+                          : "border-[#44464d]"
                       }`}
                     >
                       {/* Card Header */}
-                      <div className="p-4 bg-[#faf9f5] border-b border-[#e5dfd3]">
+                      <div className="p-4 bg-[#202125] border-b border-[#44464d]">
                         <div className="flex justify-between items-start gap-2">
                           <div>
                             <div className="flex items-center gap-2 mb-1">
                               {idx === 0 && (
-                                <span className="text-[10px] font-bold uppercase tracking-wider text-[#1b4332] bg-[#d8f3dc] px-2 py-0.5 rounded border border-[#b7e4c7]">
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-[#e7e8eb] bg-[#303136] px-2 py-0.5 rounded border border-[#aeb1b8]">
                                   ★ Rank #1 for {profile.priority.replace("_", " ")}
                                 </span>
                               )}
@@ -463,12 +480,12 @@ export default function RotationLab({
                                   type="checkbox"
                                   checked={isChecked}
                                   onChange={() => toggleCompare(strat.id)}
-                                  className="rounded border-gray-300 text-[#2d6a4f] focus:ring-[#2d6a4f]"
+                                  className="rounded border-gray-300 text-[#6a6d75] focus:ring-[#6a6d75]"
                                 />
                                 <span className="font-medium text-gray-700">Compare</span>
                               </label>
                             </div>
-                            <h4 className="font-bold text-[#1b4332] text-sm">{strat.name}</h4>
+                            <h4 className="font-bold text-[#e7e8eb] text-sm">{strat.name}</h4>
                             <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{strat.description}</p>
                           </div>
                           <div
@@ -485,32 +502,36 @@ export default function RotationLab({
                       {/* Card Body: Criteria breakdown & Visual Timeline */}
                       <div className="p-4 space-y-3 flex-1">
                         {/* Agronomic Specs Bar */}
-                        <div className="grid grid-cols-3 gap-2 bg-[#f8f6f0] p-2 rounded text-center border border-[#e5dfd3]">
+                        <div className="grid grid-cols-3 gap-2 bg-[#232428] p-2 rounded text-center border border-[#44464d]">
                           <div>
                             <div className="text-[9px] text-gray-500 uppercase font-semibold">Water needed (estimate)</div>
-                            <div className="text-xs font-bold text-[#1b4332] mt-0.5">{strat.water_demand_mm} mm</div>
+                            <div className="text-xs font-bold text-[#e7e8eb] mt-0.5">{strat.water_demand_mm} mm</div>
                           </div>
                           <div>
                             <div className="text-[9px] text-gray-500 uppercase font-semibold">Growing time and gap</div>
-                            <div className="text-xs font-bold text-sky-800 mt-0.5">
+                            <div className="text-xs font-bold text-zinc-800 mt-0.5">
                               {strat.total_duration_days} days ({strat.turnaround_days ?? (365 - strat.total_duration_days)} days free)
                             </div>
                           </div>
                           <div>
                             <div className="text-[9px] text-gray-500 uppercase font-semibold">Nitrogen added to soil (estimate)</div>
-                            <div className="text-xs font-bold text-emerald-800 mt-0.5">
+                            <div className="text-xs font-bold text-zinc-800 mt-0.5">
                               {strat.nitrogen_fixed_kg_ha > 0 ? `+${strat.nitrogen_fixed_kg_ha} kg/ha` : "None"}
                             </div>
                           </div>
                         </div>
 
-                        {/* Visual Crop Rotation Timeline (Gantt style) */}
-                        <RotationTimelineBar strat={strat} />
+                        {/* Original crop-calendar timeline is kept for enthusiasts. */}
+                        {detailMode === "detailed" && (
+                          <div className="rounded-lg border border-[#44464d] p-2">
+                            <RotationTimelineBar strat={strat} />
+                          </div>
+                        )}
 
-                        {/* Warnings if any */}
+                        {/* Warnings stay visible in both views because they may affect a real farm decision. */}
                         {strat.warnings && strat.warnings.length > 0 && (
-                          <div className="bg-amber-50 border border-amber-200 p-2 rounded text-[11px] text-amber-800">
-                            <strong>⚠️ Farm warnings:</strong>
+                          <div className="bg-zinc-50 border border-zinc-200 p-2 rounded text-[11px] text-zinc-800">
+                            <strong>Farm warnings:</strong>
                             <ul className="list-disc list-inside mt-0.5 space-y-0.5">
                               {strat.warnings.map((w, wi) => (
                                 <li key={wi}>{w}</li>
@@ -519,56 +540,106 @@ export default function RotationLab({
                           </div>
                         )}
 
-                        {/* Individual Criteria Bars */}
-                        <div className="space-y-1.5">
-                          <div className="text-[11px] font-bold text-[#1b4332]">Why this plan scored well:</div>
+                        {/* Five criteria: separate crop performance from the farmer's selected priority weights. */}
+                        <div className="space-y-2.5">
+                          <div>
+                            <div className="text-sm font-bold text-[#e7e8eb]">
+                              {detailMode === "simple" ? "How this plan fits your needs" : "Five-criteria score breakdown"}
+                            </div>
+                            <p className="text-xs text-gray-600">
+                              The score is how the plan performs. “Importance” is how much your chosen priority counts it.
+                            </p>
+                          </div>
                           {[
-                            { label: "Saves water", key: "water_sustainability", color: "bg-blue-600" },
-                            { label: "Helps the soil", key: "soil_health", color: "bg-emerald-600" },
-                            { label: "Fits the season", key: "duration_fit", color: "bg-purple-600" },
-                            { label: "Steady income", key: "economic_stability", color: "bg-amber-600" },
-                            { label: "Handles local weather", key: "climate_resilience", color: "bg-teal-600" },
+                            { label: "Saves water", key: "water_sustainability", color: "bg-zinc-700", help: "Estimated crop-water demand and your water source." },
+                            { label: "Helps the soil", key: "soil_health", color: "bg-zinc-700", help: "Crop families, root types, soil texture, pH and organic-carbon information you supplied." },
+                            { label: "Fits the growing time", key: "duration_fit", color: "bg-zinc-700", help: "Crop growing days and the time left between crops." },
+                            { label: "Steadier income", key: "economic_stability", color: "bg-zinc-700", help: "Catalogue market-stability ratings, not a profit guarantee." },
+                            { label: "Handles local weather", key: "climate_resilience", color: "bg-zinc-700", help: "Crop drought and waterlogging traits plus available rainfall and temperature context." },
                           ].map((crit) => {
-                            const score = (strat.criteria_scores as any)[crit.key];
+                            const score = (strat.criteria_scores as any)[crit.key] ?? 0;
+                            const weight = strat.weights_used?.[crit.key] ?? 0;
+                            const contribution = strat.weighted_contributions?.[crit.key] ?? score * weight;
+                            const importance = Math.round(weight * 100);
                             return (
-                              <div key={crit.key} className="text-[10px]">
-                                <div className="flex justify-between text-gray-600 mb-0.5">
-                                  <span>{crit.label}</span>
-                                  <span className="font-mono font-semibold">{score}/100</span>
+                              <div key={crit.key} className="text-sm">
+                                <div className="flex flex-wrap justify-between items-baseline gap-x-3 gap-y-1 mb-1">
+                                  <span className="font-semibold text-gray-800">{crit.label}</span>
+                                  <span className="font-semibold text-gray-800 tabular-nums">
+                                    {Math.round(score)}/100
+                                    <span className="font-normal text-gray-600"> · counts {importance}% · adds {contribution.toFixed(1)} points</span>
+                                  </span>
                                 </div>
-                                <div className="w-full bg-gray-100 rounded-full h-1.5">
-                                  <div
-                                    className={`h-1.5 rounded-full ${crit.color}`}
-                                    style={{ width: `${score}%` }}
-                                  ></div>
+                                <div className="w-full bg-gray-200 rounded-full h-2.5" aria-label={`${crit.label}: ${Math.round(score)} out of 100`}>
+                                  <div className={`h-2.5 rounded-full ${crit.color}`} style={{ width: `${Math.max(0, Math.min(100, score))}%` }} />
                                 </div>
+                                {detailMode === "detailed" && (
+                                  <p className="mt-1 text-xs text-gray-600">{crit.help}</p>
+                                )}
                               </div>
                             );
                           })}
+                          {detailMode === "simple" && (
+                            <p className="text-xs text-gray-600 bg-[#202125] border border-[#44464d] rounded-md p-2">
+                              Some numbers will stay the same when you change your priority. The crop's growing time and market rating do not change. The “counts” and “adds points” values show how your priority changes the final result.
+                            </p>
+                          )}
                         </div>
+
+                        {typeof strat.regional_fit_score === "number" && (
+                          <div className="rounded-lg border border-[#33353a] bg-[#25262b] p-2.5">
+                            <div className="flex flex-wrap justify-between gap-2 text-sm">
+                              <strong className="text-[#d0d1d5860]">Fit for this location</strong>
+                              <strong className="text-[#d0d1d5860] tabular-nums">{Math.round(strat.regional_fit_score)}/100</strong>
+                            </div>
+                            <p className="mt-1 text-xs text-gray-700">
+                              This is a separate local-fit check for {evaluation?.detected_region?.name || "the selected region"}. It is not one of the five criteria.
+                              The location adjustment changes the final score by {(strat.regional_adjustment ?? 0) >= 0 ? "+" : ""}{(strat.regional_adjustment ?? 0).toFixed(1)} points.
+                            </p>
+                          </div>
+                        )}
 
                         {/* Transparent Ranking Inspector */}
                         <div className="pt-2 border-t border-gray-100">
                           <button
                             onClick={() => setExpandedExplanationId(isExplaining ? null : strat.id)}
-                            className="text-[11px] text-[#2d6a4f] hover:text-[#1b4332] font-semibold flex items-center justify-between w-full py-1 cursor-pointer"
+                            className="text-[11px] text-[#6a6d75] hover:text-[#e7e8eb] font-semibold flex items-center justify-between w-full py-1 cursor-pointer"
                           >
-                            <span>🔍 Why is this crop plan ranked #{idx + 1}?</span>
+                            <span>Why is this crop plan ranked #{idx + 1}?</span>
                             <span>{isExplaining ? "▲" : "▼"}</span>
                           </button>
 
                           {isExplaining && (
-                            <div className="mt-2 p-2.5 bg-[#faf9f5] rounded border border-[#e5dfd3] text-[11px] space-y-2">
+                            <div className="mt-2 p-2.5 bg-[#202125] rounded border border-[#44464d] text-[11px] space-y-2">
                               <p className="text-gray-700 leading-relaxed font-medium">
                                 {strat.rationale}
                               </p>
-                              <div className="text-[10px] text-gray-600">
-                                <strong>Weighted Multi-Objective Calculation:</strong>
-                                <div className="mt-1 font-mono text-[9px] bg-white p-1.5 rounded border border-gray-200">
-                                  Score = (Water × {Math.round((strat.weights_used?.water_sustainability || 0.2) * 100)}%) + (Soil × {Math.round((strat.weights_used?.soil_health || 0.2) * 100)}%) + (Duration × {Math.round((strat.weights_used?.duration_fit || 0.2) * 100)}%) + (Econ × {Math.round((strat.weights_used?.economic_stability || 0.2) * 100)}%) + (Climate × {Math.round((strat.weights_used?.climate_resilience || 0.2) * 100)}%) = <strong>{strat.overall_score}</strong>
+                              <div className="text-xs text-gray-700">
+                                <strong>Detailed calculation:</strong>
+                                <div className="mt-1 font-mono text-xs break-words bg-white p-2 rounded border border-gray-200 leading-relaxed">
+                                  Five-criteria score: <strong>{strat.five_criteria_score ?? (Object.values(strat.weighted_contributions || {}).reduce((a, b) => a + b, 0)).toFixed(1)}</strong>
+                                  {" "}+ regional adjustment: <strong>{(strat.regional_adjustment ?? 0) >= 0 ? "+" : ""}{(strat.regional_adjustment ?? 0).toFixed(1)}</strong>
+                                  {" "}= final score: <strong>{strat.overall_score}</strong>
                                 </div>
+                                <p className="mt-1">The five raw scores are multiplied by the five weights shown above. A separate regional adjustment is applied when location evidence is available.</p>
                               </div>
-                              <div className="text-[10px] text-gray-500">
+                              {detailMode === "detailed" && (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-700">
+                                  <div className="bg-white border border-gray-200 rounded p-2">
+                                    <strong>Benefits recorded by the model</strong>
+                                    <ul className="list-disc list-inside mt-1">{strat.benefits.map((item, i) => <li key={i}>{item}</li>)}</ul>
+                                  </div>
+                                  <div className="bg-white border border-gray-200 rounded p-2">
+                                    <strong>Trade-offs to check</strong>
+                                    <ul className="list-disc list-inside mt-1">{strat.disadvantages.map((item, i) => <li key={i}>{item}</li>)}</ul>
+                                  </div>
+                                  <div className="sm:col-span-2 bg-white border border-gray-200 rounded p-2">
+                                    <strong>Model assumptions</strong>
+                                    <ul className="list-disc list-inside mt-1">{strat.assumptions.map((item, i) => <li key={i}>{item}</li>)}</ul>
+                                  </div>
+                                </div>
+                              )}
+                              <div className="text-xs text-gray-600">
                                 Priority selected: <strong>{profile.priority.replace("_", " ")}</strong>. Regional adaptation: <strong>{strat.regional_suitability || "Unknown"} in {evaluation?.detected_region?.name || "the selected region"}</strong>
                                 {typeof strat.regional_fit_score === "number" && (
                                   <> (regional fit score: <strong>{strat.regional_fit_score}/100</strong>)</>
@@ -580,7 +651,7 @@ export default function RotationLab({
                       </div>
 
                       {/* Card Footer: Key Benefits */}
-                      <div className="p-3 bg-[#faf9f5] border-t border-[#e5dfd3] text-[11px] text-gray-600">
+                      <div className="p-3 bg-[#202125] border-t border-[#44464d] text-[11px] text-gray-600">
                         <div className="font-semibold text-gray-700 mb-1">Key Agronomic Upside:</div>
                         <p className="text-gray-600 line-clamp-2">
                           {strat.benefits?.[0] || "Well-balanced crop diversification pathway."}
@@ -592,10 +663,10 @@ export default function RotationLab({
               </div>
 
               {/* Comparative Water Demand Chart */}
-              <div className="bg-white rounded-lg border border-[#e5dfd3] p-5 shadow-xs">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4 border-b border-[#f0ebe0] pb-3">
+              <div className="bg-white rounded-lg border border-[#44464d] p-5 shadow-xs">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4 border-b border-[#2b2c31] pb-3">
                   <div>
-                    <h4 className="font-bold text-[#1b4332] text-sm">
+                    <h4 className="font-bold text-[#e7e8eb] text-sm">
                       Cumulative Water Demand vs. Baseline Monsoon Rainfall
                     </h4>
                     <p className="text-xs text-gray-500 mt-0.5">
@@ -603,7 +674,7 @@ export default function RotationLab({
                     </p>
                   </div>
                   {baselineRainfall && (
-                    <span className="text-xs text-[#1b4332] bg-[#d8f3dc] px-2.5 py-1 rounded font-semibold">
+                    <span className="text-xs text-[#e7e8eb] bg-[#303136] px-2.5 py-1 rounded font-semibold">
                       Rainfall Baseline: {Math.round(baselineRainfall)} mm
                     </span>
                   )}
@@ -619,17 +690,17 @@ export default function RotationLab({
                       }))}
                       margin={{ top: 10, right: 20, left: 0, bottom: 25 }}
                     >
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0ebe0" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#2b2c31" />
                       <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} angle={-15} textAnchor="end" />
                       <YAxis tick={{ fontSize: 11 }} label={{ value: "Water (mm)", angle: -90, position: "insideLeft", fontSize: 11 }} />
                       <Tooltip
-                        contentStyle={{ backgroundColor: "#ffffff", borderColor: "#e5dfd3", fontSize: 12 }}
+                        contentStyle={{ backgroundColor: "#202125", borderColor: "#44464d", fontSize: 12 }}
                         formatter={(val: any) => [`${val} mm`, "Water Requirement"]}
                       />
                       <Legend wrapperStyle={{ fontSize: 11, paddingTop: 10 }} />
-                      <ReferenceLine y={700} stroke="#2d6a4f" strokeDasharray="3 3" label={{ value: "Semi-Arid Dryland (700mm)", fill: "#2d6a4f", fontSize: 10 }} />
-                      <ReferenceLine y={1200} stroke="#b91c1c" strokeDasharray="3 3" label={{ value: "Mean Monsoon (1200mm)", fill: "#b91c1c", fontSize: 10 }} />
-                      <Bar dataKey="water" name="Crop Water Demand (mm)" fill="#1b4332" radius={[4, 4, 0, 0]} />
+                      <ReferenceLine y={700} stroke="#6a6d75" strokeDasharray="3 3" label={{ value: "Semi-Arid Dryland (700mm)", fill: "#6a6d75", fontSize: 10 }} />
+                      <ReferenceLine y={1200} stroke="#aeb1b8" strokeDasharray="3 3" label={{ value: "Mean Monsoon (1200mm)", fill: "#aeb1b8", fontSize: 10 }} />
+                      <Bar dataKey="water" name="Crop Water Demand (mm)" fill="#e7e8eb" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -641,21 +712,23 @@ export default function RotationLab({
 
       {/* SUB-TAB 2: CUSTOM ROTATION BUILDER */}
       {subTab === "custom" && (
-        <div className="bg-white rounded-lg border border-[#e5dfd3] p-5 shadow-xs space-y-6">
+        <div className="bg-white rounded-lg border border-[#44464d] p-5 shadow-xs space-y-6">
           <div>
-            <h3 className="text-base font-bold text-[#1b4332] flex items-center gap-2">
-              <span>🧪</span> Custom Rotation Builder (Select from 53 Crops)
+            <h3 className="text-base font-bold text-[#e7e8eb] flex items-center gap-2">
+              Custom Rotation Builder (Select from the global crop library)
             </h3>
             <p className="text-xs text-gray-500 mt-1">
-              Select any Kharif, Rabi, and optional Zaid crop sequence to evaluate its calendar duration fit,
-              water requirement, biological nitrogen fixation, and multi-criteria score.
+              Select any Kharif, Rabi, and optional Zaid crop sequence. Each selected crop is evaluated using this farm's location, soil, irrigation and the same five-criteria scoring engine used for recommended plans.
+            </p>
+            <p className="text-xs font-semibold text-[#91b887] mt-2" aria-live="polite">
+              {Object.keys(allCrops).length.toLocaleString()} crops loaded into the rotation planner
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 bg-[#faf9f5] p-4 rounded-lg border border-[#e5dfd3]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 bg-[#202125] p-4 rounded-lg border border-[#44464d]">
             {/* Kharif Crop */}
             <div>
-              <label className="block text-xs font-bold text-emerald-900 mb-1">
+              <label className="block text-xs font-bold text-zinc-900 mb-1">
                 Kharif Crop (Monsoon: June – Oct):
               </label>
               <select
@@ -682,7 +755,7 @@ export default function RotationLab({
 
             {/* Rabi Crop */}
             <div>
-              <label className="block text-xs font-bold text-amber-900 mb-1">
+              <label className="block text-xs font-bold text-zinc-900 mb-1">
                 Rabi Crop (Winter: Nov – March):
               </label>
               <select
@@ -691,7 +764,7 @@ export default function RotationLab({
                 className="w-full text-xs px-2.5 py-2 border border-gray-300 rounded bg-white text-gray-800"
               >
                 {Object.values(allCrops)
-                  .filter((c) => c.season.includes("rabi") || c.season === "all_season")
+                  .filter((c) => c.season.includes("rabi") || c.season === "annual" || c.season === "perennial" || c.season === "all_season")
                   .map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.name} ({c.crop_family}) - {c.typical_water_mm}mm
@@ -710,7 +783,7 @@ export default function RotationLab({
             {/* Zaid Crop (Optional) */}
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="text-xs font-bold text-sky-900">
+                <label className="text-xs font-bold text-zinc-900">
                   Zaid Crop (Summer: April – May):
                 </label>
                 <label className="flex items-center gap-1 text-[11px] text-gray-600 cursor-pointer">
@@ -718,7 +791,7 @@ export default function RotationLab({
                     type="checkbox"
                     checked={useZaid}
                     onChange={(e) => setUseZaid(e.target.checked)}
-                    className="rounded border-gray-300 text-[#2d6a4f]"
+                    className="rounded border-gray-300 text-[#6a6d75]"
                   />
                   <span>Enable 3-Crop</span>
                 </label>
@@ -733,7 +806,7 @@ export default function RotationLab({
                 }`}
               >
                 {Object.values(allCrops)
-                  .filter((c) => c.season.includes("zaid") || c.categories.includes("catch_crop") || c.season === "all_season")
+                  .filter((c) => c.season.includes("zaid") || c.categories.includes("catch_crop") || c.season === "annual" || c.season === "all_season")
                   .map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.name} ({c.crop_family}) - {c.typical_water_mm}mm
@@ -754,26 +827,26 @@ export default function RotationLab({
             <button
               onClick={runCustomEvaluation}
               disabled={customLoading}
-              className="bg-[#1b4332] hover:bg-[#2d6a4f] text-white text-xs font-bold px-5 py-2.5 rounded shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
+              className="bg-[#e7e8eb] hover:bg-[#6a6d75] text-white text-xs font-bold px-5 py-2.5 rounded shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
             >
               {customLoading ? "Simulating Rotation..." : "Run Scientific Rotation Evaluation"}
             </button>
           </div>
 
           {customError && (
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-r text-xs text-red-700">
+            <div className="bg-zinc-50 border-l-4 border-zinc-500 p-4 rounded-r text-xs text-zinc-700">
               {customError}
             </div>
           )}
 
           {customEval && (
-            <div className="mt-6 border border-[#2d6a4f] rounded-lg p-5 bg-[#faf9f5] space-y-4 shadow-xs">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-[#e5dfd3] pb-3">
+            <div className="mt-6 border border-[#6a6d75] rounded-lg p-5 bg-[#202125] space-y-4 shadow-xs">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-[#44464d] pb-3">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
+                  <span className="text-[10px] uppercase font-bold text-zinc-800 bg-zinc-100 px-2 py-0.5 rounded">
                     Custom Sequence Evaluation
                   </span>
-                  <h4 className="text-base font-bold text-[#1b4332] mt-1">{customEval.evaluation.name}</h4>
+                  <h4 className="text-base font-bold text-[#e7e8eb] mt-1">{customEval.evaluation.name}</h4>
                 </div>
                 <div className={`text-xl font-bold px-3 py-1 rounded border font-mono ${getScoreColor(customEval.evaluation.overall_score)}`}>
                   {customEval.evaluation.overall_score} / 100
@@ -781,22 +854,22 @@ export default function RotationLab({
               </div>
 
               {/* Agronomic Summary Badges */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-white p-3 rounded border border-[#e5dfd3] text-center text-xs">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-white p-3 rounded border border-[#44464d] text-center text-xs">
                 <div>
                   <div className="text-gray-400 font-semibold uppercase text-[10px]">Water needed (estimate)</div>
-                  <div className="font-bold text-[#1b4332] mt-0.5">{customEval.evaluation.water_demand_mm} mm</div>
+                  <div className="font-bold text-[#e7e8eb] mt-0.5">{customEval.evaluation.water_demand_mm} mm</div>
                 </div>
                 <div>
                   <div className="text-gray-400 font-semibold uppercase text-[10px]">Total Duration</div>
-                  <div className="font-bold text-sky-800 mt-0.5">{customEval.evaluation.total_duration_days} days</div>
+                  <div className="font-bold text-zinc-800 mt-0.5">{customEval.evaluation.total_duration_days} days</div>
                 </div>
                 <div>
                   <div className="text-gray-400 font-semibold uppercase text-[10px]">Annual Turnaround</div>
-                  <div className="font-bold text-purple-800 mt-0.5">{customEval.evaluation.turnaround_days} days buffer</div>
+                  <div className="font-bold text-zinc-800 mt-0.5">{customEval.evaluation.turnaround_days} days buffer</div>
                 </div>
                 <div>
                   <div className="text-gray-400 font-semibold uppercase text-[10px]">Biological N-Fix</div>
-                  <div className="font-bold text-emerald-800 mt-0.5">
+                  <div className="font-bold text-zinc-800 mt-0.5">
                     {customEval.evaluation.nitrogen_fixed_kg_ha > 0 ? `+${customEval.evaluation.nitrogen_fixed_kg_ha} kg/ha` : "None"}
                   </div>
                 </div>
@@ -807,8 +880,8 @@ export default function RotationLab({
 
               {/* Warnings if any */}
               {customEval.evaluation.warnings && customEval.evaluation.warnings.length > 0 && (
-                <div className="bg-amber-50 border border-amber-200 p-3 rounded text-xs text-amber-800 space-y-1">
-                  <strong>⚠️ Agronomic Warnings & Constraints:</strong>
+                <div className="bg-zinc-50 border border-zinc-200 p-3 rounded text-xs text-zinc-800 space-y-1">
+                  <strong>Agronomic Warnings & Constraints:</strong>
                   <ul className="list-disc list-inside space-y-0.5">
                     {customEval.evaluation.warnings.map((w, wi) => (
                       <li key={wi}>{w}</li>
@@ -829,7 +902,7 @@ export default function RotationLab({
                       </div>
                       <div className="w-full bg-gray-100 rounded-full h-2 mt-1.5">
                         <div
-                          className="bg-[#2d6a4f] h-2 rounded-full transition-all"
+                          className="bg-[#6a6d75] h-2 rounded-full transition-all"
                           style={{ width: `${score}%` }}
                         ></div>
                       </div>
@@ -844,14 +917,14 @@ export default function RotationLab({
 
       {/* SUB-TAB 3: PAN-INDIAN CROP EXPLORER */}
       {subTab === "explorer" && (
-        <div className="bg-white rounded-lg border border-[#e5dfd3] p-5 shadow-xs space-y-5">
+        <div className="bg-white rounded-lg border border-[#44464d] p-5 shadow-xs space-y-5">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <div>
-              <h3 className="text-base font-bold text-[#1b4332] flex items-center gap-2">
-                <span>📚</span> Crop list for India ({filteredCrops.length} of {Object.keys(allCrops).length || 53} Crops)
+              <h3 className="text-base font-bold text-[#e7e8eb] flex items-center gap-2">
+                Global crop library ({filteredCrops.length} of {Object.keys(allCrops).length || "Loading…"} Crops)
               </h3>
               <p className="text-xs text-gray-500 mt-0.5">
-                Browse crops and see their growing season and basic details.
+                Browse 1,232 crops from the global catalogue. A crop appearing here does not mean it suits your farm; check local suitability before planting.
               </p>
             </div>
             <input
@@ -859,7 +932,7 @@ export default function RotationLab({
               placeholder="Search for a crop by name…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="text-xs px-3 py-1.5 border border-gray-300 rounded bg-[#faf9f5] w-full sm:w-72"
+              className="text-xs px-3 py-1.5 border border-gray-300 rounded bg-[#202125] w-full sm:w-72"
             />
           </div>
 
@@ -872,8 +945,8 @@ export default function RotationLab({
                   onClick={() => setSelectedCategory(cat.id)}
                   className={`text-xs px-3 py-1 rounded-full transition-all cursor-pointer ${
                     selectedCategory === cat.id
-                      ? "bg-[#1b4332] text-white font-semibold shadow-xs"
-                      : "bg-[#f8f6f0] text-gray-600 hover:bg-gray-200"
+                      ? "bg-[#e7e8eb] text-white font-semibold shadow-xs"
+                      : "bg-[#232428] text-gray-600 hover:bg-gray-200"
                   }`}
                 >
                   {cat.label}
@@ -895,7 +968,7 @@ export default function RotationLab({
                   onClick={() => setSelectedSeason(s.id)}
                   className={`px-2 py-0.5 rounded text-[11px] transition-all cursor-pointer ${
                     selectedSeason === s.id
-                      ? "bg-[#2d6a4f] text-white font-bold"
+                      ? "bg-[#6a6d75] text-white font-bold"
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 >
@@ -910,15 +983,15 @@ export default function RotationLab({
             {filteredCrops.map((crop) => (
               <div
                 key={crop.id}
-                className="border border-[#e5dfd3] rounded-lg p-4 bg-[#ffffff] hover:border-[#2d6a4f] transition-all flex flex-col justify-between"
+                className="border border-[#44464d] rounded-lg p-4 bg-[#202125] hover:border-[#6a6d75] transition-all flex flex-col justify-between"
               >
                 <div>
                   <div className="flex justify-between items-start gap-2">
                     <div>
-                      <h4 className="font-bold text-[#1b4332] text-sm">{crop.name}</h4>
+                      <h4 className="font-bold text-[#e7e8eb] text-sm">{crop.name}</h4>
                       <div className="text-[11px] text-gray-500 italic">{crop.scientific_name}</div>
                     </div>
-                    <span className="text-[10px] font-mono bg-[#f0ebe0] text-gray-700 px-2 py-0.5 rounded">
+                    <span className="text-[10px] font-mono bg-[#2b2c31] text-gray-700 px-2 py-0.5 rounded">
                       {crop.crop_family}
                     </span>
                   </div>
@@ -927,29 +1000,29 @@ export default function RotationLab({
                     {crop.categories.map((cat) => (
                       <span
                         key={cat}
-                        className="text-[9px] bg-emerald-50 text-emerald-800 px-1.5 py-0.5 rounded border border-emerald-200 uppercase font-medium"
+                        className="text-[9px] bg-zinc-50 text-zinc-800 px-1.5 py-0.5 rounded border border-zinc-200 uppercase font-medium"
                       >
                         {cat}
                       </span>
                     ))}
-                    <span className="text-[9px] bg-sky-50 text-sky-800 px-1.5 py-0.5 rounded border border-sky-200 uppercase font-medium">
+                    <span className="text-[9px] bg-zinc-50 text-zinc-800 px-1.5 py-0.5 rounded border border-zinc-200 uppercase font-medium">
                       {crop.season}
                     </span>
                   </div>
 
                   {/* Key Stats */}
-                  <div className="grid grid-cols-3 gap-1.5 mt-3 bg-[#faf9f5] p-2 rounded text-center text-[10px] border border-[#e5dfd3]">
+                  <div className="grid grid-cols-3 gap-1.5 mt-3 bg-[#202125] p-2 rounded text-center text-[10px] border border-[#44464d]">
                     <div>
                       <div className="text-gray-400 font-semibold">Duration</div>
                       <div className="font-bold text-gray-800 mt-0.5">{crop.typical_duration} d</div>
                     </div>
                     <div>
                       <div className="text-gray-400 font-semibold">Water Need</div>
-                      <div className="font-bold text-blue-800 mt-0.5">{crop.typical_water_mm} mm</div>
+                      <div className="font-bold text-zinc-800 mt-0.5">{crop.typical_water_mm} mm</div>
                     </div>
                     <div>
                       <div className="text-gray-400 font-semibold">N-Fixation</div>
-                      <div className="font-bold text-emerald-800 mt-0.5">
+                      <div className="font-bold text-zinc-800 mt-0.5">
                         {crop.nitrogen_fixation_kg_ha && crop.nitrogen_fixation_kg_ha > 0
                           ? `${crop.nitrogen_fixation_kg_ha} kg/ha`
                           : "N/A"}
@@ -967,7 +1040,7 @@ export default function RotationLab({
                     <div>
                       <strong>Bihar Suitability:</strong>{" "}
                       <span className={`font-semibold uppercase ${
-                        crop.regional_suitability?.bihar === "high" ? "text-emerald-700" : crop.regional_suitability?.bihar === "moderate" ? "text-amber-700" : "text-rose-700"
+                        crop.regional_suitability?.bihar === "high" ? "text-zinc-700" : crop.regional_suitability?.bihar === "moderate" ? "text-zinc-700" : "text-rose-700"
                       }`}>
                         {crop.regional_suitability?.bihar || "Moderate"}
                       </span>
@@ -976,7 +1049,7 @@ export default function RotationLab({
 
                   {/* Limitations */}
                   {crop.limitations && crop.limitations.length > 0 && (
-                    <div className="mt-2 text-[10px] text-gray-500 bg-amber-50 p-1.5 rounded border border-amber-100">
+                    <div className="mt-2 text-[10px] text-gray-500 bg-zinc-50 p-1.5 rounded border border-zinc-100">
                       <strong>Agronomic Caveat:</strong> {crop.limitations[0]}
                     </div>
                   )}
@@ -984,7 +1057,7 @@ export default function RotationLab({
 
                 <div className="mt-3 pt-2 border-t border-gray-100 flex justify-between text-[9px] text-gray-400">
                   <span>Source: {crop.data_source?.split(" ")[0]} ({crop.source_year})</span>
-                  <span>Information quality: <strong className="text-emerald-700 uppercase">{crop.data_confidence}</strong></span>
+                  <span>Information quality: <strong className="text-zinc-700 uppercase">{crop.data_confidence}</strong></span>
                 </div>
               </div>
             ))}
@@ -1015,7 +1088,7 @@ export default function RotationLab({
       )}
 
       {/* Global Scientific Heuristic Notice */}
-      <div className="bg-[#fefce8] border-l-4 border-amber-500 p-4 rounded-r shadow-xs text-xs text-amber-900">
+      <div className="bg-[#27282d] border-l-4 border-zinc-500 p-4 rounded-r shadow-xs text-xs text-zinc-900">
         <strong>Important Agronomic Disclaimer:</strong> {evaluation?.disclaimer || DISCLAIMER_TEXT}
       </div>
     </div>
@@ -1030,13 +1103,13 @@ function RotationTimelineBar({ strat }: { strat: RotationStrategy }) {
   const isCompressed = turnaround < 25 && strat.total_duration_days > 240;
 
   return (
-    <div className="bg-white p-2.5 rounded border border-[#e5dfd3] space-y-1.5">
+    <div className="bg-white p-2.5 rounded border border-[#44464d] space-y-1.5">
       <div className="flex justify-between items-center text-[10px]">
         <span className="font-bold text-gray-700 flex items-center gap-1">
-          <span>📅</span> Annual Rotation Timeline (June → May)
+          Annual Rotation Timeline (June → May)
         </span>
         <span className={`px-1.5 py-0.5 rounded text-[9px] font-semibold ${
-          isCompressed ? "bg-amber-100 text-amber-900 border border-amber-300" : "bg-emerald-50 text-emerald-800"
+          isCompressed ? "bg-zinc-100 text-zinc-900 border border-zinc-300" : "bg-zinc-50 text-zinc-800"
         }`}>
           {turnaround} days turnaround buffer
         </span>
@@ -1046,7 +1119,7 @@ function RotationTimelineBar({ strat }: { strat: RotationStrategy }) {
       <div className="w-full bg-gray-100 h-6 rounded flex overflow-hidden border border-gray-200 text-[9px] font-bold text-white text-center leading-6">
         {/* Kharif Segment */}
         <div
-          className="bg-[#2d6a4f] hover:bg-[#1b4332] transition-colors truncate px-1 cursor-help"
+          className="bg-[#6a6d75] hover:bg-[#e7e8eb] transition-colors truncate px-1 cursor-help"
           style={{ width: strat.crops && strat.crops.length >= 3 ? "38%" : "48%" }}
           title={`Kharif: ${strat.kharif_crop || "Kharif Crop"}`}
         >
@@ -1064,7 +1137,7 @@ function RotationTimelineBar({ strat }: { strat: RotationStrategy }) {
 
         {/* Rabi Segment */}
         <div
-          className="bg-[#b45309] hover:bg-[#92400e] transition-colors truncate px-1 cursor-help"
+          className="bg-[#aeb1b8] hover:bg-[#c6c7cb] transition-colors truncate px-1 cursor-help"
           style={{ width: strat.crops && strat.crops.length >= 3 ? "34%" : "44%" }}
           title={`Rabi: ${strat.rabi_crop || "Rabi Crop"}`}
         >
@@ -1081,7 +1154,7 @@ function RotationTimelineBar({ strat }: { strat: RotationStrategy }) {
               gap
             </div>
             <div
-              className="bg-[#0284c7] hover:bg-[#0369a1] transition-colors truncate px-1 cursor-help"
+              className="bg-[#aeb1b8] hover:bg-[#aeb1b8] transition-colors truncate px-1 cursor-help"
               style={{ width: "14%" }}
               title={`Zaid / Summer Catch Crop: ${strat.zaid_crop || "Zaid Crop"}`}
             >
@@ -1125,18 +1198,18 @@ function ComparisonModal({
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-xs">
       <div className="bg-white rounded-xl shadow-2xl border border-gray-300 w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden">
         {/* Modal Header */}
-        <div className="p-4 bg-[#1b4332] text-white flex justify-between items-center">
+        <div className="p-4 bg-[#e7e8eb] text-white flex justify-between items-center">
           <div>
             <h3 className="text-base font-bold flex items-center gap-2">
               <span>⚖️</span> Side-by-Side Strategy Comparison
             </h3>
-            <p className="text-xs text-[#d8f3dc]">
+            <p className="text-xs text-[#303136]">
               Comparing {selectedStrats.length} candidate rotation pathways for {priority.replace("_", " ")} priority.
             </p>
           </div>
           <button
             onClick={onClose}
-            className="text-white hover:bg-[#2d6a4f] px-2.5 py-1 rounded text-sm font-bold cursor-pointer"
+            className="text-white hover:bg-[#6a6d75] px-2.5 py-1 rounded text-sm font-bold cursor-pointer"
           >
             ✕
           </button>
@@ -1148,18 +1221,18 @@ function ComparisonModal({
             {selectedStrats.map((strat, sIdx) => (
               <div
                 key={strat.id}
-                className="border border-[#e5dfd3] rounded-lg p-4 bg-[#faf9f5] flex flex-col justify-between space-y-3"
+                className="border border-[#44464d] rounded-lg p-4 bg-[#202125] flex flex-col justify-between space-y-3"
               >
                 <div>
                   <div className="flex justify-between items-start">
-                    <span className="text-[10px] font-bold uppercase text-[#1b4332] bg-[#d8f3dc] px-2 py-0.5 rounded">
+                    <span className="text-[10px] font-bold uppercase text-[#e7e8eb] bg-[#303136] px-2 py-0.5 rounded">
                       Option {sIdx + 1}
                     </span>
                     <span className={`text-base font-bold font-mono px-2 py-0.5 rounded border ${getScoreColor(strat.overall_score)}`}>
                       {strat.overall_score}
                     </span>
                   </div>
-                  <h4 className="font-bold text-sm text-[#1b4332] mt-1.5">{strat.name}</h4>
+                  <h4 className="font-bold text-sm text-[#e7e8eb] mt-1.5">{strat.name}</h4>
                   <p className="text-xs text-gray-500 mt-0.5">{strat.description}</p>
                 </div>
 
@@ -1167,25 +1240,25 @@ function ComparisonModal({
                 <div className="space-y-2 bg-white p-3 rounded border border-gray-200 text-xs">
                   <div className="flex justify-between py-1 border-b border-gray-100">
                     <span className="text-gray-500">Water Demand:</span>
-                    <strong className="text-[#1b4332]">{strat.water_demand_mm} mm</strong>
+                    <strong className="text-[#e7e8eb]">{strat.water_demand_mm} mm</strong>
                   </div>
                   <div className="flex justify-between py-1 border-b border-gray-100">
                     <span className="text-gray-500">Duration:</span>
-                    <strong className="text-sky-800">{strat.total_duration_days} days</strong>
+                    <strong className="text-zinc-800">{strat.total_duration_days} days</strong>
                   </div>
                   <div className="flex justify-between py-1 border-b border-gray-100">
                     <span className="text-gray-500">Turnaround Buffer:</span>
-                    <strong className="text-purple-800">{strat.turnaround_days ?? (365 - strat.total_duration_days)} days</strong>
+                    <strong className="text-zinc-800">{strat.turnaround_days ?? (365 - strat.total_duration_days)} days</strong>
                   </div>
                   <div className="flex justify-between py-1 border-b border-gray-100">
                     <span className="text-gray-500">Biological N-Fix:</span>
-                    <strong className="text-emerald-800">
+                    <strong className="text-zinc-800">
                       {strat.nitrogen_fixed_kg_ha > 0 ? `+${strat.nitrogen_fixed_kg_ha} kg/ha` : "None"}
                     </strong>
                   </div>
                   <div className="flex justify-between py-1">
                     <span className="text-gray-500">Regional Fit:</span>
-                    <strong className="uppercase text-emerald-700">{strat.regional_suitability || "High"}</strong>
+                    <strong className="uppercase text-zinc-700">{strat.regional_suitability || "High"}</strong>
                   </div>
                 </div>
 
@@ -1209,11 +1282,11 @@ function ComparisonModal({
                 {/* Benefits & Disadvantages */}
                 <div className="text-[11px] space-y-1.5 pt-2 border-t border-gray-200">
                   <div>
-                    <strong className="text-emerald-800">Key Upside:</strong>
+                    <strong className="text-zinc-800">Key Upside:</strong>
                     <p className="text-gray-600 mt-0.5">{strat.benefits?.[0]}</p>
                   </div>
                   <div>
-                    <strong className="text-amber-800">Primary Trade-off:</strong>
+                    <strong className="text-zinc-800">Primary Trade-off:</strong>
                     <p className="text-gray-600 mt-0.5">{strat.disadvantages?.[0]}</p>
                   </div>
                 </div>
@@ -1226,7 +1299,7 @@ function ComparisonModal({
         <div className="p-4 bg-gray-50 border-t border-gray-200 flex justify-end">
           <button
             onClick={onClose}
-            className="bg-[#1b4332] hover:bg-[#2d6a4f] text-white text-xs font-semibold px-4 py-2 rounded cursor-pointer"
+            className="bg-[#e7e8eb] hover:bg-[#6a6d75] text-white text-xs font-semibold px-4 py-2 rounded cursor-pointer"
           >
             Close Comparison
           </button>
@@ -1264,23 +1337,23 @@ function FarmerReportModal({
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-xs">
       <div className="bg-white rounded-xl shadow-2xl border border-gray-300 w-full max-w-4xl max-h-[92vh] flex flex-col overflow-hidden">
         {/* Modal Header with Action */}
-        <div className="p-4 bg-[#1b4332] text-white flex justify-between items-center print:hidden">
+        <div className="p-4 bg-[#e7e8eb] text-white flex justify-between items-center print:hidden">
           <div>
             <h3 className="text-base font-bold flex items-center gap-2">
-              <span>📄</span> Exportable Farmer Advisory Report
+              Exportable Farmer Advisory Report
             </h3>
-            <p className="text-xs text-[#d8f3dc]">Print or save as PDF for extension distribution and farmer consultation.</p>
+            <p className="text-xs text-[#303136]">Print or save as PDF for extension distribution and farmer consultation.</p>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={handlePrint}
-              className="bg-[#40916c] hover:bg-[#52b788] text-white text-xs font-bold px-3 py-1.5 rounded transition-all cursor-pointer flex items-center gap-1.5"
+              className="bg-[#d0d1d5860] hover:bg-[#747780] text-white text-xs font-bold px-3 py-1.5 rounded transition-all cursor-pointer flex items-center gap-1.5"
             >
-              <span>🖨️</span> Print / Save PDF
+              Print / Save PDF
             </button>
             <button
               onClick={onClose}
-              className="text-white hover:bg-[#2d6a4f] px-2 py-1 rounded text-sm font-bold cursor-pointer"
+              className="text-white hover:bg-[#6a6d75] px-2 py-1 rounded text-sm font-bold cursor-pointer"
             >
               ✕
             </button>
@@ -1288,14 +1361,14 @@ function FarmerReportModal({
         </div>
 
         {/* Printable Report Content */}
-        <div className="p-6 overflow-y-auto space-y-6 text-[#1c1915]" id="printable-farmer-report">
+        <div className="p-6 overflow-y-auto space-y-6 text-[#e5e5e7]" id="printable-farmer-report">
           {/* Official Advisory Header */}
-          <div className="border-b-2 border-[#1b4332] pb-4 flex justify-between items-start">
+          <div className="border-b-2 border-[#e7e8eb] pb-4 flex justify-between items-start">
             <div>
-              <div className="text-xs font-bold text-[#2d6a4f] uppercase tracking-wider">
+              <div className="text-xs font-bold text-[#6a6d75] uppercase tracking-wider">
                 VASUNDHARA • PRECISION AGRO-CLIMATIC INTELLIGENCE
               </div>
-              <h2 className="text-xl font-bold text-[#1b4332] mt-0.5">
+              <h2 className="text-xl font-bold text-[#e7e8eb] mt-0.5">
                 Seasonal Crop Rotation Advisory Report
               </h2>
               <p className="text-xs text-gray-600 mt-1">
@@ -1309,8 +1382,8 @@ function FarmerReportModal({
           </div>
 
           {/* Farm Profile Summary Box */}
-          <div className="bg-[#faf9f5] border border-[#e5dfd3] rounded-lg p-4">
-            <h4 className="text-xs font-bold text-[#1b4332] uppercase mb-2">1. Farm & Field Profile Parameters</h4>
+          <div className="bg-[#202125] border border-[#44464d] rounded-lg p-4">
+            <h4 className="text-xs font-bold text-[#e7e8eb] uppercase mb-2">1. Farm & Field Profile Parameters</h4>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs">
               <div>
                 <span className="text-gray-500 block">Farm Area:</span>
@@ -1326,7 +1399,7 @@ function FarmerReportModal({
               </div>
               <div>
                 <span className="text-gray-500 block">Farmer Goal:</span>
-                <strong className="text-[#2d6a4f] uppercase font-bold">{profile.priority.replace("_", " ")}</strong>
+                <strong className="text-[#6a6d75] uppercase font-bold">{profile.priority.replace("_", " ")}</strong>
               </div>
               <div>
                 <span className="text-gray-500 block">Monsoon Baseline:</span>
@@ -1337,23 +1410,23 @@ function FarmerReportModal({
 
           {/* Top Suggested crop plans */}
           <div>
-            <h4 className="text-xs font-bold text-[#1b4332] uppercase mb-2">2. Top Recommended Rotation Strategies</h4>
+            <h4 className="text-xs font-bold text-[#e7e8eb] uppercase mb-2">2. Top Recommended Rotation Strategies</h4>
             <div className="space-y-3">
               {topRotations.map((strat, i) => (
-                <div key={strat.id} className="border border-[#e5dfd3] rounded-lg p-3 bg-white space-y-2">
+                <div key={strat.id} className="border border-[#44464d] rounded-lg p-3 bg-white space-y-2">
                   <div className="flex justify-between items-start">
                     <div>
-                      <span className="text-[10px] font-bold text-white bg-[#1b4332] px-2 py-0.5 rounded mr-2">
+                      <span className="text-[10px] font-bold text-white bg-[#e7e8eb] px-2 py-0.5 rounded mr-2">
                         Rank #{i + 1}
                       </span>
-                      <strong className="text-sm text-[#1b4332]">{strat.name}</strong>
+                      <strong className="text-sm text-[#e7e8eb]">{strat.name}</strong>
                     </div>
-                    <span className="text-xs font-bold font-mono px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200">
+                    <span className="text-xs font-bold font-mono px-2 py-0.5 rounded bg-zinc-50 text-zinc-800 border border-zinc-200">
                       Overall: {strat.overall_score}/100
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-4 gap-2 text-[11px] bg-[#f8f6f0] p-2 rounded text-center">
+                  <div className="grid grid-cols-4 gap-2 text-[11px] bg-[#232428] p-2 rounded text-center">
                     <div>
                       <span className="text-gray-500 block text-[9px]">Water Demand</span>
                       <strong>{strat.water_demand_mm} mm</strong>
@@ -1375,7 +1448,7 @@ function FarmerReportModal({
                   <div className="text-[11px] text-gray-700 space-y-1">
                     <div><strong>Agronomic Benefit:</strong> {strat.benefits?.[0]}</div>
                     {strat.warnings && strat.warnings.length > 0 && (
-                      <div className="text-amber-800">
+                      <div className="text-zinc-800">
                         <strong>Management Advisory:</strong> {strat.warnings[0]}
                       </div>
                     )}
@@ -1386,7 +1459,7 @@ function FarmerReportModal({
           </div>
 
           {/* Agronomic Best Practices Checklist */}
-          <div className="bg-[#f0f7f4] border border-[#b7e4c7] rounded-lg p-4 text-xs text-[#1b4332] space-y-2">
+          <div className="bg-[#25262b] border border-[#aeb1b8] rounded-lg p-4 text-xs text-[#e7e8eb] space-y-2">
             <h4 className="font-bold uppercase text-[11px]">3. Key Management Recommendations for Eastern Gangetic Plains</h4>
             <ul className="list-disc list-inside space-y-1 text-gray-700">
               <li><strong>Zero-Tillage Relay:</strong> For post-rice Rabi pulses (chickpea/lentil), practice zero-tillage relay sowing (utera/para) into residual moisture to escape soil hardpan delays.</li>
@@ -1407,9 +1480,9 @@ function FarmerReportModal({
 }
 
 function getScoreColor(score: number): string {
-  if (score >= 80) return "text-emerald-800 bg-emerald-50 border-emerald-300";
-  if (score >= 65) return "text-[#2d6a4f] bg-[#d8f3dc] border-[#b7e4c7]";
-  if (score >= 50) return "text-amber-800 bg-amber-50 border-amber-300";
+  if (score >= 80) return "text-zinc-800 bg-zinc-50 border-zinc-300";
+  if (score >= 65) return "text-[#6a6d75] bg-[#303136] border-[#aeb1b8]";
+  if (score >= 50) return "text-zinc-800 bg-zinc-50 border-zinc-300";
   return "text-rose-800 bg-rose-50 border-rose-300";
 }
 

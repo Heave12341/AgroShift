@@ -246,6 +246,9 @@ export type CropInfo = {
   name: string;
   scientific_name: string;
   categories: string[];
+  primary_category?: string;
+  synonyms?: string[];
+  climatic_zones?: string[];
   crop_family: string;
   season: string;
   duration_range_days: [number, number];
@@ -301,6 +304,8 @@ export type RotationStrategy = {
     climate_resilience: number;
   };
   weights_used: Record<string, number>;
+  weighted_contributions?: Record<string, number>;
+  five_criteria_score?: number;
   water_demand_mm: number;
   rabi_water_demand_mm: number;
   nitrogen_fixed_kg_ha: number;

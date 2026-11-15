@@ -1,11 +1,13 @@
 import asyncio, json, time, os, math, sys
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Any
 import httpx
 from fastapi import FastAPI, HTTPException, Query
-from fastapi.responses import ORJSONResponse, StreamingResponse
+from fastapi.responses import FileResponse, ORJSONResponse, StreamingResponse
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 # Ensure backend and repository root directories are in sys.path
@@ -474,32 +476,78 @@ async def post_evaluate_custom_rotation(req: CustomRotationInput):
     return sanitize_json(rotation.evaluate_custom_rotation(req.crop_ids, prof, climate_summary=req.climate_summary))
 
 
+@app.get("/api/rotation/crops/summary")
+async def get_crops_summary():
+    import crops_registry
+    return sanitize_json(crops_registry.get_catalog_stats())
+
+
+@app.get("/api/rotation/crops/{crop_id}")
+async def get_single_crop(crop_id: str):
+    crop = rotation.CROPS.get(crop_id)
+    if not crop:
+        raise HTTPException(status_code=404, detail=f"Crop with ID '{crop_id}' not found in registry.")
+    return sanitize_json(crop)
+
+
 @app.get("/api/rotation/crops")
 async def get_crops(
-    category: str | None = Query(None, description="Filter by crop category (e.g. cereal, pulse, oilseed, vegetable, fruit, commercial, spice, millet)"),
-    season: str | None = Query(None, description="Filter by season (e.g. kharif, rabi, zaid, annual, perennial)"),
-    region: str | None = Query(None, description="Filter by regional suitability (e.g. bihar, indo_gangetic, central, deccan)"),
-    q: str | None = Query(None, description="Search query across crop names and categories"),
+    category: str | None = Query(None),
+    family: str | None = Query(None),
+    season: str | None = Query(None),
+    region: str | None = Query(None),
+    zone: str | None = Query(None),
+    q: str | None = Query(None),
+    limit: int | None = Query(None, ge=1, le=2000),
+    offset: int = Query(0, ge=0),
 ):
     crops = rotation.CROPS
     result = {}
-    for cid, c in crops.items():
-        if category and category.lower() not in [cat.lower() for cat in c.get("categories", [])]:
+    for cid, crop in crops.items():
+        cats = [str(cat).lower() for cat in crop.get("categories", [])]
+        primary = str(crop.get("primary_category", "")).lower()
+        if category and category.lower() not in cats and category.lower() != primary:
             continue
-        if season and season.lower() not in str(c.get("season", "")).lower():
+        if family and family.lower() != str(crop.get("crop_family", "")).lower():
+            continue
+        if season and season.lower() not in str(crop.get("season", "")).lower() and "annual" not in str(crop.get("season", "" )).lower():
             continue
         if region:
-            reg_suit = c.get("regional_suitability", {}).get(region.lower(), "low")
-            if reg_suit not in ("high", "moderate"):
+            suitability = (crop.get("regional_suitability") or {}).get(region.lower(), "low")
+            if suitability not in ("high", "moderate"):
                 continue
+        if zone and zone.lower() not in [str(z).lower() for z in crop.get("climatic_zones", [])]:
+            continue
         if q:
-            needle = q.lower()
-            in_name = needle in c.get("name", "").lower()
-            in_sci = needle in c.get("scientific_name", "").lower()
-            in_cats = any(needle in cat.lower() for cat in c.get("categories", []))
-            if not (in_name or in_sci or in_cats):
+            needle = q.strip().lower()
+            searchable = [cid, crop.get("name", ""), crop.get("scientific_name", ""), crop.get("crop_family", "")]
+            searchable += list(crop.get("synonyms", []) or []) + cats
+            if not any(needle in str(item).lower() for item in searchable):
                 continue
-        result[cid] = c
-    return sanitize_json(result)
+        result[cid] = crop
+    items = list(result.items())[offset:]
+    if limit is not None:
+        items = items[:limit]
+    return sanitize_json(dict(items))
 
+
+_static_root = Path(_repo_root)
+
+
+@app.get("/", include_in_schema=False)
+async def landing_page():
+    return FileResponse(_static_root / "index.html")
+
+
+@app.get("/styles.css", include_in_schema=False)
+async def landing_styles():
+    return FileResponse(_static_root / "styles.css")
+
+
+app.mount("/images", StaticFiles(directory=str(_static_root / "images")), name="site-images")
+app.mount(
+    "/dashboard",
+    StaticFiles(directory=str(_static_root / "dashboard"), html=True),
+    name="dashboard",
+)
 

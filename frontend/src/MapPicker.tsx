@@ -237,11 +237,11 @@ export default function MapPicker({
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg border border-[#e5dfd3] shadow-xs space-y-3">
+    <div className="dashboard-map-card bg-white p-4 rounded-lg border border-[#44464d] shadow-xs space-y-3">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
         <div>
-          <h3 className="font-bold text-[#1b4332] text-lg flex items-center gap-1.5">
-            <span>🗺️</span> Choose your place
+          <h3 className="font-bold text-[#e7e8eb] text-lg flex items-center gap-1.5">
+            <span aria-hidden="true">⌖</span> Choose your place
           </h3>
           <p className="text-sm text-gray-700">
             Tap the map, or search for your village, town or district. The information below will update for that place.
@@ -258,58 +258,60 @@ export default function MapPicker({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             disabled={searching}
-            className="text-xs px-2.5 py-1.5 border border-gray-300 rounded bg-[#faf9f5] w-full sm:w-64 focus:outline-[#2d6a4f]"
+            className="text-xs px-2.5 py-1.5 border border-gray-300 rounded bg-[#202125] w-full sm:w-64 focus:outline-[#6a6d75]"
           />
           <button
             type="submit"
             aria-label="Find this place"
             disabled={searching}
-            className="bg-[#2d6a4f] hover:bg-[#1b4332] text-white text-xs font-semibold px-3 py-1.5 rounded transition-colors whitespace-nowrap shadow-xs disabled:opacity-50"
+            className="bg-[#6a6d75] hover:bg-[#e7e8eb] text-white text-xs font-semibold px-3 py-1.5 rounded transition-colors whitespace-nowrap shadow-xs disabled:opacity-50"
           >
             {searching ? "Finding place..." : "Find place"}
           </button>
         </form>
       </div>
 
-      {/* Quick Location Pills */}
-      <div className="flex items-center gap-1.5 flex-wrap">
-        <span className="text-xs font-semibold text-gray-500 uppercase">Quick places:</span>
-        {QUICK_JUMP_HUBS.map((loc) => (
-          <button
-            key={loc.name}
-            type="button"
-            aria-pressed={Math.abs(lat - loc.lat) < 0.01 && Math.abs(lon - loc.lon) < 0.01}
-            onClick={() => onLocationChange(loc.lat, loc.lon)}
-            className={`text-xs px-2 py-0.5 rounded border transition-colors ${
-              Math.abs(lat - loc.lat) < 0.01 && Math.abs(lon - loc.lon) < 0.01
-                ? "bg-[#2d6a4f] text-white border-[#1b4332] font-semibold"
-                : "bg-[#f8f6f0] text-[#2d6a4f] hover:bg-[#e9e4d9] border-[#d8d2c4]"
-            }`}
-          >
-            {loc.name}
-          </button>
-        ))}
-      </div>
+      {/* Additional quick places are tucked away so the map stays uncluttered. */}
+      <details className="dashboard-more-places">
+        <summary>More nearby and regional places</summary>
+        <div className="dashboard-more-place-list">
+          {QUICK_JUMP_HUBS.map((loc) => (
+            <button
+              key={loc.name}
+              type="button"
+              aria-pressed={Math.abs(lat - loc.lat) < 0.01 && Math.abs(lon - loc.lon) < 0.01}
+              onClick={() => onLocationChange(loc.lat, loc.lon)}
+              className={`text-xs px-2 py-1 rounded border transition-colors ${
+                Math.abs(lat - loc.lat) < 0.01 && Math.abs(lon - loc.lon) < 0.01
+                  ? "bg-[#6a6d75] text-white border-[#e7e8eb] font-semibold"
+                  : "bg-[#232428] text-[#6a6d75] hover:bg-[#303136] border-[#505158]"
+              }`}
+            >
+              {loc.name}
+            </button>
+          ))}
+        </div>
+      </details>
 
       {/* Map Container */}
-      <div className="relative w-full h-72 rounded-md overflow-hidden border border-[#d8d2c4]" aria-label="Map for choosing a farm location">
+      <div className="relative w-full h-72 rounded-md overflow-hidden border border-[#505158]" aria-label="Map for choosing a farm location">
         <div ref={mapContainerRef} className="w-full h-full z-0" role="application" aria-label="Map. Tap a place to choose your farm location." />
         {clickNotice && (
-          <div role="status" aria-live="polite" className="absolute top-2 left-2 z-10 bg-[#1b4332] text-white text-sm px-3 py-2 rounded shadow-md border border-[#40916c] animate-fade-in">
+          <div role="status" aria-live="polite" className="absolute top-2 left-2 z-10 bg-[#e7e8eb] text-white text-sm px-3 py-2 rounded shadow-md border border-[#d0d1d5860] animate-fade-in">
             {clickNotice}
           </div>
         )}
       </div>
 
       {/* Coordinate & Period Status Bar */}
-      <div className="flex flex-wrap justify-between items-center text-xs bg-[#f8f6f0] p-2.5 rounded border border-[#e5dfd3] gap-2">
+      <div className="flex flex-wrap justify-between items-center text-xs bg-[#232428] p-2.5 rounded border border-[#44464d] gap-2">
         <div className="flex items-center gap-3">
           <span className="text-gray-600">
-            Selected place: <strong className="text-[#1b4332]">{lat.toFixed(4)}°N, {lon.toFixed(4)}°E</strong>
+            Selected place: <strong className="text-[#e7e8eb]">{lat.toFixed(4)}°N, {lon.toFixed(4)}°E</strong>
           </span>
           <span className="text-gray-400">|</span>
           <span className="text-gray-600">
-            Years shown: <strong className="text-[#1b4332]">{startYear}–{endYear}</strong>
+            Years shown: <strong className="text-[#e7e8eb]">{startYear}–{endYear}</strong>
           </span>
         </div>
         <div className="text-gray-500 text-xs">

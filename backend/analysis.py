@@ -364,7 +364,7 @@ def analyze_vegetation(payload: dict, *, lat: float, lon: float, start_year: int
         latest = {
             "date": row["date"],
             "ndvi": _round(row["ndvi"], 4),
-            "note": "Latest quality-filtered observation in the selected period. This is not a live measurement.",
+            "note": "This is the newest clear satellite picture in the years you selected. It is not a live reading.",
         }
         break
     period_max = max(valid, key=lambda row: row["ndvi"]) if valid else None
