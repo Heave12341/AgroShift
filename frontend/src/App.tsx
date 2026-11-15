@@ -258,7 +258,7 @@ export default function App() {
           </div>
           <div className="dashboard-header-tools">
             <a
-              href={window.location.hostname === "dashboard.vasundhara.earth" ? "https://vasundhara.earth/" : "/"}
+              href={window.location.hostname === "dashboard.vasundhara.earth" ? "https://vasundhara.earth/" : import.meta.env.BASE_URL}
               className="dashboard-home-link"
               aria-label="Return to the Vasundhara home page"
             >
