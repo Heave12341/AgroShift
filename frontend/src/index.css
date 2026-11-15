@@ -179,3 +179,66 @@ img, svg, canvas { max-width: 100%; }
   border-color:#759A64 !important;
   color:#fff !important;
 }
+
+/* Restrained accents distinguish topics while keeping the dark dashboard calm. */
+.dashboard-dark .dashboard-content h2,
+.dashboard-dark .dashboard-howto h2 {
+  color:#bed7a8 !important;
+}
+.dashboard-dark .dashboard-content h3,
+.dashboard-dark .rotation-lab h3 {
+  color:#bed5e2 !important;
+}
+.dashboard-dark .rotation-lab h4 {
+  color:#d5c28e !important;
+}
+.dashboard-dark .dashboard-content .dashboard-metric-card {
+  background:#1b201d !important;
+  border-color:#39413a !important;
+  border-left:3px solid var(--metric-accent) !important;
+}
+.dashboard-dark .dashboard-content .dashboard-metric-card > div:first-child {
+  color:var(--metric-accent) !important;
+}
+.dashboard-dark .dashboard-content .dashboard-metric-card .text-2xl {
+  color:var(--metric-value) !important;
+}
+.dashboard-dark .dashboard-content .metric-sage {
+  --metric-accent:#9fc486;
+  --metric-value:#c8dfa9;
+}
+.dashboard-dark .dashboard-content .metric-amber {
+  --metric-accent:#d9b66d;
+  --metric-value:#f0d48e;
+}
+.dashboard-dark .dashboard-content .metric-coral {
+  --metric-accent:#d99476;
+  --metric-value:#efb8a0;
+}
+.dashboard-dark .dashboard-content .metric-blue {
+  --metric-accent:#79b6d2;
+  --metric-value:#add5e5;
+}
+.dashboard-dark .dashboard-content .metric-teal {
+  --metric-accent:#77b7a5;
+  --metric-value:#a9d8c8;
+}
+.dashboard-dark .dashboard-content .recharts-text {
+  fill:#c7cbd0;
+}
+.dashboard-dark .rotation-lab [class*="bg-gray-100"],
+.dashboard-dark .rotation-lab [class*="bg-gray-200"] {
+  background:#343b36 !important;
+}
+.dashboard-dark .rotation-strategy-grid > div {
+  border-left:3px solid #759A64 !important;
+}
+.dashboard-dark .rotation-strategy-grid > div:nth-child(4n + 2) {
+  border-left-color:#79b6d2 !important;
+}
+.dashboard-dark .rotation-strategy-grid > div:nth-child(4n + 3) {
+  border-left-color:#d9b66d !important;
+}
+.dashboard-dark .rotation-strategy-grid > div:nth-child(4n) {
+  border-left-color:#77b7a5 !important;
+}

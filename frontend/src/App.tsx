@@ -496,7 +496,7 @@ export default function App() {
               <div className="space-y-6">
                 {/* Metric Summary Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="bg-white p-4 rounded-lg border border-[#44464d] shadow-xs">
+                  <div className="dashboard-metric-card metric-sage bg-white p-4 rounded-lg border border-[#44464d] shadow-xs">
                     <div className="text-xs font-semibold text-gray-500 uppercase">Usual temperature (1991–2020)</div>
                     <div className="text-2xl font-bold text-[#e7e8eb] mt-1">
                       {climateData.baseline?.temperature_mean_c != null ? `${climateData.baseline.temperature_mean_c} °C` : "N/A"}
@@ -504,7 +504,7 @@ export default function App() {
                     <div className="text-xs text-gray-500 mt-1">Average yearly temperature in the reference period</div>
                   </div>
 
-                  <div className="bg-white p-4 rounded-lg border border-[#44464d] shadow-xs">
+                  <div className="dashboard-metric-card metric-amber bg-white p-4 rounded-lg border border-[#44464d] shadow-xs">
                     <div className="text-xs font-semibold text-gray-500 uppercase">Average temperature in selected years</div>
                     <div className="text-2xl font-bold text-[#6a6d75] mt-1">
                       {climateData.annual && climateData.annual.length > 0
@@ -517,7 +517,7 @@ export default function App() {
                     <div className="text-xs text-gray-500 mt-1">{startYear}–{endYear} observed mean</div>
                   </div>
 
-                  <div className="bg-white p-4 rounded-lg border border-[#44464d] shadow-xs">
+                  <div className="dashboard-metric-card metric-coral bg-white p-4 rounded-lg border border-[#44464d] shadow-xs">
                     <div className="text-xs font-semibold text-gray-500 uppercase">Highest recorded temperature</div>
                     <div className="text-2xl font-bold text-zinc-700 mt-1">
                       {climateData.annual && climateData.annual.length > 0
@@ -527,7 +527,7 @@ export default function App() {
                     <div className="text-xs text-gray-500 mt-1">Highest daily air temperature in these years</div>
                   </div>
 
-                  <div className="bg-white p-4 rounded-lg border border-[#44464d] shadow-xs">
+                  <div className="dashboard-metric-card metric-blue bg-white p-4 rounded-lg border border-[#44464d] shadow-xs">
                     <div className="text-xs font-semibold text-gray-500 uppercase">Lowest recorded temperature</div>
                     <div className="text-2xl font-bold text-zinc-700 mt-1">
                       {climateData.annual && climateData.annual.length > 0
@@ -568,9 +568,9 @@ export default function App() {
                             label={{ value: `Baseline: ${climateData.baseline.temperature_mean_c} °C`, fontSize: 14, fill: "#d0d1d5" }}
                           />
                         )}
-                        <Line type="monotone" dataKey="t2m_max_c" stroke="#aeb1b8" name="Annual Max (°C)" dot={{ r: 2 }} connectNulls={false} />
-                        <Line type="monotone" dataKey="t2m_mean_c" stroke="#e7e8eb" strokeWidth={2} name="Annual Mean (°C)" dot={{ r: 3 }} connectNulls={false} />
-                        <Line type="monotone" dataKey="t2m_min_c" stroke="#aeb1b8" name="Annual Min (°C)" dot={{ r: 2 }} connectNulls={false} />
+                        <Line type="monotone" dataKey="t2m_max_c" stroke="#E3A36F" name="Annual Max (°C)" dot={{ r: 2 }} connectNulls={false} />
+                        <Line type="monotone" dataKey="t2m_mean_c" stroke="#E7CC7A" strokeWidth={2} name="Annual Mean (°C)" dot={{ r: 3 }} connectNulls={false} />
+                        <Line type="monotone" dataKey="t2m_min_c" stroke="#82B6D1" name="Annual Min (°C)" dot={{ r: 2 }} connectNulls={false} />
                       </LineChart>
                     </ResponsiveContainer>
                   </div>
@@ -599,7 +599,7 @@ export default function App() {
                         <XAxis dataKey="monthName" tick={{ fontSize: 16 }} />
                         <YAxis domain={[0, "auto"]} unit="°C" tick={{ fontSize: 16 }} />
                         <Tooltip formatter={(val: any) => [`${val} °C`, "Mean Temp"]} />
-                        <Bar dataKey="t2m_mean_c" fill="#d0d1d5860" radius={[4, 4, 0, 0]} name="Monthly Mean Temp (°C)" />
+                        <Bar dataKey="t2m_mean_c" fill="#D9AE69" radius={[4, 4, 0, 0]} name="Monthly Mean Temp (°C)" />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
@@ -622,7 +622,7 @@ export default function App() {
               <div className="space-y-6">
                 {/* Metric Summary Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="bg-white p-4 rounded-lg border border-[#44464d] shadow-xs">
+                  <div className="dashboard-metric-card metric-blue bg-white p-4 rounded-lg border border-[#44464d] shadow-xs">
                     <div className="text-xs font-semibold text-gray-500 uppercase">Usual yearly rainfall</div>
                     <div className="text-2xl font-bold text-[#e7e8eb] mt-1">
                       {climateData.baseline?.rainfall_mean_mm != null ? `${climateData.baseline.rainfall_mean_mm} mm` : "N/A"}
@@ -630,7 +630,7 @@ export default function App() {
                     <div className="text-xs text-gray-500 mt-1">Average rainfall from 1991 to 2020</div>
                   </div>
 
-                  <div className="bg-white p-4 rounded-lg border border-[#44464d] shadow-xs">
+                  <div className="dashboard-metric-card metric-teal bg-white p-4 rounded-lg border border-[#44464d] shadow-xs">
                     <div className="text-xs font-semibold text-gray-500 uppercase">Rain in the rainy season (June–October)</div>
                     <div className="text-2xl font-bold text-zinc-700 mt-1">
                       {(() => {
@@ -653,7 +653,7 @@ export default function App() {
                     <div className="text-xs text-gray-500 mt-1">June–October seasonal rainfall mean</div>
                   </div>
 
-                  <div className="bg-white p-4 rounded-lg border border-[#44464d] shadow-xs">
+                  <div className="dashboard-metric-card metric-sage bg-white p-4 rounded-lg border border-[#44464d] shadow-xs">
                     <div className="text-xs font-semibold text-gray-500 uppercase">Rain in the cool season (November–March)</div>
                     <div className="text-2xl font-bold text-zinc-700 mt-1">
                       {(() => {
@@ -713,7 +713,7 @@ export default function App() {
                         )}
                         <Bar
                           dataKey="rainfall_mm"
-                          fill="#6a6d75"
+                          fill="#78B8D1"
                           radius={[4, 4, 0, 0]}
                           name="Annual Rainfall (mm)"
                         />
@@ -883,7 +883,7 @@ export default function App() {
                     {vegProgressPct !== null && (
                       <div className="w-full max-w-md mt-3" aria-label={`${vegProgressPct}% complete`}>
                         <div className="h-3 rounded-full bg-[#44464d] overflow-hidden">
-                          <div className="h-full rounded-full bg-[#6a6d75] transition-all" style={{ width: `${vegProgressPct}%` }} />
+                          <div className="h-full rounded-full bg-[#759A64] transition-all" style={{ width: `${vegProgressPct}%` }} />
                         </div>
                         <p className="mt-1 text-sm font-semibold text-[#e7e8eb]">{vegProgressPct}% done</p>
                       </div>
@@ -1019,7 +1019,7 @@ export default function App() {
                             <Line
                               type="monotone"
                               dataKey="ndvi"
-                              stroke="#6a6d75"
+                              stroke="#759A64"
                               strokeWidth={2}
                               dot={{ r: 2 }}
                               connectNulls={false}

@@ -1,7 +1,7 @@
 # Vasundhara — quick fix for the current screenshot and local API errors
 
 ## What changed
-- Dashboard styling now follows the landing page: charcoal `#141613`, panel `#1D211C`, leaf green `#759A64`, harvest orange `#D67C33` and Atkinson Hyperlegible.
+- Dashboard styling now follows the landing page: charcoal `#141613`, panel `#1D211C`, sage green `#759A64`, balanced blue and warm amber accents, and Atkinson Hyperlegible.
 - The content width is 1320px (matching the landing page's hero/footer width), not the compressed 1120px layout.
 - Text, controls and spacing have been normalised. Location controls are in two clear rows.
 - Duplicate quick-location chips are tucked under “More nearby and regional places”.

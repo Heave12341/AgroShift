@@ -551,11 +551,11 @@ export default function RotationLab({
                             </p>
                           </div>
                           {[
-                            { label: "Saves water", key: "water_sustainability", color: "bg-zinc-700", help: "Estimated crop-water demand and your water source." },
-                            { label: "Helps the soil", key: "soil_health", color: "bg-zinc-700", help: "Crop families, root types, soil texture, pH and organic-carbon information you supplied." },
-                            { label: "Fits the growing time", key: "duration_fit", color: "bg-zinc-700", help: "Crop growing days and the time left between crops." },
-                            { label: "Steadier income", key: "economic_stability", color: "bg-zinc-700", help: "Catalogue market-stability ratings, not a profit guarantee." },
-                            { label: "Handles local weather", key: "climate_resilience", color: "bg-zinc-700", help: "Crop drought and waterlogging traits plus available rainfall and temperature context." },
+                            { label: "Saves water", key: "water_sustainability", color: "bg-sky-400", help: "Estimated crop-water demand and your water source." },
+                            { label: "Helps the soil", key: "soil_health", color: "bg-emerald-400", help: "Crop families, root types, soil texture, pH and organic-carbon information you supplied." },
+                            { label: "Fits the growing time", key: "duration_fit", color: "bg-amber-400", help: "Crop growing days and the time left between crops." },
+                            { label: "Steadier income", key: "economic_stability", color: "bg-violet-400", help: "Catalogue market-stability ratings, not a profit guarantee." },
+                            { label: "Handles local weather", key: "climate_resilience", color: "bg-teal-400", help: "Crop drought and waterlogging traits plus available rainfall and temperature context." },
                           ].map((crit) => {
                             const score = (strat.criteria_scores as any)[crit.key] ?? 0;
                             const weight = strat.weights_used?.[crit.key] ?? 0;
@@ -902,7 +902,7 @@ export default function RotationLab({
                       </div>
                       <div className="w-full bg-gray-100 rounded-full h-2 mt-1.5">
                         <div
-                          className="bg-[#6a6d75] h-2 rounded-full transition-all"
+                          className="bg-[#759A64] h-2 rounded-full transition-all"
                           style={{ width: `${score}%` }}
                         ></div>
                       </div>
@@ -1480,10 +1480,10 @@ function FarmerReportModal({
 }
 
 function getScoreColor(score: number): string {
-  if (score >= 80) return "text-zinc-800 bg-zinc-50 border-zinc-300";
-  if (score >= 65) return "text-[#6a6d75] bg-[#303136] border-[#aeb1b8]";
-  if (score >= 50) return "text-zinc-800 bg-zinc-50 border-zinc-300";
-  return "text-rose-800 bg-rose-50 border-rose-300";
+  if (score >= 80) return "text-[#c6dfa7] bg-[#263b2b] border-[#759A64]";
+  if (score >= 65) return "text-[#a9d0e2] bg-[#243844] border-[#5c9bb4]";
+  if (score >= 50) return "text-[#f0d48e] bg-[#44391f] border-[#a98d4a]";
+  return "text-[#efb8b0] bg-[#432b2b] border-[#a76058]";
 }
 
 const DISCLAIMER_TEXT =
