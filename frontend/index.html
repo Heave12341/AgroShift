@@ -8,7 +8,7 @@
     <script>if (location.hostname === "dashboard.vasundhara.earth") location.replace("/dashboard/");</script>
     <meta name="description" content="Vasundhara helps farmers explore local rainfall, temperature, satellite plant-growth history and crop-plan comparisons.">
 
-    <link rel="preload" as="image" href="/landing/images/herobg.jpg" fetchpriority="high">
+    <link rel="preload" as="image" href="./landing/images/herobg.jpg" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Gurmukhi:wght@400;600;700&family=Noto+Sans+Malayalam:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&display=swap" rel="stylesheet">
@@ -237,7 +237,7 @@
             margin: 0;
             min-height: 94vh;
             background-color: #141613;
-            background-image: linear-gradient(180deg, rgba(20, 22, 19, 0.3) 0%, rgba(20, 22, 19, 0.5) 50%, rgba(20, 22, 19, 0.96) 100%), url('/landing/images/herobg.jpg');
+            background-image: linear-gradient(180deg, rgba(20, 22, 19, 0.3) 0%, rgba(20, 22, 19, 0.5) 50%, rgba(20, 22, 19, 0.96) 100%), url('./landing/images/herobg.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -715,21 +715,23 @@
         }
     </style>
 
-    <link rel="icon" type="image/png" href="/favicon.png">\n    <link rel="apple-touch-icon" href="/logo.png">\n    <title>Vasundhara — Satellite weather, plant-growth and crop-plan guidance</title>
+    <link rel="icon" type="image/png" href="./favicon.png">
+    <link rel="apple-touch-icon" href="./logo.png">
+    <title>Vasundhara — Satellite weather, plant-growth and crop-plan guidance</title>
 </head>
 <body>
     <a href="#main-content" class="skip-link" data-i18n="skip_link">Skip to main content</a>
 
     <header id="navbar">
         <a href="#hero" class="brand-logo" aria-label="Vasundhara Home">
-            <img class="brand-icon" src="/logo.png" alt="" width="40" height="40" aria-hidden="true">
+            <img class="brand-icon" src="./logo.png" alt="" width="40" height="40" aria-hidden="true">
             <span>Vasundhara</span>
         </a>
         <nav aria-label="Primary Navigation">
             <ul>
                 <li><a href="#hero" data-i18n="nav_home">Home</a></li>
                 <li><a href="#about" data-i18n="nav_about">About</a></li>
-                <li><a href="/dashboard/" data-i18n="nav_dashboard">Dashboard</a></li>
+                <li><a href="./dashboard/" data-i18n="nav_dashboard">Dashboard</a></li>
                 <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
                 <li>
                     <div class="controls-wrapper" role="region" aria-label="Language Selector">
@@ -754,7 +756,7 @@
                 <h1 id="hero-heading" data-i18n="hero_heading">Smarter.<br>Healthier.<br>Sustainable.</h1>
                 <p data-i18n="hero_sub">Satellite-guided crop planning for resilient farms.</p>
                 <div class="hero-actions">
-                    <a href="/dashboard/" class="hero-btn" data-i18n="hero_btn">Check Your Farm</a>
+                    <a href="./dashboard/" class="hero-btn" data-i18n="hero_btn">Check Your Farm</a>
                 </div>
             </div>
         </section>
@@ -768,7 +770,7 @@
             <div class="feature-grid">
                 <article class="feature-card">
                     <div class="feature-img">
-                        <img src="/landing/images/feature1.jpeg" alt="Satellite observing Earth" loading="lazy" decoding="async" width="400" height="220">
+                        <img src="./landing/images/feature1.jpeg" alt="Satellite observing Earth" loading="lazy" decoding="async" width="400" height="220">
                     </div>
                     <div>
                         <h3 data-i18n="feat1_title">Rain and temperature</h3>
@@ -777,7 +779,7 @@
                 </article>
                 <article class="feature-card">
                     <div class="feature-img">
-                        <img src="/landing/images/feature2.jpeg" alt="Green crop rows in a field" loading="lazy" decoding="async" width="400" height="220">
+                        <img src="./landing/images/feature2.jpeg" alt="Green crop rows in a field" loading="lazy" decoding="async" width="400" height="220">
                     </div>
                     <div>
                         <h3 data-i18n="feat2_title">Plant growth over time</h3>
@@ -786,7 +788,7 @@
                 </article>
                 <article class="feature-card">
                     <div class="feature-img">
-                        <img src="/landing/images/feature3.jpeg" alt="Farmland with crops growing in rows" loading="lazy" decoding="async" width="400" height="220">
+                        <img src="./landing/images/feature3.jpeg" alt="Farmland with crops growing in rows" loading="lazy" decoding="async" width="400" height="220">
                     </div>
                     <div>
                         <h3 data-i18n="feat3_title">Compare crop plans</h3>
@@ -815,7 +817,7 @@
                     </div>
                 </div>
                 <div class="about-visual">
-                    <img src="/landing/images/about-farm.jpeg" alt="Farmer inspecting healthy crops in the field" loading="lazy" decoding="async" width="600" height="540">
+                    <img src="./landing/images/about-farm.jpeg" alt="Farmer inspecting healthy crops in the field" loading="lazy" decoding="async" width="600" height="540">
                 </div>
             </div>
         </section>
@@ -852,7 +854,7 @@
             <div class="footer-container">
                 <div class="footer-brand">
                     <div class="footer-brand-title">
-                        <img class="brand-icon" src="/logo.png" alt="" width="40" height="40" aria-hidden="true">
+                        <img class="brand-icon" src="./logo.png" alt="" width="40" height="40" aria-hidden="true">
                         <h2>Vasundhara</h2>
                     </div>
                     <p data-i18n="footer_desc">Satellite intelligence for resilient, sustainable farming. Built for the NASA Space Apps Challenge.</p>
@@ -863,7 +865,7 @@
                         <li><a href="#hero" data-i18n="nav_home">Home</a></li>
                         <li><a href="#features" data-i18n="footer_features">Features</a></li>
                         <li><a href="#about" data-i18n="nav_about">About</a></li>
-                        <li><a href="/dashboard/" data-i18n="nav_dashboard">Dashboard</a></li>
+                        <li><a href="./dashboard/" data-i18n="nav_dashboard">Dashboard</a></li>
                         <li><a href="#getting-started" data-i18n="footer_testimonials">How to start</a></li>
                     </ul>
                 </div>
