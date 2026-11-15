@@ -1,13 +1,11 @@
 import asyncio, json, time, os, math, sys
 from contextlib import asynccontextmanager
-from pathlib import Path
 from typing import Any
 import httpx
 from fastapi import FastAPI, HTTPException, Query
-from fastapi.responses import FileResponse, ORJSONResponse, StreamingResponse
+from fastapi.responses import ORJSONResponse, StreamingResponse
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 # Ensure backend and repository root directories are in sys.path
@@ -505,22 +503,3 @@ async def get_crops(
     return sanitize_json(result)
 
 
-_static_root = Path(_repo_root)
-
-
-@app.get("/", include_in_schema=False)
-async def landing_page():
-    return FileResponse(_static_root / "index.html")
-
-
-@app.get("/styles.css", include_in_schema=False)
-async def landing_styles():
-    return FileResponse(_static_root / "styles.css")
-
-
-app.mount("/images", StaticFiles(directory=str(_static_root / "images")), name="site-images")
-app.mount(
-    "/dashboard",
-    StaticFiles(directory=str(_static_root / "dashboard"), html=True),
-    name="dashboard",
-)

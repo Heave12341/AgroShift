@@ -239,13 +239,13 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div className="flex items-center gap-3.5">
             <img
-              src="./logo.png"
-              alt="AgroShift logo"
+              src="/logo.png"
+              alt="VASUNDHARA Logo"
               className="w-12 h-12 rounded-full object-contain bg-white p-0.5 shadow-md border-2 border-[#52b788]"
             />
             <div>
               <div className="flex items-center gap-2.5 flex-wrap">
-                <h1 className="text-2xl font-black tracking-wider text-white">AgroShift</h1>
+                <h1 className="text-2xl font-black tracking-wider text-white">VASUNDHARA</h1>
                 <span className="bg-[#40916c] text-white text-xs font-semibold px-2 py-0.5 rounded uppercase tracking-wider">
                   Simple farm, weather and crop guidance
                 </span>
@@ -474,7 +474,7 @@ export default function App() {
                   <div className="text-xs font-bold text-amber-900 uppercase">Weather information is not available for this place</div>
                   <div className="text-sm text-amber-800">{climateData.reason || "Data could not be retrieved from NASA POWER servers."}</div>
                   <p className="text-xs text-gray-600">
-                    AgroShift adheres strictly to scientific data integrity and will never invent or fabricate substitute observations.
+                    VASUNDHARA adheres strictly to scientific data integrity and will never invent or fabricate substitute observations.
                   </p>
                   <button onClick={() => loadData()} className="mt-2 bg-[#1b4332] text-white text-xs px-3 py-1.5 rounded cursor-pointer font-semibold">
                     Retry NASA Query
@@ -970,7 +970,7 @@ export default function App() {
                         <div className="text-right text-xs text-gray-500 bg-[#f8f6f0] p-3 rounded border border-[#e5dfd3]">
                           <div>Clear pictures used: <span className="font-bold text-[#1b4332]">{vegData.observation_count}</span></div>
                           <div>Cloudy or unclear pictures skipped: <span className="font-bold text-amber-800">{vegData.missing_count}</span></div>
-
+                          
                         </div>
                       </div>
                     )}
@@ -1133,7 +1133,7 @@ export default function App() {
 
       {/* Footer */}
       <footer className="bg-white border-t border-[#e5dfd3] py-4 text-center text-xs text-gray-500">
-        AgroShift &copy; 2026 &bull; NASA Space Apps Agriculture &bull; Location: {lat.toFixed(4)}°, {lon.toFixed(4)}°
+        VASUNDHARA &copy; 2026 &bull; NASA Space Apps Agriculture &bull; Location: {lat.toFixed(4)}°, {lon.toFixed(4)}°
       </footer>
     </div>
   );

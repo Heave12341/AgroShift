@@ -1293,7 +1293,7 @@ function FarmerReportModal({
           <div className="border-b-2 border-[#1b4332] pb-4 flex justify-between items-start">
             <div>
               <div className="text-xs font-bold text-[#2d6a4f] uppercase tracking-wider">
-                AGROSHIFT • PRECISION AGRO-CLIMATIC INTELLIGENCE
+                VASUNDHARA • PRECISION AGRO-CLIMATIC INTELLIGENCE
               </div>
               <h2 className="text-xl font-bold text-[#1b4332] mt-0.5">
                 Seasonal Crop Rotation Advisory Report
@@ -1398,7 +1398,7 @@ function FarmerReportModal({
 
           {/* Official Disclaimers */}
           <div className="text-[10px] text-gray-500 border-t border-gray-200 pt-3 leading-relaxed">
-            <strong>Advisory Notice:</strong> AgroShift recommendations are scientific heuristic estimates derived from regional ICAR/BAU agricultural compendia and NASA Earth-observation baselines. They provide comparative risk and trade-off analysis and do not guarantee market prices, government procurement, or yields. Consult your local district Krishi Vigyan Kendra (KVK) and block agricultural officer for soil testing and seed variety certification.
+            <strong>Advisory Notice:</strong> VASUNDHARA recommendations are scientific heuristic estimates derived from regional ICAR/BAU agricultural compendia and NASA Earth-observation baselines. They provide comparative risk and trade-off analysis and do not guarantee market prices, government procurement, or yields. Consult your local district Krishi Vigyan Kendra (KVK) and block agricultural officer for soil testing and seed variety certification.
           </div>
         </div>
       </div>
@@ -1414,4 +1414,4 @@ function getScoreColor(score: number): string {
 }
 
 const DISCLAIMER_TEXT =
-  "AgroShift evaluations are heuristic agronomic models based on regional crop science parameters and historical climate observations across the Indian subcontinent. They provide comparative trade-off analysis and do not guarantee specific crop yields, market prices, or soil fertility outcomes. A crop being present in the database does not mean it is suitable for every region or farm. Local field testing and Krishi Vigyan Kendra (KVK) / agricultural extension advice must always guide on-farm decisions.";
+  "VASUNDHARA evaluations are heuristic agronomic models based on regional crop science parameters and historical climate observations across the Indian subcontinent. They provide comparative trade-off analysis and do not guarantee specific crop yields, market prices, or soil fertility outcomes. A crop being present in the database does not mean it is suitable for every region or farm. Local field testing and Krishi Vigyan Kendra (KVK) / agricultural extension advice must always guide on-farm decisions.";

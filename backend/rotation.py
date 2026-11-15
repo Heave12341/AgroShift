@@ -3796,7 +3796,7 @@ def _score_duration(crops_list: list[dict]) -> tuple[float, int, list[str]]:
 
 def _score_economic(crops_list: list[dict], priority: str) -> tuple[float, list[str]]:
     """Evaluates income predictability, market infrastructure, price stability, and perishability.
-
+    
     IMPORTANT NOTE:
     Economic stability scores reflect relative price predictability and perishability heuristics based
     on historical MSP benchmarks and Agmarknet trends. They do NOT provide live price forecasts,
