@@ -240,7 +240,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div className="flex items-center gap-3.5">
             <img
-              src={`${import.meta.env.BASE_URL}logo.png`}
+              src="../logo.png"
               alt="VASUNDHARA Logo"
               className="w-12 h-12 rounded-full object-contain bg-white p-0.5 shadow-md border-2 border-[#747780]"
             />
@@ -258,7 +258,7 @@ export default function App() {
           </div>
           <div className="dashboard-header-tools">
             <a
-              href={window.location.hostname === "dashboard.vasundhara.earth" ? "https://vasundhara.earth/" : import.meta.env.BASE_URL}
+              href={window.location.hostname === "dashboard.vasundhara.earth" ? "https://vasundhara.earth/" : "../"}
               className="dashboard-home-link"
               aria-label="Return to the Vasundhara home page"
             >

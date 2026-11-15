@@ -14,6 +14,7 @@ const vasundharaEntryRoutes = {
 };
 
 export default defineConfig({
+  base: "./",
   plugins: [vasundharaEntryRoutes, react(), tailwindcss()],
   server: {
     port: 5173,
