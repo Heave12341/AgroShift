@@ -75,6 +75,57 @@ const QUICK_JUMP_HUBS = [
   { name: "Guwahati", lat: 26.1445, lon: 91.7362 },
 ];
 
+export interface PlaceSearchResult {
+  lat: number;
+  lon: number;
+  notice: string;
+}
+
+export async function resolvePlaceSearch(query: string): Promise<PlaceSearchResult | null> {
+  const normalizedQuery = query.trim();
+  if (!normalizedQuery) return null;
+
+  const coordinateParts = normalizedQuery.split(/[\s,]+/);
+  if (coordinateParts.length === 2) {
+    const lat = Number(coordinateParts[0]);
+    const lon = Number(coordinateParts[1]);
+    if (Number.isFinite(lat) && Number.isFinite(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+      return { lat, lon, notice: `Coordinates: ${lat.toFixed(4)}, ${lon.toFixed(4)}` };
+    }
+  }
+
+  const preset = PAN_INDIA_LOCATIONS.find((location) =>
+    location.name.toLowerCase().includes(normalizedQuery.toLowerCase())
+  );
+  if (preset) {
+    return {
+      lat: preset.lat,
+      lon: preset.lon,
+      notice: `Found: ${preset.name} (${preset.desc})`,
+    };
+  }
+
+  const geoUrl = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=in&limit=1&q=${encodeURIComponent(normalizedQuery)}`;
+  const response = await fetch(geoUrl, { headers: { "Accept-Language": "en" } });
+  if (!response.ok) throw new Error("Place search is temporarily unavailable.");
+
+  const results = await response.json() as Array<{ lat: string; lon: string; display_name: string }>;
+  if (!Array.isArray(results) || results.length === 0) return null;
+
+  const lat = Number(results[0].lat);
+  const lon = Number(results[0].lon);
+  if (!Number.isFinite(lat) || !Number.isFinite(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+    return null;
+  }
+
+  const shortName = results[0].display_name.split(",").slice(0, 2).join(", ");
+  return {
+    lat: Number(lat.toFixed(4)),
+    lon: Number(lon.toFixed(4)),
+    notice: `Found: ${shortName}`,
+  };
+}
+
 interface MapPickerProps {
   lat: number;
   lon: number;
@@ -171,65 +222,21 @@ export default function MapPicker({
     const query = searchQuery.trim();
     if (!query) return;
 
-    // 1. Check if user entered "lat, lon" or "lat lon"
-    const coordParts = query.split(/[\s,]+/);
-    if (coordParts.length === 2) {
-      const parsedLat = parseFloat(coordParts[0]);
-      const parsedLon = parseFloat(coordParts[1]);
-      if (
-        !isNaN(parsedLat) &&
-        !isNaN(parsedLon) &&
-        parsedLat >= -90 &&
-        parsedLat <= 90 &&
-        parsedLon >= -180 &&
-        parsedLon <= 180
-      ) {
-        onLocationChange(parsedLat, parsedLon);
-        setClickNotice(`Coordinates: ${parsedLat}°N, ${parsedLon}°E`);
-        setSearchQuery("");
-        setTimeout(() => setClickNotice(null), 3500);
-        return;
-      }
-    }
-
-    // 2. Check pre-configured Pan-Indian agricultural locations
-    const found = PAN_INDIA_LOCATIONS.find((loc) =>
-      loc.name.toLowerCase().includes(query.toLowerCase())
-    );
-    if (found) {
-      onLocationChange(found.lat, found.lon);
-      setClickNotice(`Found: ${found.name} (${found.desc})`);
-      setSearchQuery("");
-      setTimeout(() => setClickNotice(null), 3500);
-      return;
-    }
-
-    // 3. Fallback to OpenStreetMap Nominatim geocoding (covers any Indian district/town)
     setSearching(true);
     try {
-      const geoUrl = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=in&limit=1&q=${encodeURIComponent(
-        query
-      )}`;
-      const res = await fetch(geoUrl, {
-        headers: { "Accept-Language": "en" },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data && data.length > 0) {
-          const newLat = parseFloat(parseFloat(data[0].lat).toFixed(4));
-          const newLon = parseFloat(parseFloat(data[0].lon).toFixed(4));
-          onLocationChange(newLat, newLon);
-          const shortName = data[0].display_name.split(",").slice(0, 2).join(", ");
-          setClickNotice(`Find placed: ${shortName}`);
-          setSearchQuery("");
-          setTimeout(() => setClickNotice(null), 3500);
-          return;
-        }
+      const location = await resolvePlaceSearch(query);
+      if (!location) {
+        setClickNotice(`No location found for "${query}". Try district name or lat, lon.`);
+        setTimeout(() => setClickNotice(null), 4000);
+        return;
       }
-      setClickNotice(`No location found for "${query}". Try district name or lat, lon.`);
-      setTimeout(() => setClickNotice(null), 4000);
+
+      onLocationChange(location.lat, location.lon);
+      setClickNotice(location.notice);
+      setSearchQuery("");
+      setTimeout(() => setClickNotice(null), 3500);
     } catch (err) {
-      setClickNotice(`Search error. Please enter lat, lon directly.`);
+      setClickNotice(err instanceof Error ? err.message : "Search error. Please enter lat, lon directly.");
       setTimeout(() => setClickNotice(null), 4000);
     } finally {
       setSearching(false);
@@ -297,7 +304,7 @@ export default function MapPicker({
       <div className="relative w-full h-72 rounded-md overflow-hidden border border-[#505158]" aria-label="Map for choosing a farm location">
         <div ref={mapContainerRef} className="w-full h-full z-0" role="application" aria-label="Map. Tap a place to choose your farm location." />
         {clickNotice && (
-          <div role="status" aria-live="polite" className="absolute top-2 left-2 z-10 bg-[#e7e8eb] text-white text-sm px-3 py-2 rounded shadow-md border border-[#d0d1d5860] animate-fade-in">
+          <div role="status" aria-live="polite" className="absolute top-2 left-2 z-10 bg-[#e7e8eb] text-white text-sm px-3 py-2 rounded shadow-md border border-[#759A64] animate-fade-in">
             {clickNotice}
           </div>
         )}
