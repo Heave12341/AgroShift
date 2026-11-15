@@ -1,0 +1,207 @@
+@import "tailwindcss";
+
+/* Farmer-first accessibility defaults. Tailwind sizes use rem, so the larger
+   base size also makes the existing small labels easier to read. */
+html {
+  font-size: 20px;
+  scroll-behavior: smooth;
+}
+
+html, body, #root {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  background: #f4f0e6;
+  color: #1c1915;
+  font-family: Arial, "Segoe UI", sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.farmer-ui {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.farmer-ui button,
+.farmer-ui input,
+.farmer-ui select,
+.farmer-ui textarea {
+  font-family: inherit;
+}
+
+/* Large touch targets are easier to use on phones and touch screens. */
+.farmer-ui button,
+.farmer-ui select,
+.farmer-ui input[type="button"],
+.farmer-ui input[type="submit"] {
+  min-height: 44px;
+}
+
+.farmer-ui input,
+.farmer-ui select,
+.farmer-ui textarea {
+  font-size: 1rem;
+}
+
+.farmer-ui button {
+  line-height: 1.35;
+  touch-action: manipulation;
+}
+
+.farmer-ui button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.farmer-ui :focus-visible {
+  outline: 3px solid #0759b8;
+  outline-offset: 3px;
+}
+
+/* Keep secondary text readable against white and cream backgrounds. */
+.farmer-ui .text-gray-500,
+.farmer-ui .text-gray-600,
+.farmer-ui .text-gray-400 {
+  color: #4b5563 !important;
+}
+
+.farmer-ui table th,
+.farmer-ui table td {
+  line-height: 1.5;
+}
+
+.farmer-ui table th {
+  font-weight: 700;
+}
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  background: #c9c2b2;
+  font-family: inherit;
+}
+
+.leaflet-control-zoom a {
+  width: 44px !important;
+  height: 44px !important;
+  line-height: 44px !important;
+  font-size: 26px !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Extra readability for farmers using the app on a phone or outdoors. */
+.farmer-ui {
+  color: #171b16;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+/* Do not let Tailwind's small utility labels become tiny print. */
+.farmer-ui .text-xs {
+  font-size: 0.86rem !important;
+  line-height: 1.5 !important;
+}
+
+.farmer-ui .text-sm {
+  font-size: 0.96rem !important;
+  line-height: 1.55 !important;
+}
+
+.farmer-ui .text-base {
+  font-size: 1.04rem !important;
+  line-height: 1.65 !important;
+}
+
+.farmer-ui .text-gray-400,
+.farmer-ui .text-gray-500,
+.farmer-ui .text-gray-600,
+.farmer-ui .text-gray-700 {
+  color: #3f4941 !important;
+}
+
+.farmer-ui button,
+.farmer-ui select,
+.farmer-ui input[type="button"],
+.farmer-ui input[type="submit"] {
+  min-height: 48px;
+}
+
+.farmer-ui input,
+.farmer-ui select,
+.farmer-ui textarea {
+  min-height: 48px;
+  color: #171b16;
+  background-color: #fff;
+  border-color: #6b756d;
+}
+
+.farmer-ui button {
+  font-weight: 600;
+}
+
+.farmer-ui button:focus-visible,
+.farmer-ui a:focus-visible,
+.farmer-ui input:focus-visible,
+.farmer-ui select:focus-visible,
+.farmer-ui textarea:focus-visible,
+.farmer-ui [role="tab"]:focus-visible {
+  outline: 4px solid #0759b8;
+  outline-offset: 3px;
+}
+
+.farmer-ui h1,
+.farmer-ui h2,
+.farmer-ui h3 {
+  line-height: 1.3;
+  text-wrap: pretty;
+}
+
+.farmer-ui p,
+.farmer-ui li,
+.farmer-ui label,
+.farmer-ui th,
+.farmer-ui td {
+  text-wrap: pretty;
+}
+
+.farmer-ui table th,
+.farmer-ui table td {
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+}
+
+.farmer-ui [role="tab"] {
+  min-height: 52px;
+  white-space: nowrap;
+}
+
+/* Do not communicate meaning using colour alone. */
+.farmer-ui :disabled {
+  opacity: 0.7;
+}
+
+@media (max-width: 640px) {
+  html { font-size: 19px; }
+  .farmer-ui main { padding-top: 1rem; }
+  .farmer-ui table { font-size: 0.9rem; }
+}
+
+/* Tiny text was previously used for card badges; keep those readable too. */
+.farmer-ui [class*="text-[9px]"],
+.farmer-ui [class*="text-[10px]"],
+.farmer-ui [class*="text-[11px]"] {
+  font-size: 0.82rem !important;
+  line-height: 1.4 !important;
+}
