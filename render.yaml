@@ -14,6 +14,6 @@ services:
       - key: ROTATION_IQ_WARM_CACHE
         value: "1"
       - key: CORS_ORIGINS
-        value: "https://heave12341.github.io,http://localhost:5173,http://127.0.0.1:5173"
+        value: "https://heave12341.github.io,https://vasundhara.earth,https://www.vasundhara.earth,https://dashboard.vasundhara.earth,http://localhost:5173,http://127.0.0.1:5173"
       - key: ENVIRONMENT
         value: production
