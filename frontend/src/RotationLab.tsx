@@ -350,8 +350,15 @@ export default function RotationLab({
       </div>
 
       {/* Sub-Navigation Tabs */}
-      <div className="flex border-b border-[#44464d] bg-white rounded-t-lg px-3 pt-2 gap-2 text-xs font-semibold">
+      <div
+        className="rotation-lab-tabs flex border-b border-[#44464d] bg-white rounded-t-lg px-3 pt-2 gap-2 text-xs font-semibold"
+        role="tablist"
+        aria-label="Crop planner views"
+      >
         <button
+          type="button"
+          role="tab"
+          aria-selected={subTab === "recommendations"}
           onClick={() => setSubTab("recommendations")}
           className={`px-4 py-2.5 border-b-2 transition-all flex items-center gap-1.5 cursor-pointer ${
             subTab === "recommendations"
@@ -362,6 +369,9 @@ export default function RotationLab({
           Suggested crop plans
         </button>
         <button
+          type="button"
+          role="tab"
+          aria-selected={subTab === "custom"}
           onClick={() => setSubTab("custom")}
           className={`px-4 py-2.5 border-b-2 transition-all flex items-center gap-1.5 cursor-pointer ${
             subTab === "custom"
@@ -372,6 +382,9 @@ export default function RotationLab({
           Custom Rotation Builder
         </button>
         <button
+          type="button"
+          role="tab"
+          aria-selected={subTab === "explorer"}
           onClick={() => setSubTab("explorer")}
           className={`px-4 py-2.5 border-b-2 transition-all flex items-center gap-1.5 cursor-pointer ${
             subTab === "explorer"
@@ -589,8 +602,8 @@ export default function RotationLab({
                         {typeof strat.regional_fit_score === "number" && (
                           <div className="rounded-lg border border-[#33353a] bg-[#25262b] p-2.5">
                             <div className="flex flex-wrap justify-between gap-2 text-sm">
-                              <strong className="text-[#d0d1d5860]">Fit for this location</strong>
-                              <strong className="text-[#d0d1d5860] tabular-nums">{Math.round(strat.regional_fit_score)}/100</strong>
+                              <strong className="text-[#bed7a8]">Fit for this location</strong>
+                              <strong className="text-[#bed7a8] tabular-nums">{Math.round(strat.regional_fit_score)}/100</strong>
                             </div>
                             <p className="mt-1 text-xs text-gray-700">
                               This is a separate local-fit check for {evaluation?.detected_region?.name || "the selected region"}. It is not one of the five criteria.
@@ -1347,7 +1360,7 @@ function FarmerReportModal({
           <div className="flex items-center gap-2">
             <button
               onClick={handlePrint}
-              className="bg-[#d0d1d5860] hover:bg-[#747780] text-white text-xs font-bold px-3 py-1.5 rounded transition-all cursor-pointer flex items-center gap-1.5"
+              className="bg-[#315d43] hover:bg-[#3c704f] text-white text-xs font-bold px-3 py-1.5 rounded transition-all cursor-pointer flex items-center gap-1.5"
             >
               Print / Save PDF
             </button>
@@ -1366,7 +1379,7 @@ function FarmerReportModal({
           <div className="border-b-2 border-[#e7e8eb] pb-4 flex justify-between items-start">
             <div>
               <div className="text-xs font-bold text-[#6a6d75] uppercase tracking-wider">
-                VASUNDHARA • PRECISION AGRO-CLIMATIC INTELLIGENCE
+                Vasundhara • PRECISION AGRO-CLIMATIC INTELLIGENCE
               </div>
               <h2 className="text-xl font-bold text-[#e7e8eb] mt-0.5">
                 Seasonal Crop Rotation Advisory Report
@@ -1471,7 +1484,7 @@ function FarmerReportModal({
 
           {/* Official Disclaimers */}
           <div className="text-[10px] text-gray-500 border-t border-gray-200 pt-3 leading-relaxed">
-            <strong>Advisory Notice:</strong> VASUNDHARA recommendations are scientific heuristic estimates derived from regional ICAR/BAU agricultural compendia and NASA Earth-observation baselines. They provide comparative risk and trade-off analysis and do not guarantee market prices, government procurement, or yields. Consult your local district Krishi Vigyan Kendra (KVK) and block agricultural officer for soil testing and seed variety certification.
+            <strong>Advisory Notice:</strong> Vasundhara recommendations are scientific heuristic estimates derived from regional ICAR/BAU agricultural compendia and NASA Earth-observation baselines. They provide comparative risk and trade-off analysis and do not guarantee market prices, government procurement, or yields. Consult your local district Krishi Vigyan Kendra (KVK) and block agricultural officer for soil testing and seed variety certification.
           </div>
         </div>
       </div>
@@ -1487,4 +1500,4 @@ function getScoreColor(score: number): string {
 }
 
 const DISCLAIMER_TEXT =
-  "VASUNDHARA evaluations are heuristic agronomic models based on regional crop science parameters and historical climate observations across the Indian subcontinent. They provide comparative trade-off analysis and do not guarantee specific crop yields, market prices, or soil fertility outcomes. A crop being present in the database does not mean it is suitable for every region or farm. Local field testing and Krishi Vigyan Kendra (KVK) / agricultural extension advice must always guide on-farm decisions.";
+  "Vasundhara evaluations are heuristic agronomic models based on regional crop science parameters and historical climate observations across the Indian subcontinent. They provide comparative trade-off analysis and do not guarantee specific crop yields, market prices, or soil fertility outcomes. A crop being present in the database does not mean it is suitable for every region or farm. Local field testing and Krishi Vigyan Kendra (KVK) / agricultural extension advice must always guide on-farm decisions.";

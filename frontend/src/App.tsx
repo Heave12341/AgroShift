@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type FormEvent } from "react";
 import {
   fetchClimateAnalysis,
   fetchTrendAnalysis,
@@ -10,7 +10,7 @@ import type {
   VegetationAnalysisResponse,
   ProgressEvent,
 } from "./types";
-import MapPicker from "./MapPicker";
+import MapPicker, { resolvePlaceSearch } from "./MapPicker";
 import RotationLab from "./RotationLab";
 import {
   ResponsiveContainer,
@@ -37,6 +37,41 @@ const PRESETS = [
   { name: "Varanasi", lat: 25.3176, lon: 82.9739, region: "Eastern Alluvial Plain (UP)" },
   { name: "Kolkata", lat: 22.5726, lon: 88.3639, region: "Lower Gangetic Delta (West Bengal)" },
 ];
+
+const DEFAULT_LOCATION = { lat: 25.5941, lon: 85.1376 };
+const SAVED_LOCATION_KEY = "vasundhara-dashboard-location";
+const SKIPPED_LOCATION_SETUP_KEY = "vasundhara-dashboard-location-setup-skipped";
+
+interface DashboardLocation {
+  lat: number;
+  lon: number;
+}
+
+function readSavedLocation(): DashboardLocation | null {
+  try {
+    const stored = window.localStorage.getItem(SAVED_LOCATION_KEY);
+    if (!stored) return null;
+
+    const location = JSON.parse(stored) as DashboardLocation;
+    if (
+      Number.isFinite(location.lat) && location.lat >= -90 && location.lat <= 90 &&
+      Number.isFinite(location.lon) && location.lon >= -180 && location.lon <= 180
+    ) {
+      return location;
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
+
+function hasSkippedLocationSetup(): boolean {
+  try {
+    return window.localStorage.getItem(SKIPPED_LOCATION_SETUP_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
 
 function farmerFriendlyVegetationProgress(event: ProgressEvent): { message: string; percent: number | null } {
   switch (event.step) {
@@ -67,10 +102,18 @@ function farmerFriendlyVegetationProgress(event: ProgressEvent): { message: stri
 }
 
 export default function App() {
-  const [lat, setLat] = useState<number>(25.5941);
-  const [lon, setLon] = useState<number>(85.1376);
-  const [inputLat, setInputLat] = useState<string>("25.5941");
-  const [inputLon, setInputLon] = useState<string>("85.1376");
+  const [initialLocation] = useState(readSavedLocation);
+  const [lat, setLat] = useState<number>(initialLocation?.lat ?? DEFAULT_LOCATION.lat);
+  const [lon, setLon] = useState<number>(initialLocation?.lon ?? DEFAULT_LOCATION.lon);
+  const [inputLat, setInputLat] = useState<string>((initialLocation?.lat ?? DEFAULT_LOCATION.lat).toFixed(4));
+  const [inputLon, setInputLon] = useState<string>((initialLocation?.lon ?? DEFAULT_LOCATION.lon).toFixed(4));
+  const [locationPromptOpen, setLocationPromptOpen] = useState(
+    () => !initialLocation && !hasSkippedLocationSetup()
+  );
+  const [locationSearch, setLocationSearch] = useState("");
+  const [locationSearchError, setLocationSearchError] = useState<string | null>(null);
+  const [locationSearching, setLocationSearching] = useState(false);
+  const [locationStorageWarning, setLocationStorageWarning] = useState<string | null>(null);
   const [startYear, setStartYear] = useState<number>(2015);
   const [endYear, setEndYear] = useState<number>(2024);
 
@@ -141,9 +184,17 @@ export default function App() {
     setLon(newLon);
     setInputLat(newLat.toFixed(4));
     setInputLon(newLon.toFixed(4));
-    loadData(newLat, newLon);
+    try {
+      window.localStorage.setItem(SAVED_LOCATION_KEY, JSON.stringify({ lat: newLat, lon: newLon }));
+      window.localStorage.removeItem(SKIPPED_LOCATION_SETUP_KEY);
+      setLocationStorageWarning(null);
+    } catch {
+      setLocationStorageWarning("Your location is selected, but this browser could not save it for your next visit.");
+    }
+    if (newLat === lat && newLon === lon && !locationPromptOpen) {
+      loadData(newLat, newLon);
+    }
     // The plant-growth effect follows the selected coordinates automatically.
-
   };
 
   const applyCoordinates = () => {
@@ -164,10 +215,59 @@ export default function App() {
     }
   };
 
+  const searchForInitialLocation = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLocationSearchError(null);
+    setLocationSearching(true);
+    try {
+      const location = await resolvePlaceSearch(locationSearch);
+      if (!location) {
+        setLocationSearchError("No matching place found. Try another name or enter coordinates below.");
+        return;
+      }
+
+      handleLocationChange(location.lat, location.lon);
+      setLocationPromptOpen(false);
+    } catch (searchError) {
+      setLocationSearchError(
+        searchError instanceof Error ? searchError.message : "Place search is temporarily unavailable."
+      );
+    } finally {
+      setLocationSearching(false);
+    }
+  };
+
+  const applyInitialCoordinates = () => {
+    const parsedLat = Number(inputLat.trim());
+    const parsedLon = Number(inputLon.trim());
+    if (
+      inputLat.trim() && inputLon.trim() &&
+      Number.isFinite(parsedLat) && parsedLat >= -90 && parsedLat <= 90 &&
+      Number.isFinite(parsedLon) && parsedLon >= -180 && parsedLon <= 180
+    ) {
+      setLocationSearchError(null);
+      handleLocationChange(parsedLat, parsedLon);
+      setLocationPromptOpen(false);
+    } else {
+      setLocationSearchError("Enter a latitude from -90 to 90 and a longitude from -180 to 180.");
+    }
+  };
+
+  const skipInitialLocationSetup = () => {
+    try {
+      window.localStorage.setItem(SKIPPED_LOCATION_SETUP_KEY, "true");
+      setLocationStorageWarning(null);
+    } catch {
+      setLocationStorageWarning("This browser could not save your setup preference. You can still use the dashboard.");
+    }
+    setLocationPromptOpen(false);
+  };
+
 
   useEffect(() => {
+    if (locationPromptOpen) return;
     loadData();
-  }, [startYear, endYear]);
+  }, [locationPromptOpen, lat, lon, startYear, endYear]);
 
   // Fetch satellite data whenever the visible place or selected years change.
   // Cleanup cancels the old request, so a slow old response cannot replace new data.
@@ -238,16 +338,16 @@ export default function App() {
       {/* Header */}
       <header className="bg-[#101113] text-white shadow-md border-b-4 border-[#858991]">
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-          <div className="flex items-center gap-3.5">
+          <div className="dashboard-brand flex items-center gap-3.5">
             <img
               src="../logo.png"
-              alt="VASUNDHARA Logo"
+              alt="Vasundhara logo"
               className="w-12 h-12 rounded-full object-contain bg-white p-0.5 shadow-md border-2 border-[#747780]"
             />
-            <div>
+            <div className="dashboard-brand-copy">
               <div className="flex items-center gap-2.5 flex-wrap">
-                <h1 className="text-2xl font-black tracking-wider text-white">VASUNDHARA</h1>
-                <span className="bg-[#d0d1d5860] text-white text-xs font-semibold px-2 py-0.5 rounded uppercase tracking-wider">
+                <h1 className="text-2xl font-black text-white">Vasundhara</h1>
+                <span className="dashboard-brand-badge bg-[#315d43] text-white text-xs font-semibold px-2 py-0.5 rounded uppercase tracking-wider">
                   Simple farm, weather and crop guidance
                 </span>
               </div>
@@ -271,6 +371,12 @@ export default function App() {
           </div>
         </div>
       </header>
+
+      {locationStorageWarning && (
+        <div role="status" className="dashboard-location-storage-warning">
+          {locationStorageWarning}
+        </div>
+      )}
 
       {/* Control Bar */}
       <section className="dashboard-controls border-b shadow-xs">
@@ -486,7 +592,7 @@ export default function App() {
                   <div className="text-xs font-bold text-zinc-900 uppercase">Weather information is not available for this place</div>
                   <div className="text-sm text-zinc-800">{climateData.reason || "Data could not be retrieved from NASA POWER servers."}</div>
                   <p className="text-xs text-gray-600">
-                    VASUNDHARA adheres strictly to scientific data integrity and will never invent or fabricate substitute observations.
+                    Vasundhara adheres strictly to scientific data integrity and will never invent or fabricate substitute observations.
                   </p>
                   <button onClick={() => loadData()} className="mt-2 bg-[#e7e8eb] text-white text-xs px-3 py-1.5 rounded cursor-pointer font-semibold">
                     Retry NASA Query
@@ -1145,8 +1251,84 @@ export default function App() {
 
       {/* Footer */}
       <footer className="bg-white border-t border-[#44464d] py-4 text-center text-xs text-gray-500">
-        VASUNDHARA &copy; 2026 &bull; NASA Space Apps Agriculture &bull; Location: {lat.toFixed(4)}°, {lon.toFixed(4)}°
+        <p>Vasundhara &copy; 2026 &bull; NASA Space Apps Agriculture &bull; Location: {lat.toFixed(4)}°, {lon.toFixed(4)}°</p>
+        <p className="mx-auto mt-2 max-w-4xl px-4">
+          Code and descriptive text were developed with AI assistance. Climate data comes from NASA POWER, plant-growth observations from MODIS, and crop comparisons are heuristic estimates—not AI-generated observations.
+        </p>
       </footer>
+
+      {locationPromptOpen && (
+        <div className="dashboard-location-backdrop">
+          <section
+            className="dashboard-location-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="dashboard-location-title"
+            aria-describedby="dashboard-location-description"
+          >
+            <p className="dashboard-location-eyebrow">Personalize your dashboard</p>
+            <h2 id="dashboard-location-title">Choose a location</h2>
+            <p id="dashboard-location-description">
+              Search for a place or enter its coordinates. We will save your choice in this browser for next time.
+            </p>
+
+            <form className="dashboard-location-search" onSubmit={searchForInitialLocation}>
+              <label htmlFor="dashboard-location-search-input">Search by city, town, or district</label>
+              <div className="dashboard-location-search-row">
+                <input
+                  id="dashboard-location-search-input"
+                  type="search"
+                  value={locationSearch}
+                  onChange={(event) => setLocationSearch(event.target.value)}
+                  placeholder="e.g. Pune or Varanasi"
+                  autoFocus
+                />
+                <button type="submit" className="dashboard-location-primary" disabled={locationSearching}>
+                  {locationSearching ? "Searching..." : "Search"}
+                </button>
+              </div>
+            </form>
+
+            <div className="dashboard-location-coordinate-entry">
+              <h3>Or enter coordinates</h3>
+              <div className="dashboard-location-coordinate-grid">
+                <div>
+                  <label htmlFor="dashboard-location-latitude">Latitude (-90 to 90)</label>
+                  <input
+                    id="dashboard-location-latitude"
+                    type="number"
+                    min="-90"
+                    max="90"
+                    step="any"
+                    value={inputLat}
+                    onChange={(event) => setInputLat(event.target.value)}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="dashboard-location-longitude">Longitude (-180 to 180)</label>
+                  <input
+                    id="dashboard-location-longitude"
+                    type="number"
+                    min="-180"
+                    max="180"
+                    step="any"
+                    value={inputLon}
+                    onChange={(event) => setInputLon(event.target.value)}
+                  />
+                </div>
+              </div>
+              <button type="button" className="dashboard-location-primary" onClick={applyInitialCoordinates}>
+                Use these coordinates
+              </button>
+            </div>
+
+            {locationSearchError && <p role="alert" className="dashboard-location-error">{locationSearchError}</p>}
+            <button type="button" className="dashboard-location-skip" onClick={skipInitialLocationSetup}>
+              Skip for now
+            </button>
+          </section>
+        </div>
+      )}
     </div>
   );
 }
