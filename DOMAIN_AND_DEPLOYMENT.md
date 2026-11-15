@@ -6,7 +6,7 @@
 - `https://vasundhara.earth/dashboard/` opens the dashboard as a same-domain fallback.
 - `https://dashboard.vasundhara.earth/` opens the dashboard after the subdomain is added to the same Vercel project and DNS is configured.
 
-The root `frontend/index.html` is the landing page. The React dashboard entry is `frontend/dashboard/index.html`. Both are part of one Vite build. The supplied landing assets are in `frontend/public/landing/images/`.
+The root `frontend/index.html` is the landing page. The React dashboard entry is `frontend/dashboard/index.html`. Both are part of one Vite build. Optimized WebP landing assets are in `frontend/public/landing/images/` and mirrored to `landing/images/` for GitHub Pages; original sources remain available alongside them.
 
 ## Vercel frontend
 
