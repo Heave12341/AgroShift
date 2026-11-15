@@ -56,7 +56,7 @@ npm run build
 
 ## Landing page and languages
 
-The supplied landing page is the root entry at `frontend/index.html`; the React dashboard is at `frontend/dashboard/index.html`. Landing images are in `frontend/public/landing/images/` and are served from `/landing/images/`.
+The supplied landing page is the root entry at `frontend/index.html`; the React dashboard is at `frontend/dashboard/index.html`. Optimized WebP images are served from `frontend/public/landing/images/` and mirrored to `landing/images/` for GitHub Pages. Original image sources remain alongside the WebP variants.
 
 
 

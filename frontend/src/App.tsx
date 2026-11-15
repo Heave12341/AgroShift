@@ -340,7 +340,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div className="dashboard-brand flex items-center gap-3.5">
             <img
-              src="../logo.png"
+              src="../logo.webp"
               alt="Vasundhara logo"
               className="w-12 h-12 rounded-full object-contain bg-white p-0.5 shadow-md border-2 border-[#747780]"
             />
@@ -1253,7 +1253,7 @@ export default function App() {
       <footer className="bg-white border-t border-[#44464d] py-4 text-center text-xs text-gray-500">
         <p>Vasundhara &copy; 2026 &bull; NASA Space Apps Agriculture &bull; Location: {lat.toFixed(4)}°, {lon.toFixed(4)}°</p>
         <p className="mx-auto mt-2 max-w-4xl px-4">
-          Code and descriptive text were developed with AI assistance. Climate data comes from NASA POWER, plant-growth observations from MODIS, and crop comparisons are heuristic estimates—not AI-generated observations.
+          AI tools assisted with parts of this code and descriptive text. Climate data comes from NASA POWER, plant-growth observations from MODIS, and crop comparisons are heuristic estimates—not AI-generated observations.
         </p>
       </footer>
 
