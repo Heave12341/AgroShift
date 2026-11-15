@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+!frontend/.env.production
+backend/.cache/
+frontend/node_modules/
+frontend/dist/
+frontend/tsconfig.tsbuildinfo
